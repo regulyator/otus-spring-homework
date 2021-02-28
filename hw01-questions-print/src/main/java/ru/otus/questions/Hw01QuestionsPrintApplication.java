@@ -1,14 +1,16 @@
 package ru.otus.questions;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import ru.otus.questions.services.QuizReader;
 
-@SpringBootApplication
 public class Hw01QuestionsPrintApplication {
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		SpringApplication.run(Hw01QuestionsPrintApplication.class, args);
-	}
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("/spring-context.xml");
+
+        QuizReader service = context.getBean(QuizReader.class);
+        service.readQuiz();
+    }
 
 }

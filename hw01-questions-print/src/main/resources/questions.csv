@@ -1,0 +1,5 @@
+"What year is it?", "0:1990;1:2021;0:2029"
+"Is the cat in the box alive or dead?", "1:Alive);1:Dead("
+"Where did the the Ice Battle take place?", "1:On Lake Chudskoe;0:On ice;0:On lake;0:In the Ice Palace"
+"boolean size?", "0:1 bit;0:1 byte;1:It depends where"
+"The answer to the main question ...?", "1:42;0:84;0:36"
