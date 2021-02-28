@@ -1,0 +1,28 @@
+plugins {
+    id 'idea'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+}
+
+idea {
+    project {
+        languageLevel = 11
+    }
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
+allprojects {
+    group "ru.otus.homework"
+
+    repositories {
+        mavenCentral()
+    }
+
+    apply plugin: "io.spring.dependency-management"
+    dependencyManagement {
+        dependencies {
+        }
+    }
+}
