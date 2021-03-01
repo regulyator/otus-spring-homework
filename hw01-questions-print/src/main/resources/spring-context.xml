@@ -4,12 +4,18 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="quizResourceHolder" class="ru.otus.questions.services.QuizResourceHolderImpl">
-        <constructor-arg name="quizFileResource" value="questions.csv"/>
+    <bean id="quizResourceHolder" class="ru.otus.questions.services.impl.QuizResourceHolderImpl">
+        <constructor-arg name="quizFileResource" value="/questions.csv"/>
     </bean>
 
-    <bean id="quizReader" class="ru.otus.questions.services.QuizReaderImplCSV">
+    <bean id="quizReader" class="ru.otus.questions.services.impl.QuizResourceReaderCSV">
         <constructor-arg name="quizResourceHolder" ref="quizResourceHolder"/>
     </bean>
+
+    <bean id="quizBuilder" class="ru.otus.questions.services.impl.QuizBuilderCSV">
+        <constructor-arg name="quizResourceReader" ref="quizReader"/>
+    </bean>
+
+    <bean id="quizRunner" class="ru.otus.questions.services.impl.QuizRunnerConsole"/>
 
 </beans>

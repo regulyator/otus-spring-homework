@@ -1,14 +1,16 @@
 package ru.otus.questions.domain;
 
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 
 import java.util.List;
 
 @Getter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Question {
-
+    @EqualsAndHashCode.Include
     private final String text;
     private final List<Answer> answers;
     private final boolean multipleCorrectAnswers;

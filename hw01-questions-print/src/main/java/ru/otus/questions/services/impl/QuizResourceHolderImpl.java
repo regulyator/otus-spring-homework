@@ -1,6 +1,8 @@
-package ru.otus.questions.services;
+package ru.otus.questions.services.impl;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import ru.otus.questions.services.QuizResourceHolder;
 
 public class QuizResourceHolderImpl implements QuizResourceHolder {
     private final Resource quizFileResource;
@@ -11,6 +13,6 @@ public class QuizResourceHolderImpl implements QuizResourceHolder {
 
     @Override
     public Resource getQuizResource() {
-        return null;
+        return quizFileResource;
     }
 }
