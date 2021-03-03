@@ -3,6 +3,7 @@ package ru.otus.questions.services.impl;
 import ru.otus.questions.domain.Answer;
 import ru.otus.questions.domain.Question;
 import ru.otus.questions.domain.Quiz;
+import ru.otus.questions.exception.QuizBuildException;
 import ru.otus.questions.services.QuizBuilder;
 import ru.otus.questions.services.QuizResourceReader;
 
@@ -21,35 +22,34 @@ public class QuizBuilderCSV implements QuizBuilder {
         this.quizResourceReader = quizResourceReader;
     }
 
+
     @Override
     public Quiz buildQuiz() {
         List<Question> questions = quizResourceReader.readQuizResource().stream()
                 .filter(Objects::nonNull)
                 .map(this::constructQuestion)
-                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
         return new Quiz(questions);
     }
 
-    private Question constructQuestion(String[] questionRaw) {
+    private Question constructQuestion(String[] questionRaw) throws QuizBuildException {
         if (checkQuestionIsCorrect(questionRaw)) {
             List<Answer> answers = Arrays.stream(getCSVAnswers(questionRaw))
                     .map(this::constructAnswers)
-                    .filter(Objects::nonNull)
                     .collect(Collectors.toList());
 
             return new Question(questionRaw[0], answers);
         } else {
-            return null;
+            throw new QuizBuildException("Error when construct quiz question! Incorrect question!");
         }
     }
 
-    private Answer constructAnswers(String answersRaw) {
+    private Answer constructAnswers(String answersRaw) throws QuizBuildException {
         final String[] answerSplited = getCSVAnswerWithCorrectMark(answersRaw);
         if (checkAnswerIsCorrect(answerSplited)) {
             return new Answer(answerSplited[1], answerSplited[0].trim().equals("1"));
         } else {
-            return null;
+            throw new QuizBuildException("Error when construct quiz answer! Incorrect answer!");
         }
     }
 
