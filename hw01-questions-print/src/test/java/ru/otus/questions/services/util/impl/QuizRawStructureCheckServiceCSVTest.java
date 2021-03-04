@@ -2,11 +2,11 @@ package ru.otus.questions.services.util.impl;
 
 import org.junit.jupiter.api.Test;
 import ru.otus.questions.services.util.QuizRawStructureCheckService;
-import ru.otus.questions.util.CSVUtil;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class QuizRawStructureCheckServiceCSVTest {
 

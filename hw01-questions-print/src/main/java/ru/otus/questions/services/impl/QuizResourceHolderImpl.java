@@ -1,6 +1,5 @@
 package ru.otus.questions.services.impl;
 
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import ru.otus.questions.services.QuizResourceHolder;
 
