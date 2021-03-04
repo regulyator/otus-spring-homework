@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="quizResourceHolder" class="ru.otus.questions.services.impl.QuizResourceHolderImpl">
+        <constructor-arg name="quizFileResource" value="/questions.csv"/>
+    </bean>
+
+    <bean id="quizReader" class="ru.otus.questions.services.impl.QuizResourceReaderCSV">
+        <constructor-arg name="quizResourceHolder" ref="quizResourceHolder"/>
+    </bean>
+
+    <bean id="checkService" class="ru.otus.questions.services.util.impl.QuizRawStructureCheckServiceCSV"/>
+
+    <bean id="quizBuilder" class="ru.otus.questions.services.impl.QuizBuilderCSV">
+        <constructor-arg name="quizResourceReader" ref="quizReader"/>
+        <constructor-arg name="quizRawStructureCheckService" ref="checkService"/>
+    </bean>
+
+    <bean id="inputOutputService" class="ru.otus.questions.services.util.impl.InputOutputServiceConsole"/>
+
+    <bean id="quizRunner" class="ru.otus.questions.services.impl.QuizRunnerImpl">
+        <constructor-arg name="inputOutputServiceConsole" ref="inputOutputService"/>
+    </bean>
+
+    <bean id="quizExecutorService" class="ru.otus.questions.services.impl.QuizExecutorServiceImpl">
+        <constructor-arg name="quizBuilder" ref="quizBuilder"/>
+        <constructor-arg name="quizRunner" ref="quizRunner"/>
+    </bean>
+
+</beans>
