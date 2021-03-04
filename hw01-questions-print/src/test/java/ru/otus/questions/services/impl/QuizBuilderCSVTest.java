@@ -9,16 +9,20 @@ import ru.otus.questions.domain.Question;
 import ru.otus.questions.domain.Quiz;
 import ru.otus.questions.services.QuizBuilder;
 import ru.otus.questions.services.QuizResourceReader;
+import ru.otus.questions.services.util.QuizRawStructureCheckService;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class QuizBuilderCSVTest {
     @Mock
     QuizResourceReader<List<String[]>> quizResourceReader;
+    @Mock
+    QuizRawStructureCheckService<String[]> quizRawStructureCheckService;
 
     @Test
     void buildQuiz() {
@@ -26,7 +30,9 @@ class QuizBuilderCSVTest {
                 new String[]{"Is the cat in the box alive or dead?", "1:Alive)"});
         Quiz correctQuiz = buildCorrectQuiz();
         when(quizResourceReader.readQuizResource()).thenReturn(quiz);
-        QuizBuilder quizBuilder = new QuizBuilderCSV(quizResourceReader);
+        when(quizRawStructureCheckService.checkRawAnswerIsCorrect(any())).thenReturn(true);
+        when(quizRawStructureCheckService.checkRawQuestionIsCorrect(any())).thenReturn(true);
+        QuizBuilder quizBuilder = new QuizBuilderCSV(quizResourceReader, quizRawStructureCheckService);
         Quiz resultQuiz = quizBuilder.buildQuiz();
         assertEquals(correctQuiz, resultQuiz);
     }

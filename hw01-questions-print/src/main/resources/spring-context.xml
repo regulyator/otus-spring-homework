@@ -12,8 +12,11 @@
         <constructor-arg name="quizResourceHolder" ref="quizResourceHolder"/>
     </bean>
 
+    <bean id="checkService" class="ru.otus.questions.services.util.impl.QuizRawStructureCheckServiceCSV"/>
+
     <bean id="quizBuilder" class="ru.otus.questions.services.impl.QuizBuilderCSV">
         <constructor-arg name="quizResourceReader" ref="quizReader"/>
+        <constructor-arg name="quizRawStructureCheckService" ref="checkService"/>
     </bean>
 
     <bean id="inputOutputService" class="ru.otus.questions.services.util.impl.InputOutputServiceConsole"/>

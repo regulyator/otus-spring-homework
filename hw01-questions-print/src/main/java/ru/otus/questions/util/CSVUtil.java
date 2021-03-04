@@ -8,15 +8,16 @@ public class CSVUtil {
     private final static String ANSWER_RESULT_DELIMITER = ":";
     private final static Pattern IS_ANSWER_RESULT_PATTERN = Pattern.compile("^[1|0]$");
 
-    public static String[] getCSVAnswers(String[] questionRaw) {
-        return questionRaw[1].split(ANSWER_DELIMITER);
+
+    static String[] getCSVAnswers(String[] questionRaw) {
+        return questionRaw[1].split(CSVUtil.ANSWER_DELIMITER);
     }
 
-    public static String[] getCSVAnswerWithCorrectMark(String answersRaw) {
-        return answersRaw.split(ANSWER_RESULT_DELIMITER);
+    static String[] getCSVAnswerWithCorrectMark(String answersRaw) {
+        return answersRaw.split(CSVUtil.ANSWER_RESULT_DELIMITER);
     }
 
-    public static boolean checkQuestionIsCorrect(String[] questionRaw) {
+    static boolean checkQuestionIsCorrect(String[] questionRaw) {
         return questionRaw.length == 2
                 && Objects.nonNull(questionRaw[0])
                 && Objects.nonNull(questionRaw[1])
@@ -24,12 +25,13 @@ public class CSVUtil {
                 && !questionRaw[1].trim().isEmpty();
     }
 
-    public static boolean checkAnswerIsCorrect(String[] answersRaw) {
+    static boolean checkAnswerIsCorrect(String[] answersRaw) {
         return answersRaw.length == 2
                 && Objects.nonNull(answersRaw[0])
                 && Objects.nonNull(answersRaw[1])
-                && IS_ANSWER_RESULT_PATTERN.matcher(answersRaw[0].trim()).matches()
+                && CSVUtil.IS_ANSWER_RESULT_PATTERN.matcher(answersRaw[0].trim()).matches()
                 && !answersRaw[1].trim().isEmpty();
 
     }
+
 }

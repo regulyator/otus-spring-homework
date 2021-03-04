@@ -6,22 +6,26 @@ import ru.otus.questions.domain.Quiz;
 import ru.otus.questions.exception.QuizBuildException;
 import ru.otus.questions.services.QuizBuilder;
 import ru.otus.questions.services.QuizResourceReader;
+import ru.otus.questions.services.util.QuizRawStructureCheckService;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static ru.otus.questions.util.CSVUtil.*;
-
 public class QuizBuilderCSV implements QuizBuilder {
 
+    private final static String ANSWER_DELIMITER = ";";
+    private final static String ANSWER_RESULT_DELIMITER = ":";
+
     private final QuizResourceReader<List<String[]>> quizResourceReader;
+    private final QuizRawStructureCheckService<String[]> quizRawStructureCheckService;
 
-    public QuizBuilderCSV(QuizResourceReader<List<String[]>> quizResourceReader) {
+    public QuizBuilderCSV(QuizResourceReader<List<String[]>> quizResourceReader,
+                          QuizRawStructureCheckService<String[]> quizRawStructureCheckService) {
         this.quizResourceReader = quizResourceReader;
+        this.quizRawStructureCheckService = quizRawStructureCheckService;
     }
-
 
     @Override
     public Quiz buildQuiz() {
@@ -33,7 +37,7 @@ public class QuizBuilderCSV implements QuizBuilder {
     }
 
     private Question constructQuestion(String[] questionRaw) throws QuizBuildException {
-        if (checkQuestionIsCorrect(questionRaw)) {
+        if (quizRawStructureCheckService.checkRawQuestionIsCorrect(questionRaw)) {
             List<Answer> answers = Arrays.stream(getCSVAnswers(questionRaw))
                     .map(this::constructAnswers)
                     .collect(Collectors.toList());
@@ -46,11 +50,20 @@ public class QuizBuilderCSV implements QuizBuilder {
 
     private Answer constructAnswers(String answersRaw) throws QuizBuildException {
         final String[] answerSplited = getCSVAnswerWithCorrectMark(answersRaw);
-        if (checkAnswerIsCorrect(answerSplited)) {
+        if (quizRawStructureCheckService.checkRawAnswerIsCorrect(answerSplited)) {
             return new Answer(answerSplited[1], answerSplited[0].trim().equals("1"));
         } else {
             throw new QuizBuildException("Error when construct quiz answer! Incorrect answer!");
         }
+    }
+
+
+    private String[] getCSVAnswers(String[] questionRaw) {
+        return questionRaw[1].split(ANSWER_DELIMITER);
+    }
+
+    private String[] getCSVAnswerWithCorrectMark(String answersRaw) {
+        return answersRaw.split(ANSWER_RESULT_DELIMITER);
     }
 
 
