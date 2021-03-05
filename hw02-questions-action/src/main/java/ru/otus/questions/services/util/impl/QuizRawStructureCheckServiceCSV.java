@@ -1,10 +1,12 @@
 package ru.otus.questions.services.util.impl;
 
+import org.springframework.stereotype.Service;
 import ru.otus.questions.services.util.QuizRawStructureCheckService;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+@Service
 public class QuizRawStructureCheckServiceCSV implements QuizRawStructureCheckService<String[]> {
     private final static Pattern IS_ANSWER_RESULT_PATTERN = Pattern.compile("^[1|0]$");
 

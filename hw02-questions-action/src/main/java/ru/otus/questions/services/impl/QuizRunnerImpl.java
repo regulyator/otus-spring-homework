@@ -1,11 +1,13 @@
 package ru.otus.questions.services.impl;
 
+import org.springframework.stereotype.Service;
 import ru.otus.questions.domain.Quiz;
 import ru.otus.questions.services.QuizRunner;
 import ru.otus.questions.services.util.InputOutputService;
 
 import java.util.Objects;
 
+@Service
 public class QuizRunnerImpl implements QuizRunner {
 
     private final InputOutputService inputOutputServiceConsole;

@@ -1,5 +1,6 @@
 package ru.otus.questions.services.impl;
 
+import org.springframework.stereotype.Service;
 import ru.otus.questions.domain.Answer;
 import ru.otus.questions.domain.Question;
 import ru.otus.questions.domain.Quiz;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Service
 public class QuizBuilderCSV implements QuizBuilder {
 
     private final static String ANSWER_DELIMITER = ";";

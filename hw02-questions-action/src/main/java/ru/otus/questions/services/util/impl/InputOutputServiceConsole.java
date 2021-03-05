@@ -1,9 +1,11 @@
 package ru.otus.questions.services.util.impl;
 
+import org.springframework.stereotype.Service;
 import ru.otus.questions.services.util.InputOutputService;
 
 import java.util.Scanner;
 
+@Service
 public class InputOutputServiceConsole implements InputOutputService {
 
     @Override

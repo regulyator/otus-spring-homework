@@ -1,10 +1,12 @@
 package ru.otus.questions.services.impl;
 
+import org.springframework.stereotype.Service;
 import ru.otus.questions.domain.Quiz;
 import ru.otus.questions.services.QuizBuilder;
 import ru.otus.questions.services.QuizExecutorService;
 import ru.otus.questions.services.QuizRunner;
 
+@Service
 public class QuizExecutorServiceImpl implements QuizExecutorService {
 
     private final QuizBuilder quizBuilder;
