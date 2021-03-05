@@ -1,5 +1,6 @@
 package ru.otus.questions.services.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.otus.questions.domain.Answer;
 import ru.otus.questions.domain.Question;
@@ -23,6 +24,7 @@ public class QuizBuilderCSV implements QuizBuilder {
     private final QuizResourceReader<List<String[]>> quizResourceReader;
     private final QuizRawStructureCheckService<String[]> quizRawStructureCheckService;
 
+    @Autowired
     public QuizBuilderCSV(QuizResourceReader<List<String[]>> quizResourceReader,
                           QuizRawStructureCheckService<String[]> quizRawStructureCheckService) {
         this.quizResourceReader = quizResourceReader;

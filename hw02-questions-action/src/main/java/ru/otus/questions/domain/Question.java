@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NonNull;
 
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Getter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -22,5 +24,13 @@ public class Question {
                 .stream()
                 .map(Answer::isCorrect)
                 .count() > 1;
+    }
+
+    public List<Answer> getCorrectAnswers() {
+        return answers.stream().filter(Answer::isCorrect).collect(Collectors.toList());
+    }
+
+    public List<Answer> getUnCorrectAnswers() {
+        return answers.stream().filter(Predicate.not(Answer::isCorrect)).collect(Collectors.toList());
     }
 }

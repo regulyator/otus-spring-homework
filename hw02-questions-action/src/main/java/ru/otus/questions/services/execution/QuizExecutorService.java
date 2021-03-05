@@ -1,4 +1,4 @@
-package ru.otus.questions.services;
+package ru.otus.questions.services.execution;
 
 public interface QuizExecutorService {
 
