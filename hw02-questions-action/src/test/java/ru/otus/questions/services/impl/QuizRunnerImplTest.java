@@ -7,19 +7,21 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.questions.domain.Answer;
 import ru.otus.questions.domain.Question;
 import ru.otus.questions.domain.Quiz;
+import ru.otus.questions.services.execution.AnswerReader;
 import ru.otus.questions.services.execution.QuizRunner;
 import ru.otus.questions.services.execution.impl.QuizRunnerImpl;
 import ru.otus.questions.services.util.InputOutputService;
 
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class QuizRunnerImplTest {
     @Mock
     InputOutputService inputOutputService;
+    @Mock
+    AnswerReader<Integer> answerReader;
 
     @Test
     void printQuiz() {

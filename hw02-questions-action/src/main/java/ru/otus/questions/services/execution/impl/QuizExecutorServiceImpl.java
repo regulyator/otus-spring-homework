@@ -40,7 +40,7 @@ public class QuizExecutorServiceImpl implements QuizExecutorService {
         Quiz quiz = quizBuilder.buildQuiz();
         Map<Question, List<Answer>> quizRawResult = quizRunner.runQuizAndCollectAnswers(quiz);
         QuizResult calculatedResult = quizResultProcessor.calculateResults(quizRawResult);
-        inputOutputService.writeOutput(calculatedResult);
+        //inputOutputService.writeOutput(calculatedResult);
     }
 
     @Override

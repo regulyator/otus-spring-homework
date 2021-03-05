@@ -8,7 +8,10 @@ import ru.otus.questions.services.execution.AnswerReader;
 import ru.otus.questions.services.execution.QuizRunner;
 import ru.otus.questions.services.util.InputOutputService;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -30,26 +33,27 @@ public class QuizRunnerImpl implements QuizRunner {
             inputOutputServiceConsole.writeOutput("No Quiz - no fun:(");
         } else {
             Map<Question, List<Answer>> quizUserAnswerMap = new HashMap<>(quiz.getQuestions().size());
-            quiz.getQuestions().forEach(question -> {
-                inputOutputServiceConsole.writeOutput(question.getText());
-                AtomicInteger answerCounter = new AtomicInteger(0);
-                Map<Integer, Answer> answersMap = question.getAnswers()
-                        .stream().collect(Collectors.toMap(answer -> answerCounter.incrementAndGet(), answer -> answer));
-
-                printAnswers(answersMap);
-                inputOutputServiceConsole.writeOutput("Enter answer number(s) , for multiply answer use comma fo separate: ");
-                List<Integer> convertedAnswersNumbers = answerReader.readUserAnswers(answersMap);
-
-                inputOutputServiceConsole.writeOutput("");
-                quizUserAnswerMap.put(question, convertedAnswersNumbers.stream()
-                        .map(answerNumber -> answersMap.get(answerNumber))
-                        .collect(Collectors.toList()));
-            });
+            quiz.getQuestions().forEach(question -> printQuestion(quizUserAnswerMap, question));
             return quizUserAnswerMap;
         }
         return null;
     }
 
+    private void printQuestion(Map<Question, List<Answer>> quizUserAnswerMap, Question question) {
+        inputOutputServiceConsole.writeOutput(question.getText());
+
+        AtomicInteger answerCounter = new AtomicInteger(0);
+        Map<Integer, Answer> answersMap = question.getAnswers()
+                .stream().collect(Collectors.toMap(answer -> answerCounter.incrementAndGet(), answer -> answer));
+        printAnswers(answersMap);
+        List<Integer> convertedAnswersNumbers = answerReader.readUserAnswers(answersMap);
+
+        inputOutputServiceConsole.writeOutput("");
+
+        quizUserAnswerMap.put(question, convertedAnswersNumbers.stream()
+                .map(answersMap::get)
+                .collect(Collectors.toList()));
+    }
 
 
     private void printAnswers(Map<Integer, Answer> answersMap) {

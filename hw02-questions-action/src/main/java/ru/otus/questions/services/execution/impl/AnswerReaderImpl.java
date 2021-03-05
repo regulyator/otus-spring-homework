@@ -24,6 +24,7 @@ public class AnswerReaderImpl implements AnswerReader<Integer> {
 
     @Override
     public List<Integer> readUserAnswers(Map<Integer, Answer> answersMap) {
+        inputOutputServiceConsole.writeOutput("Enter answer number(s) , for multiply answer use comma fo separate: ");
         List<Integer> convertedAnswersNumbers = checkResult(inputOutputServiceConsole.readInput(), answersMap);
         while (convertedAnswersNumbers.isEmpty()) {
             inputOutputServiceConsole.writeOutput("Wrong answer format or no such answer number!");

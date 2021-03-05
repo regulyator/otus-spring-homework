@@ -23,8 +23,8 @@ public class QuizResultProcessorImpl implements QuizResultProcessor {
 
     @Override
     public QuizResult calculateResults(Map<Question, List<Answer>> rawQuizResult) {
-        return new QuizResult(countAnswers(rawQuizResult, questionListEntry -> false),
-                countAnswers(rawQuizResult, Predicate.not(questionListEntry -> false)),
+        return new QuizResult(countAnswers(rawQuizResult, questionListEntry -> questionListEntry.getKey().getCorrectAnswers().containsAll(questionListEntry.getValue())),
+                countAnswers(rawQuizResult, Predicate.not(questionListEntry -> questionListEntry.getKey().getCorrectAnswers().containsAll(questionListEntry.getValue()))),
                 calculateTestPasses(rawQuizResult));
     }
 
@@ -38,7 +38,7 @@ public class QuizResultProcessorImpl implements QuizResultProcessor {
     private boolean calculateTestPasses(Map<Question, List<Answer>> rawQuizResult) {
         return rawQuizResult.entrySet()
                 .stream()
-                .filter(questionListEntry -> questionListEntry.getKey().getAnswers().containsAll(questionListEntry.getValue()))
+                .filter(questionListEntry -> questionListEntry.getKey().getCorrectAnswers().containsAll(questionListEntry.getValue()))
                 .count() >= threshold;
     }
 }
