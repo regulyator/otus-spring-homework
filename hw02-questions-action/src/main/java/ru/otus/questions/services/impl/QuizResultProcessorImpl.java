@@ -1,6 +1,5 @@
 package ru.otus.questions.services.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.otus.questions.domain.Answer;
@@ -16,15 +15,14 @@ import java.util.function.Predicate;
 public class QuizResultProcessorImpl implements QuizResultProcessor {
     private final int threshold;
 
-    @Autowired
     public QuizResultProcessorImpl(@Value("${ru.otus.hw.test.threshold}") int threshold) {
         this.threshold = threshold;
     }
 
     @Override
     public QuizResult calculateResults(Map<Question, List<Answer>> rawQuizResult) {
-        return new QuizResult(countAnswers(rawQuizResult, questionListEntry -> questionListEntry.getKey().getCorrectAnswers().containsAll(questionListEntry.getValue())),
-                countAnswers(rawQuizResult, Predicate.not(questionListEntry -> questionListEntry.getKey().getCorrectAnswers().containsAll(questionListEntry.getValue()))),
+        return new QuizResult(countAnswers(rawQuizResult, questionListEntry -> questionListEntry.getKey().getCorrectAnswers().equals(questionListEntry.getValue())),
+                countAnswers(rawQuizResult, Predicate.not(questionListEntry -> questionListEntry.getKey().getCorrectAnswers().equals(questionListEntry.getValue()))),
                 calculateTestPasses(rawQuizResult));
     }
 

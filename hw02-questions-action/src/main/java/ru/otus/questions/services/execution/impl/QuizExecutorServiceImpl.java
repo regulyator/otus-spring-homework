@@ -7,8 +7,8 @@ import ru.otus.questions.domain.Question;
 import ru.otus.questions.domain.Quiz;
 import ru.otus.questions.domain.QuizResult;
 import ru.otus.questions.services.QuizBuilder;
-import ru.otus.questions.services.execution.QuizExecutorService;
 import ru.otus.questions.services.QuizResultProcessor;
+import ru.otus.questions.services.execution.QuizExecutorService;
 import ru.otus.questions.services.execution.QuizRunner;
 import ru.otus.questions.services.util.InputOutputService;
 
@@ -36,16 +36,13 @@ public class QuizExecutorServiceImpl implements QuizExecutorService {
 
     @Override
     public void runQuiz() {
-        var userName = readInput("Enter first name and last name: ");
+        var userName = readInput("Enter your name: ");
+
         Quiz quiz = quizBuilder.buildQuiz();
         Map<Question, List<Answer>> quizRawResult = quizRunner.runQuizAndCollectAnswers(quiz);
-        QuizResult calculatedResult = quizResultProcessor.calculateResults(quizRawResult);
-        //inputOutputService.writeOutput(calculatedResult);
-    }
 
-    @Override
-    public Object getQuizResult() {
-        throw new UnsupportedOperationException();
+        QuizResult calculatedResult = quizResultProcessor.calculateResults(quizRawResult);
+        inputOutputService.writeOutput(String.format("%s! Your result: %s", userName, calculatedResult.toString()));
     }
 
     private String readInput(String message) {

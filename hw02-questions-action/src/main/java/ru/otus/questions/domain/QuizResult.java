@@ -7,14 +7,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class QuizResult {
     private final int correctAnswersCount;
-    private final int unCorrectAnswersCount;
+    private final int inCorrectAnswersCount;
     private final boolean thresholdPassed;
 
     @Override
     public String toString() {
-        return String.format("%d - answers are correct, %d - answers are not correct:(, %s!",
+        return String.format("%d - answers are correct, %d - answers are not correct. %s!",
                 correctAnswersCount,
-                unCorrectAnswersCount,
-                thresholdPassed ? "Test pass" : "Test failed");
+                inCorrectAnswersCount,
+                thresholdPassed ? "Test passed" : "Test failed");
     }
 }

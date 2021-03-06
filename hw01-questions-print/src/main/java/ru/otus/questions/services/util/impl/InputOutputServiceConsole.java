@@ -16,7 +16,6 @@ public class InputOutputServiceConsole implements InputOutputService {
         Scanner scanner = new Scanner(System.in);
         String result = scanner.nextLine();
         while (result.isEmpty()) {
-
             result = scanner.nextLine();
         }
         return result;

@@ -21,7 +21,7 @@ class QuizRunnerImplTest {
     @Mock
     InputOutputService inputOutputService;
     @Mock
-    AnswerReader<Integer> answerReader;
+    AnswerReader<Answer> answerReader;
 
     @Test
     void printQuiz() {

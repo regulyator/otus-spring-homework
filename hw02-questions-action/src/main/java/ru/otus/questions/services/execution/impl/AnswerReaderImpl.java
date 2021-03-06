@@ -6,15 +6,13 @@ import ru.otus.questions.domain.Answer;
 import ru.otus.questions.services.execution.AnswerReader;
 import ru.otus.questions.services.util.InputOutputService;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class AnswerReaderImpl implements AnswerReader<Integer> {
+public class AnswerReaderImpl implements AnswerReader<Answer> {
     private final static String USER_ANSWER_DELIMITER = ",";
+    private final static String QUIT_SYMBOL = "Q";
     private final InputOutputService inputOutputServiceConsole;
 
     @Autowired
@@ -23,23 +21,55 @@ public class AnswerReaderImpl implements AnswerReader<Integer> {
     }
 
     @Override
-    public List<Integer> readUserAnswers(Map<Integer, Answer> answersMap) {
-        inputOutputServiceConsole.writeOutput("Enter answer number(s) , for multiply answer use comma fo separate: ");
-        List<Integer> convertedAnswersNumbers = checkResult(inputOutputServiceConsole.readInput(), answersMap);
-        while (convertedAnswersNumbers.isEmpty()) {
-            inputOutputServiceConsole.writeOutput("Wrong answer format or no such answer number!");
-            inputOutputServiceConsole.writeOutput("Enter answer number(s) , for multiply answer use comma fo separate: ");
-            convertedAnswersNumbers = checkResult(inputOutputServiceConsole.readInput(), answersMap);
+    public List<Answer> readUserAnswers(Map<Integer, Answer> answersMap) {
+        writeGreetings();
+
+        var userInput = inputOutputServiceConsole.readInput();
+        if (Objects.nonNull(userInput) && userInput.equals(QUIT_SYMBOL)) {
+            return Collections.emptyList();
         }
-        return convertedAnswersNumbers;
+
+        var convertedAnswers = convertRawUserInput(userInput, answersMap);
+        while (convertedAnswers.isEmpty()) {
+            inputOutputServiceConsole.writeOutput("Wrong answer format or no such answer number!");
+            writeGreetings();
+            userInput = inputOutputServiceConsole.readInput();
+            if (Objects.nonNull(userInput) && userInput.equals(QUIT_SYMBOL)) {
+                return Collections.emptyList();
+            }
+            convertedAnswers = convertRawUserInput(userInput, answersMap);
+        }
+
+        return convertedAnswers;
     }
 
-    private List<Integer> checkResult(String result, Map<Integer, Answer> questionMap) {
+    /**
+     * тут пробуем сконвертировать ответы пользователя
+     *
+     * @param result     строка ввода
+     * @param answersMap мапа с ответами
+     * @return выбранные ответы или пустой лист если что то не так
+     */
+    private List<Answer> convertRawUserInput(String result, Map<Integer, Answer> answersMap) {
         try {
-            List<Integer> intResults = Arrays.stream(result.split(USER_ANSWER_DELIMITER)).map(Integer::valueOf).collect(Collectors.toList());
-            return intResults.stream().allMatch(questionMap::containsKey) ? intResults : Collections.emptyList();
+            List<Integer> intResults = Arrays.stream(result
+                    .replace(" ", "")
+                    .trim()
+                    .split(USER_ANSWER_DELIMITER)).map(Integer::valueOf).collect(Collectors.toList());
+
+            if (intResults.stream().allMatch(answersMap::containsKey)) {
+                return intResults.stream()
+                        .map(answersMap::get)
+                        .collect(Collectors.toList());
+            } else {
+                return Collections.emptyList();
+            }
         } catch (NumberFormatException ex) {
             return Collections.emptyList();
         }
+    }
+
+    private void writeGreetings() {
+        inputOutputServiceConsole.writeOutput("Enter answer number(s) , for multiply answer use comma fo separate, for skip enter Q: ");
     }
 }

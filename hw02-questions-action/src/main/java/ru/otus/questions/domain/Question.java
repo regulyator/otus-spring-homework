@@ -30,7 +30,7 @@ public class Question {
         return answers.stream().filter(Answer::isCorrect).collect(Collectors.toList());
     }
 
-    public List<Answer> getUnCorrectAnswers() {
+    public List<Answer> getInCorrectAnswers() {
         return answers.stream().filter(Predicate.not(Answer::isCorrect)).collect(Collectors.toList());
     }
 }
