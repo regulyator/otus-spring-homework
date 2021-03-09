@@ -15,17 +15,15 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AnswerReaderImplTest {
     @Mock
-    InputOutputService inputOutputService;
+    private InputOutputService inputOutputService;
 
     @Test
     void readUserAnswersOneOption() {
-        doNothing().when(inputOutputService).writeOutput(anyString());
         when(inputOutputService.readInput()).thenReturn("1");
         AnswerReader<Answer> answerReader = new AnswerReaderImpl(inputOutputService);
         Map<Integer, Answer> answerMap = buildAnswersMap(buildQuestion());
@@ -36,7 +34,6 @@ class AnswerReaderImplTest {
 
     @Test
     void readUserAnswersMultipleOption() {
-        doNothing().when(inputOutputService).writeOutput(anyString());
         when(inputOutputService.readInput()).thenReturn("1,2");
         AnswerReader<Answer> answerReader = new AnswerReaderImpl(inputOutputService);
         Map<Integer, Answer> answerMap = buildAnswersMap(buildQuestion());
@@ -48,7 +45,6 @@ class AnswerReaderImplTest {
 
     @Test
     void readUserAnswersWrongOption() {
-        doNothing().when(inputOutputService).writeOutput(anyString());
         when(inputOutputService.readInput()).thenReturn("sdfsdf").thenReturn("3");
         AnswerReader<Answer> answerReader = new AnswerReaderImpl(inputOutputService);
         Map<Integer, Answer> answerMap = buildAnswersMap(buildQuestion());
@@ -60,7 +56,6 @@ class AnswerReaderImplTest {
 
     @Test
     void readUserAnswersSkip() {
-        doNothing().when(inputOutputService).writeOutput(anyString());
         when(inputOutputService.readInput()).thenReturn("Q");
         AnswerReader<Answer> answerReader = new AnswerReaderImpl(inputOutputService);
         Map<Integer, Answer> answerMap = buildAnswersMap(buildQuestion());

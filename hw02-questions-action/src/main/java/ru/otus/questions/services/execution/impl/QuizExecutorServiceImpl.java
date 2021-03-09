@@ -2,18 +2,11 @@ package ru.otus.questions.services.execution.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.otus.questions.domain.Answer;
-import ru.otus.questions.domain.Question;
-import ru.otus.questions.domain.Quiz;
-import ru.otus.questions.domain.QuizResult;
 import ru.otus.questions.services.QuizBuilder;
 import ru.otus.questions.services.QuizResultProcessor;
 import ru.otus.questions.services.execution.QuizExecutorService;
 import ru.otus.questions.services.execution.QuizRunner;
 import ru.otus.questions.services.util.InputOutputService;
-
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class QuizExecutorServiceImpl implements QuizExecutorService {
@@ -36,19 +29,13 @@ public class QuizExecutorServiceImpl implements QuizExecutorService {
 
     @Override
     public void runQuiz() {
-        var userName = readInput("Enter your name: ");
+        var userName = inputOutputService.readInput("Enter your name: ");
 
-        Quiz quiz = quizBuilder.buildQuiz();
-        Map<Question, List<Answer>> quizRawResult = quizRunner.runQuizAndCollectAnswers(quiz);
+        var quiz = quizBuilder.buildQuiz();
+        var quizRawResult = quizRunner.runQuizAndCollectAnswers(quiz);
 
-        QuizResult calculatedResult = quizResultProcessor.calculateResults(quizRawResult);
+        var calculatedResult = quizResultProcessor.calculateResults(quizRawResult.getUserAnswersMap());
         inputOutputService.writeOutput(String.format("%s! Your result: %s", userName, calculatedResult.toString()));
     }
-
-    private String readInput(String message) {
-        inputOutputService.writeOutput(message);
-        return inputOutputService.readInput();
-    }
-
 
 }

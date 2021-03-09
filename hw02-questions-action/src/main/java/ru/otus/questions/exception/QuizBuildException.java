@@ -1,6 +1,6 @@
 package ru.otus.questions.exception;
 
-public class QuizBuildException extends RuntimeException {
+public class QuizBuildException extends QuizException {
 
     public QuizBuildException(String message) {
         super(message);

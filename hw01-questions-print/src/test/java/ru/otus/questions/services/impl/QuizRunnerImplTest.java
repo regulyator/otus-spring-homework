@@ -22,7 +22,6 @@ class QuizRunnerImplTest {
 
     @Test
     void printQuiz() {
-        doNothing().when(inputOutputService).writeOutput(anyString());
         Quiz quiz = buildQuiz();
         QuizRunner quizRunner = new QuizRunnerImpl(inputOutputService);
         quizRunner.printQuiz(quiz);
@@ -31,7 +30,6 @@ class QuizRunnerImplTest {
 
     @Test
     void printNullQuiz() {
-        doNothing().when(inputOutputService).writeOutput(anyString());
         QuizRunner quizRunner = new QuizRunnerImpl(inputOutputService);
         quizRunner.printQuiz(null);
         verify(inputOutputService, times(1)).writeOutput(anyString());

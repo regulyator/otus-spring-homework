@@ -33,7 +33,7 @@ public class QuizBuilderCSV implements QuizBuilder {
 
     @Override
     public Quiz buildQuiz() {
-        List<Question> questions = quizResourceReader.readQuizResource().stream()
+        var questions = quizResourceReader.readQuizResource().stream()
                 .filter(Objects::nonNull)
                 .map(this::constructQuestion)
                 .collect(Collectors.toList());
@@ -42,7 +42,7 @@ public class QuizBuilderCSV implements QuizBuilder {
 
     private Question constructQuestion(String[] questionRaw) throws QuizBuildException {
         if (quizRawStructureCheckService.checkRawQuestionIsCorrect(questionRaw)) {
-            List<Answer> answers = Arrays.stream(getCSVAnswers(questionRaw))
+            var answers = Arrays.stream(getCSVAnswers(questionRaw))
                     .map(this::constructAnswers)
                     .collect(Collectors.toList());
 

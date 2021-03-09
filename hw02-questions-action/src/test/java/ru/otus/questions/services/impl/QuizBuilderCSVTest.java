@@ -20,9 +20,9 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class QuizBuilderCSVTest {
     @Mock
-    QuizResourceReader<List<String[]>> quizResourceReader;
-    @Mock
     QuizRawStructureCheckService<String[]> quizRawStructureCheckService;
+    @Mock
+    private QuizResourceReader<List<String[]>> quizResourceReader;
 
     @Test
     void buildQuiz() {

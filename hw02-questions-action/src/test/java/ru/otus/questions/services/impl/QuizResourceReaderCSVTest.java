@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class QuizResourceReaderCSVTest {
     @Mock
-    QuizResourceHolder quizResourceHolder;
+    private QuizResourceHolder quizResourceHolder;
 
     @Test
     void readQuizResource() {

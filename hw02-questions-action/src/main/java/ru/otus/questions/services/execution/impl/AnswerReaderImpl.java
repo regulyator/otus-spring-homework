@@ -52,7 +52,7 @@ public class AnswerReaderImpl implements AnswerReader<Answer> {
      */
     private List<Answer> convertRawUserInput(String result, Map<Integer, Answer> answersMap) {
         try {
-            List<Integer> intResults = Arrays.stream(result
+            var intResults = Arrays.stream(result
                     .replace(" ", "")
                     .trim()
                     .split(USER_ANSWER_DELIMITER)).map(Integer::valueOf).collect(Collectors.toList());

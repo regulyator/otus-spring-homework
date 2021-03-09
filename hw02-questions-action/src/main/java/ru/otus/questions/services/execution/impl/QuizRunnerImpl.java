@@ -4,11 +4,16 @@ import org.springframework.stereotype.Service;
 import ru.otus.questions.domain.Answer;
 import ru.otus.questions.domain.Question;
 import ru.otus.questions.domain.Quiz;
+import ru.otus.questions.domain.QuizUserRawResult;
+import ru.otus.questions.exception.RunNullQuizException;
 import ru.otus.questions.services.execution.AnswerReader;
 import ru.otus.questions.services.execution.QuizRunner;
 import ru.otus.questions.services.util.InputOutputService;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -25,14 +30,13 @@ public class QuizRunnerImpl implements QuizRunner {
     }
 
     @Override
-    public Map<Question, List<Answer>> runQuizAndCollectAnswers(Quiz quiz) {
+    public QuizUserRawResult runQuizAndCollectAnswers(Quiz quiz) {
         if (Objects.isNull(quiz)) {
-            inputOutputServiceConsole.writeOutput("No Quiz - no fun:(");
-            return Collections.emptyMap();
+            throw new RunNullQuizException("No Quiz - no fun:(");
         } else {
             Map<Question, List<Answer>> quizUserAnswerMap = new HashMap<>(quiz.getQuestions().size());
             quiz.getQuestions().forEach(question -> printQuestion(quizUserAnswerMap, question));
-            return quizUserAnswerMap;
+            return new QuizUserRawResult(quizUserAnswerMap);
         }
     }
 
