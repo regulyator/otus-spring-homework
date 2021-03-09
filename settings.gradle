@@ -1,2 +1,3 @@
 rootProject.name = 'otus-spring-homework'
 include 'hw01-questions-print'
+include 'hw02-questions-action'

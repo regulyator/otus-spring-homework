@@ -7,32 +7,36 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.questions.domain.Answer;
 import ru.otus.questions.domain.Question;
 import ru.otus.questions.domain.Quiz;
-import ru.otus.questions.services.QuizRunner;
+import ru.otus.questions.exception.RunNullQuizException;
+import ru.otus.questions.services.execution.AnswerReader;
+import ru.otus.questions.services.execution.QuizRunner;
+import ru.otus.questions.services.execution.impl.QuizRunnerImpl;
 import ru.otus.questions.services.util.InputOutputService;
 
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class QuizRunnerImplTest {
     @Mock
-    InputOutputService inputOutputService;
+    private InputOutputService inputOutputService;
+    @Mock
+    private AnswerReader<Answer> answerReader;
 
     @Test
     void printQuiz() {
         Quiz quiz = buildQuiz();
-        QuizRunner quizRunner = new QuizRunnerImpl(inputOutputService);
-        quizRunner.printQuiz(quiz);
+        QuizRunner quizRunner = new QuizRunnerImpl(inputOutputService, answerReader);
+        quizRunner.runQuizAndCollectAnswers(quiz);
         verify(inputOutputService, times(6)).writeOutput(anyString());
     }
 
     @Test
     void printNullQuiz() {
-        QuizRunner quizRunner = new QuizRunnerImpl(inputOutputService);
-        quizRunner.printQuiz(null);
-        verify(inputOutputService, times(1)).writeOutput(anyString());
+        QuizRunner quizRunner = new QuizRunnerImpl(inputOutputService, answerReader);
+        assertThrows(RunNullQuizException.class, () -> quizRunner.runQuizAndCollectAnswers(null));
     }
 
     private Quiz buildQuiz() {
