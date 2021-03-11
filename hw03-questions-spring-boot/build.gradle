@@ -1,0 +1,38 @@
+plugins {
+    id 'com.github.johnrengelman.shadow'
+    id 'org.springframework.boot' version '2.4.3'
+    id 'java'
+}
+
+group = 'ru.otus'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'com.opencsv:opencsv:5.3'
+
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+shadowJar {
+    archiveBaseName.set('OtusHomework03')
+    archiveVersion.set('0.1')
+    archiveClassifier.set('')
+    manifest {
+        attributes 'Main-Class': "ru.otus.questions.Hw03QuestionsActionApplication"
+    }
+}
+
+tasks.build.dependsOn tasks.shadowJar

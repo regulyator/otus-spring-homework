@@ -1,0 +1,6 @@
+ru:
+  otus:
+    hw:
+      test:
+        file: questions.csv
+        threshold: 4
