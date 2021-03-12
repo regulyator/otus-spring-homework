@@ -1,6 +1,8 @@
 package ru.otus.questions.services.execution;
 
+import ru.otus.questions.domain.QuizResult;
+
 public interface QuizExecutorService {
 
-    void runQuiz();
+    QuizResult runQuiz();
 }

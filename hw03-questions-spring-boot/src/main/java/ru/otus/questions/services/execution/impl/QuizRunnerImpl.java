@@ -1,5 +1,6 @@
 package ru.otus.questions.services.execution.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.otus.questions.domain.Answer;
 import ru.otus.questions.domain.Question;
@@ -23,6 +24,7 @@ public class QuizRunnerImpl implements QuizRunner {
     private final InputOutputService inputOutputServiceConsole;
     private final AnswerReader<Answer> answerReader;
 
+    @Autowired
     public QuizRunnerImpl(InputOutputService inputOutputServiceConsole,
                           AnswerReader<Answer> answerReader) {
         this.inputOutputServiceConsole = inputOutputServiceConsole;
@@ -32,7 +34,7 @@ public class QuizRunnerImpl implements QuizRunner {
     @Override
     public QuizUserRawResult runQuizAndCollectAnswers(Quiz quiz) {
         if (Objects.isNull(quiz)) {
-            throw new RunNullQuizException("No Quiz - no fun:(");
+            throw new RunNullQuizException("NoQuiz");
         } else {
             Map<Question, List<Answer>> quizUserAnswerMap = new HashMap<>(quiz.getQuestions().size());
             quiz.getQuestions().forEach(question -> printQuestion(quizUserAnswerMap, question));
@@ -47,8 +49,6 @@ public class QuizRunnerImpl implements QuizRunner {
         printAnswers(answersMap);
         List<Answer> userAnswers = answerReader.readUserAnswers(answersMap);
         quizUserAnswerMap.put(question, userAnswers);
-
-        inputOutputServiceConsole.writeOutput("");
     }
 
     private Map<Integer, Answer> buildAnswersMap(List<Answer> answers) {

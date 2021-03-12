@@ -31,7 +31,7 @@ public class AnswerReaderImpl implements AnswerReader<Answer> {
 
         var convertedAnswers = convertRawUserInput(userInput, answersMap);
         while (convertedAnswers.isEmpty()) {
-            inputOutputServiceConsole.writeOutput("Wrong answer format or no such answer number!");
+            inputOutputServiceConsole.writeOutput("WrongAnswer");
             writeGreetings();
             userInput = inputOutputServiceConsole.readInput();
             if (Objects.nonNull(userInput) && userInput.equals(QUIT_SYMBOL)) {
@@ -70,6 +70,6 @@ public class AnswerReaderImpl implements AnswerReader<Answer> {
     }
 
     private void writeGreetings() {
-        inputOutputServiceConsole.writeOutput("Enter answer number(s) , for multiply answer use comma fo separate, for skip enter Q: ");
+        inputOutputServiceConsole.writeOutput("AnswerAdvice");
     }
 }

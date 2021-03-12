@@ -1,9 +1,8 @@
 package ru.otus.questions.services.impl;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import ru.otus.questions.services.QuizResourceHolder;
 import ru.otus.questions.services.QuizResourceReader;
@@ -13,7 +12,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class QuizResourceReaderCSVTest {
     @Mock
     private QuizResourceHolder quizResourceHolder;

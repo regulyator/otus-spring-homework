@@ -3,7 +3,7 @@ ru:
     hw:
       locale: en
       test:
-        file: questions_${ru.otus.hw.locale}.csv
+        file: quiz-test-source/questions_${ru.otus.hw.locale}.csv
         threshold: 4
 
 logging:

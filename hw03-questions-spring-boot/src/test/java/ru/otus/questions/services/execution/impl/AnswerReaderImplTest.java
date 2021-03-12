@@ -1,9 +1,8 @@
 package ru.otus.questions.services.execution.impl;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.otus.questions.domain.Answer;
 import ru.otus.questions.services.execution.AnswerReader;
 import ru.otus.questions.services.util.InputOutputService;
@@ -17,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class AnswerReaderImplTest {
     @Mock
     private InputOutputService inputOutputService;

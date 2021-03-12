@@ -13,7 +13,7 @@ public class LoggingOutputAspect {
     private static final Logger logger = LoggerFactory.getLogger(LoggingOutputAspect.class);
 
     @Before("@annotation(ru.otus.questions.anotation.LoggingMethod)")
-    public void logBeforeOutput(JoinPoint joinPoint){
+    public void logBeforeOutput(JoinPoint joinPoint) {
         logger.info("Call method {} with params {}", joinPoint.getSignature().getName(), joinPoint.getArgs());
     }
 }
