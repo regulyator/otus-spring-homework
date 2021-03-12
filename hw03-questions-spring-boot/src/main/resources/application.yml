@@ -4,3 +4,8 @@ ru:
       test:
         file: questions.csv
         threshold: 4
+
+logging:
+  file:
+    path: './logs'
+    name: ${logging.file.path}/app.log
