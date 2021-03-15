@@ -1,0 +1,11 @@
+ru:
+  otus:
+    hw:
+      locale: en
+      test:
+        file: quiz-test-source/questions_${ru.otus.hw.locale}.csv
+        threshold: 4
+
+spring:
+  main:
+    banner-mode: off
