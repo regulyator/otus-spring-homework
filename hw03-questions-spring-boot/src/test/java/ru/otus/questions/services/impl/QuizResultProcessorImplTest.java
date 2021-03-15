@@ -1,6 +1,8 @@
 package ru.otus.questions.services.impl;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import ru.otus.questions.domain.Answer;
 import ru.otus.questions.domain.Question;
 import ru.otus.questions.domain.QuizResult;
@@ -11,7 +13,10 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest(properties = { "ru.otus.hw.test.threshold=1" })
 class QuizResultProcessorImplTest {
+    @Autowired
+    private QuizResultProcessor quizResultProcessor;
 
     @Test
     void calculateResults() {
@@ -25,7 +30,6 @@ class QuizResultProcessorImplTest {
         List<Answer> inCorrectUserAnswers = List.of(
                 new Answer("212", true),
                 new Answer("10010", true));
-        QuizResultProcessor quizResultProcessor = new QuizResultProcessorImpl(1);
         QuizResult calculatedResultCorrect = quizResultProcessor.calculateResults(Map.of(question, correctUserAnswers));
         assertEquals(1, calculatedResultCorrect.getCorrectAnswersCount());
         assertEquals(0, calculatedResultCorrect.getInCorrectAnswersCount());
@@ -46,7 +50,6 @@ class QuizResultProcessorImplTest {
         List<Answer> inCorrectUserAnswers = List.of(
                 new Answer("212", true),
                 new Answer("10010", true));
-        QuizResultProcessor quizResultProcessor = new QuizResultProcessorImpl(1);
         QuizResult calculatedResultCorrect = quizResultProcessor.calculateResults(Map.of(question, correctUserAnswers));
         assertTrue(calculatedResultCorrect.isThresholdPassed());
         QuizResult calculatedResultInCorrect = quizResultProcessor.calculateResults(Map.of(question, inCorrectUserAnswers));

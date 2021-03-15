@@ -1,15 +1,15 @@
 package ru.otus.questions.services.impl;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.questions.domain.Answer;
 import ru.otus.questions.domain.Question;
 import ru.otus.questions.domain.Quiz;
 import ru.otus.questions.exception.RunNullQuizException;
 import ru.otus.questions.services.execution.AnswerReader;
 import ru.otus.questions.services.execution.QuizRunner;
-import ru.otus.questions.services.execution.impl.QuizRunnerImpl;
 import ru.otus.questions.services.util.InputOutputService;
 
 import java.util.List;
@@ -17,24 +17,25 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+
 @SpringBootTest
 class QuizRunnerImplTest {
-    @Mock
+    @MockBean
     private InputOutputService inputOutputService;
-    @Mock
+    @MockBean
     private AnswerReader<Answer> answerReader;
+    @Autowired
+    private QuizRunner quizRunner;
 
     @Test
     void printQuiz() {
         Quiz quiz = buildQuiz();
-        QuizRunner quizRunner = new QuizRunnerImpl(inputOutputService, answerReader);
         quizRunner.runQuizAndCollectAnswers(quiz);
         verify(inputOutputService, times(4)).writeOutput(anyString());
     }
 
     @Test
     void printNullQuiz() {
-        QuizRunner quizRunner = new QuizRunnerImpl(inputOutputService, answerReader);
         assertThrows(RunNullQuizException.class, () -> quizRunner.runQuizAndCollectAnswers(null));
     }
 

@@ -2,10 +2,10 @@ package ru.otus.questions.services.impl;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ru.otus.questions.services.QuizResourceHolder;
 
-@Service
+@Component
 public class QuizResourceHolderImpl implements QuizResourceHolder {
     private final Resource quizFileResource;
 

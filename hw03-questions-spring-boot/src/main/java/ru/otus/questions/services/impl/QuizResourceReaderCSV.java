@@ -3,7 +3,7 @@ package ru.otus.questions.services.impl;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ru.otus.questions.exception.QuizRawReadException;
 import ru.otus.questions.services.QuizResourceHolder;
 import ru.otus.questions.services.QuizResourceReader;
@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
-@Service
+@Component
 public class QuizResourceReaderCSV implements QuizResourceReader<List<String[]>> {
     private final QuizResourceHolder quizResourceHolder;
 

@@ -6,7 +6,6 @@ ru:
         file: quiz-test-source/questions_${ru.otus.hw.locale}.csv
         threshold: 4
 
-logging:
-  file:
-    path: './logs'
-    name: ${logging.file.path}/app.log
+spring:
+  main:
+    banner-mode: off

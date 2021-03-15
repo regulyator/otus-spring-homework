@@ -1,8 +1,9 @@
 package ru.otus.questions.services.impl;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.questions.domain.Answer;
 import ru.otus.questions.domain.Question;
 import ru.otus.questions.domain.Quiz;
@@ -18,10 +19,12 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class QuizBuilderCSVTest {
-    @Mock
-    QuizRawStructureCheckService<String[]> quizRawStructureCheckService;
-    @Mock
+    @MockBean
+    private QuizRawStructureCheckService<String[]> quizRawStructureCheckService;
+    @MockBean
     private QuizResourceReader<List<String[]>> quizResourceReader;
+    @Autowired
+    private QuizBuilder quizBuilder;
 
     @Test
     void buildQuiz() {
@@ -31,7 +34,6 @@ class QuizBuilderCSVTest {
         when(quizResourceReader.readQuizResource()).thenReturn(quiz);
         when(quizRawStructureCheckService.checkRawAnswerIsCorrect(any())).thenReturn(true);
         when(quizRawStructureCheckService.checkRawQuestionIsCorrect(any())).thenReturn(true);
-        QuizBuilder quizBuilder = new QuizBuilderCSV(quizResourceReader, quizRawStructureCheckService);
         Quiz resultQuiz = quizBuilder.buildQuiz();
         assertEquals(correctQuiz, resultQuiz);
     }

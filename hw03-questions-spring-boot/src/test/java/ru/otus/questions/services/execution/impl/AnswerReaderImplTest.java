@@ -1,11 +1,12 @@
 package ru.otus.questions.services.execution.impl;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.questions.domain.Answer;
 import ru.otus.questions.services.execution.AnswerReader;
-import ru.otus.questions.services.util.InputOutputService;
+import ru.otus.questions.services.util.InputOutputFacade;
 
 import java.util.List;
 import java.util.Map;
@@ -16,25 +17,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
+
 @SpringBootTest
 class AnswerReaderImplTest {
-    @Mock
-    private InputOutputService inputOutputService;
+    @MockBean
+    private InputOutputFacade inputOutputFacade;
+    @Autowired
+    private AnswerReader<Answer> answerReader;
 
     @Test
     void readUserAnswersOneOption() {
-        when(inputOutputService.readInput()).thenReturn("1");
-        AnswerReader<Answer> answerReader = new AnswerReaderImpl(inputOutputService);
+        when(inputOutputFacade.readInputFromUser()).thenReturn("1");
         Map<Integer, Answer> answerMap = buildAnswersMap(buildQuestion());
-
         List<Answer> readAnswers = answerReader.readUserAnswers(answerMap);
         assertEquals(List.of(new Answer("Alive", true)), readAnswers);
     }
 
     @Test
     void readUserAnswersMultipleOption() {
-        when(inputOutputService.readInput()).thenReturn("1,2");
-        AnswerReader<Answer> answerReader = new AnswerReaderImpl(inputOutputService);
+        when(inputOutputFacade.readInputFromUser()).thenReturn("1,2");
         Map<Integer, Answer> answerMap = buildAnswersMap(buildQuestion());
 
         List<Answer> readAnswers = answerReader.readUserAnswers(answerMap);
@@ -44,19 +45,17 @@ class AnswerReaderImplTest {
 
     @Test
     void readUserAnswersWrongOption() {
-        when(inputOutputService.readInput()).thenReturn("sdfsdf").thenReturn("3");
-        AnswerReader<Answer> answerReader = new AnswerReaderImpl(inputOutputService);
+        when(inputOutputFacade.readInputFromUser()).thenReturn("sdfsdf").thenReturn("3");
         Map<Integer, Answer> answerMap = buildAnswersMap(buildQuestion());
 
         List<Answer> readAnswers = answerReader.readUserAnswers(answerMap);
         assertEquals(List.of(new Answer("It's a Dog!", false)), readAnswers);
-        verify(inputOutputService, times(2)).readInput();
+        verify(inputOutputFacade, times(2)).readInputFromUser();
     }
 
     @Test
     void readUserAnswersSkip() {
-        when(inputOutputService.readInput()).thenReturn("Q");
-        AnswerReader<Answer> answerReader = new AnswerReaderImpl(inputOutputService);
+        when(inputOutputFacade.readInputFromUser()).thenReturn("Q");
         Map<Integer, Answer> answerMap = buildAnswersMap(buildQuestion());
 
         List<Answer> readAnswers = answerReader.readUserAnswers(answerMap);
