@@ -30,10 +30,10 @@ class QuizResultProcessorImplTest {
         List<Answer> inCorrectUserAnswers = List.of(
                 new Answer("212", true),
                 new Answer("10010", true));
-        QuizResult calculatedResultCorrect = quizResultProcessor.calculateResults(Map.of(question, correctUserAnswers));
+        QuizResult calculatedResultCorrect = quizResultProcessor.calculateResults(Map.of(question, correctUserAnswers), "user");
         assertEquals(1, calculatedResultCorrect.getCorrectAnswersCount());
         assertEquals(0, calculatedResultCorrect.getInCorrectAnswersCount());
-        QuizResult calculatedResultInCorrect = quizResultProcessor.calculateResults(Map.of(question, inCorrectUserAnswers));
+        QuizResult calculatedResultInCorrect = quizResultProcessor.calculateResults(Map.of(question, inCorrectUserAnswers), "user");
         assertEquals(0, calculatedResultInCorrect.getCorrectAnswersCount());
         assertEquals(1, calculatedResultInCorrect.getInCorrectAnswersCount());
     }
@@ -50,9 +50,9 @@ class QuizResultProcessorImplTest {
         List<Answer> inCorrectUserAnswers = List.of(
                 new Answer("212", true),
                 new Answer("10010", true));
-        QuizResult calculatedResultCorrect = quizResultProcessor.calculateResults(Map.of(question, correctUserAnswers));
+        QuizResult calculatedResultCorrect = quizResultProcessor.calculateResults(Map.of(question, correctUserAnswers), "user");
         assertTrue(calculatedResultCorrect.isThresholdPassed());
-        QuizResult calculatedResultInCorrect = quizResultProcessor.calculateResults(Map.of(question, inCorrectUserAnswers));
+        QuizResult calculatedResultInCorrect = quizResultProcessor.calculateResults(Map.of(question, inCorrectUserAnswers), "user");
         assertFalse(calculatedResultInCorrect.isThresholdPassed());
     }
 }

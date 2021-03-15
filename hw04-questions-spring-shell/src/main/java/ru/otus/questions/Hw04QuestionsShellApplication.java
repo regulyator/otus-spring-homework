@@ -9,11 +9,7 @@ import ru.otus.questions.services.execution.QuizExecutorService;
 public class Hw04QuestionsShellApplication {
 
     public static void main(String[] args) {
-
-        ApplicationContext context = SpringApplication.run(Hw04QuestionsShellApplication.class, args);
-        QuizExecutorService quizExecutorService = context.getBean(QuizExecutorService.class);
-        quizExecutorService.runQuiz();
-
+        SpringApplication.run(Hw04QuestionsShellApplication.class, args);
     }
 
 }

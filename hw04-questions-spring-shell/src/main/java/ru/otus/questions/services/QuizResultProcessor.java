@@ -9,5 +9,5 @@ import java.util.Map;
 
 public interface QuizResultProcessor {
 
-    QuizResult calculateResults(Map<Question, List<Answer>> rawQuizResult);
+    QuizResult calculateResults(Map<Question, List<Answer>> rawQuizResult, String userName);
 }

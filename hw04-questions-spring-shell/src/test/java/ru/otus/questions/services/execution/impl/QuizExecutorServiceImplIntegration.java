@@ -25,13 +25,13 @@ class QuizExecutorServiceImplIntegration {
     @DisplayName(value = "pass quiz")
     void quizPassed() {
         when(inputOutputService.readInput())
-                .thenReturn("User")
+                .thenReturn("user")
                 .thenReturn("2")
                 .thenReturn("1,2")
                 .thenReturn("1")
                 .thenReturn("3")
                 .thenReturn("1");
-        final var result = quizExecutorService.runQuiz();
+        final var result = quizExecutorService.runQuiz("user");
         assertTrue(result.isThresholdPassed());
     }
 
@@ -39,13 +39,13 @@ class QuizExecutorServiceImplIntegration {
     @DisplayName(value = "fail quiz")
     void quizFailed() {
         when(inputOutputService.readInput())
-                .thenReturn("User")
+                .thenReturn("user")
                 .thenReturn("Q")
                 .thenReturn("1,2")
                 .thenReturn("1")
                 .thenReturn("Q")
                 .thenReturn("Q");
-        final var result = quizExecutorService.runQuiz();
+        final var result = quizExecutorService.runQuiz("user");
         assertFalse(result.isThresholdPassed());
     }
 }

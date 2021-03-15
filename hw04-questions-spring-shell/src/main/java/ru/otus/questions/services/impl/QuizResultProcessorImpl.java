@@ -22,8 +22,8 @@ public class QuizResultProcessorImpl implements QuizResultProcessor {
     }
 
     @Override
-    public QuizResult calculateResults(Map<Question, List<Answer>> rawQuizResult) {
-        return new QuizResult(countAnswers(rawQuizResult, this::getCorrectPredicateSortedLists),
+    public QuizResult calculateResults(Map<Question, List<Answer>> rawQuizResult, String userName) {
+        return new QuizResult(userName, countAnswers(rawQuizResult, this::getCorrectPredicateSortedLists),
                 countAnswers(rawQuizResult, Predicate.not(this::getCorrectPredicateSortedLists)),
                 calculateTestPasses(rawQuizResult));
     }
