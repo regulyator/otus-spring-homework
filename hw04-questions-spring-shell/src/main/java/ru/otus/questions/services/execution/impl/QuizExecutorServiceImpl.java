@@ -7,7 +7,6 @@ import ru.otus.questions.services.QuizBuilder;
 import ru.otus.questions.services.QuizResultProcessor;
 import ru.otus.questions.services.execution.QuizExecutorService;
 import ru.otus.questions.services.execution.QuizRunner;
-import ru.otus.questions.services.util.InputOutputFacade;
 
 @Service
 public class QuizExecutorServiceImpl implements QuizExecutorService {

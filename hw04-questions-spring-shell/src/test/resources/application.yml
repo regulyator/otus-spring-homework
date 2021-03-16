@@ -9,3 +9,6 @@ ru:
 spring:
   main:
     banner-mode: off
+  shell:
+    interactive:
+      enabled: false

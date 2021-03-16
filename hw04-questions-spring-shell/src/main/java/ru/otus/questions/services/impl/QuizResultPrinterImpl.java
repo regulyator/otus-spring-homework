@@ -9,6 +9,7 @@ import java.util.Collection;
 
 @Component
 public class QuizResultPrinterImpl implements QuizResultPrinter {
+    private final static String RESULTS_DELIMITER = "========================";
     private final InputOutputFacade inputOutputFacade;
 
     public QuizResultPrinterImpl(InputOutputFacade inputOutputFacade) {
@@ -22,6 +23,7 @@ public class QuizResultPrinterImpl implements QuizResultPrinter {
                 quizResult.getCorrectAnswersCount(),
                 quizResult.getInCorrectAnswersCount());
         inputOutputFacade.printMessageToUser(quizResult.isThresholdPassed() ? "Result.QuizPassed" : "Result.QuizFailed");
+        inputOutputFacade.printMessageToUser(RESULTS_DELIMITER);
     }
 
     @Override

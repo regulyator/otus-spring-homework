@@ -8,6 +8,7 @@ import ru.otus.questions.services.util.InputOutputService;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
+
 @Component
 public class InputOutputServiceConsole implements InputOutputService {
 

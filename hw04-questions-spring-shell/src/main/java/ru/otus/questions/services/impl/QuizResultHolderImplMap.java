@@ -14,7 +14,8 @@ public class QuizResultHolderImplMap implements QuizResultHolder {
 
     @Override
     public void putQuizResult(QuizResult quizResult) {
-        quizResultMap.computeIfAbsent(quizResult.getUserName(), s -> addNewUserResult(quizResult));
+        quizResultMap.computeIfAbsent(quizResult.getUserName(), s -> createNewUserResultsList()).add(quizResult);
+
     }
 
     @Override
@@ -28,16 +29,14 @@ public class QuizResultHolderImplMap implements QuizResultHolder {
 
     @Override
     public Collection<QuizResult> getAllResult() {
-        var allResults = quizResultMap.values().stream().flatMap(Collection::stream).collect(Collectors.toList());
-        if(allResults.isEmpty()){
+        var allResults = quizResultMap.values().stream().flatMap(Collection::stream).collect(Collectors.toUnmodifiableList());
+        if (allResults.isEmpty()) {
             throw new NoUserResultException("No one results found!");
         }
         return allResults;
     }
 
-    private List<QuizResult> addNewUserResult(QuizResult quizResult) {
-        var userResults = new ArrayList<QuizResult>();
-        userResults.add(quizResult);
-        return userResults;
+    private List<QuizResult> createNewUserResultsList() {
+        return new ArrayList<>();
     }
 }

@@ -13,7 +13,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(properties = { "ru.otus.hw.test.threshold=1" })
+@SpringBootTest(properties = {"ru.otus.hw.test.threshold=1"})
 class QuizResultProcessorImplTest {
     @Autowired
     private QuizResultProcessor quizResultProcessor;
