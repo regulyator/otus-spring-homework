@@ -1,6 +1,6 @@
 package ru.otus.questions.services.util;
 
-public interface InputOutputService {
+public interface InputOutputComponent {
 
     void writeOutput(String outputMessage);
 

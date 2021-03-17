@@ -1,6 +1,6 @@
 package ru.otus.questions.services.util;
 
-public interface InputOutputFacade {
+public interface InputOutputLocalizedService {
 
     void printMessageToUser(String outputMessage);
 

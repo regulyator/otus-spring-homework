@@ -3,20 +3,20 @@ package ru.otus.questions.services.util.impl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.otus.questions.anotation.LoggingMethod;
-import ru.otus.questions.services.util.InputOutputService;
+import ru.otus.questions.services.util.InputOutputComponent;
 
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
 @Component
-public class InputOutputServiceConsole implements InputOutputService {
+public class InputOutputComponentConsole implements InputOutputComponent {
 
     private final InputStream in;
     private final PrintStream out;
 
-    public InputOutputServiceConsole(@Value("#{ T(java.lang.System).in}") InputStream in,
-                                     @Value("#{ T(java.lang.System).out}") PrintStream out) {
+    public InputOutputComponentConsole(@Value("#{ T(java.lang.System).in}") InputStream in,
+                                       @Value("#{ T(java.lang.System).out}") PrintStream out) {
         this.in = in;
         this.out = out;
     }
