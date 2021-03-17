@@ -1,0 +1,58 @@
+package ru.otus.questions.services.impl;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import ru.otus.questions.domain.Answer;
+import ru.otus.questions.domain.Question;
+import ru.otus.questions.domain.QuizResult;
+import ru.otus.questions.services.QuizResultProcessor;
+
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@SpringBootTest(properties = {"ru.otus.hw.test.threshold=1"})
+class QuizResultProcessorImplTest {
+    @Autowired
+    private QuizResultProcessor quizResultProcessor;
+
+    @Test
+    void calculateResults() {
+        List<Answer> answers = List.of(new Answer("1990", false),
+                new Answer("2000", true),
+                new Answer("1000", true));
+        Question question = new Question("Q", answers);
+        List<Answer> correctUserAnswers = List.of(
+                new Answer("2000", true),
+                new Answer("1000", true));
+        List<Answer> inCorrectUserAnswers = List.of(
+                new Answer("212", true),
+                new Answer("10010", true));
+        QuizResult calculatedResultCorrect = quizResultProcessor.calculateResults(Map.of(question, correctUserAnswers), "user");
+        assertEquals(1, calculatedResultCorrect.getCorrectAnswersCount());
+        assertEquals(0, calculatedResultCorrect.getInCorrectAnswersCount());
+        QuizResult calculatedResultInCorrect = quizResultProcessor.calculateResults(Map.of(question, inCorrectUserAnswers), "user");
+        assertEquals(0, calculatedResultInCorrect.getCorrectAnswersCount());
+        assertEquals(1, calculatedResultInCorrect.getInCorrectAnswersCount());
+    }
+
+    @Test
+    void calculateResultsCheckThreshold() {
+        List<Answer> answers = List.of(new Answer("1990", false),
+                new Answer("2000", true),
+                new Answer("1000", true));
+        Question question = new Question("Q", answers);
+        List<Answer> correctUserAnswers = List.of(
+                new Answer("2000", true),
+                new Answer("1000", true));
+        List<Answer> inCorrectUserAnswers = List.of(
+                new Answer("212", true),
+                new Answer("10010", true));
+        QuizResult calculatedResultCorrect = quizResultProcessor.calculateResults(Map.of(question, correctUserAnswers), "user");
+        assertTrue(calculatedResultCorrect.isThresholdPassed());
+        QuizResult calculatedResultInCorrect = quizResultProcessor.calculateResults(Map.of(question, inCorrectUserAnswers), "user");
+        assertFalse(calculatedResultInCorrect.isThresholdPassed());
+    }
+}
