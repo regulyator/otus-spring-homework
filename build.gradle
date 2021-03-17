@@ -5,9 +5,6 @@ plugins {
 }
 
 idea {
-    project {
-        languageLevel = 11
-    }
     module {
         downloadJavadoc = true
         downloadSources = true
@@ -21,9 +18,12 @@ allprojects {
         mavenCentral()
     }
 
-    apply plugin: "io.spring.dependency-management"
+    apply plugin: 'io.spring.dependency-management'
     dependencyManagement {
         dependencies {
+            imports {
+                mavenBom("org.springframework.boot:spring-boot-dependencies:2.3.1.RELEASE")
+            }
         }
     }
 }

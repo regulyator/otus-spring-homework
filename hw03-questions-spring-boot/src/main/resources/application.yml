@@ -1,0 +1,12 @@
+ru:
+  otus:
+    hw:
+      locale: en
+      test:
+        file: questions_${ru.otus.hw.locale}.csv
+        threshold: 4
+
+logging:
+  file:
+    path: './logs'
+    name: ${logging.file.path}/app.log
