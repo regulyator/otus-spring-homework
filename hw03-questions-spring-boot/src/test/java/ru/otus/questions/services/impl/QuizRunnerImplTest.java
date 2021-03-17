@@ -10,7 +10,7 @@ import ru.otus.questions.domain.Quiz;
 import ru.otus.questions.exception.RunNullQuizException;
 import ru.otus.questions.services.execution.AnswerReader;
 import ru.otus.questions.services.execution.QuizRunner;
-import ru.otus.questions.services.util.InputOutputService;
+import ru.otus.questions.services.util.InputOutputComponent;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 class QuizRunnerImplTest {
     @MockBean
-    private InputOutputService inputOutputService;
+    private InputOutputComponent inputOutputComponent;
     @MockBean
     private AnswerReader<Answer> answerReader;
     @Autowired
@@ -31,7 +31,7 @@ class QuizRunnerImplTest {
     void printQuiz() {
         Quiz quiz = buildQuiz();
         quizRunner.runQuizAndCollectAnswers(quiz);
-        verify(inputOutputService, times(4)).writeOutput(anyString());
+        verify(inputOutputComponent, times(4)).writeOutput(anyString());
     }
 
     @Test

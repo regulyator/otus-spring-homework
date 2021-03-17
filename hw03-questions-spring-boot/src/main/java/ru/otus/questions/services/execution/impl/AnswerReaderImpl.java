@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.otus.questions.domain.Answer;
 import ru.otus.questions.services.execution.AnswerReader;
-import ru.otus.questions.services.util.InputOutputFacade;
+import ru.otus.questions.services.util.InputOutputLocalizedService;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -13,27 +13,27 @@ import java.util.stream.Collectors;
 public class AnswerReaderImpl implements AnswerReader<Answer> {
     private final static String USER_ANSWER_DELIMITER = ",";
     private final static String QUIT_SYMBOL = "Q";
-    private final InputOutputFacade inputOutputFacade;
+    private final InputOutputLocalizedService inputOutputLocalizedService;
 
     @Autowired
-    public AnswerReaderImpl(InputOutputFacade inputOutputFacade) {
-        this.inputOutputFacade = inputOutputFacade;
+    public AnswerReaderImpl(InputOutputLocalizedService inputOutputLocalizedService) {
+        this.inputOutputLocalizedService = inputOutputLocalizedService;
     }
 
     @Override
     public List<Answer> readUserAnswers(Map<Integer, Answer> answersMap) {
         writeGreetings();
 
-        var userInput = inputOutputFacade.readInputFromUser();
+        var userInput = inputOutputLocalizedService.readInputFromUser();
         if (Objects.nonNull(userInput) && userInput.equals(QUIT_SYMBOL)) {
             return Collections.emptyList();
         }
 
         var convertedAnswers = convertRawUserInput(userInput, answersMap);
         while (convertedAnswers.isEmpty()) {
-            inputOutputFacade.printMessageToUser("WrongAnswer");
+            inputOutputLocalizedService.printMessageToUser("WrongAnswer");
             writeGreetings();
-            userInput = inputOutputFacade.readInputFromUser();
+            userInput = inputOutputLocalizedService.readInputFromUser();
             if (Objects.nonNull(userInput) && userInput.equals(QUIT_SYMBOL)) {
                 return Collections.emptyList();
             }
@@ -70,6 +70,6 @@ public class AnswerReaderImpl implements AnswerReader<Answer> {
     }
 
     private void writeGreetings() {
-        inputOutputFacade.printMessageToUser("AnswerAdvice");
+        inputOutputLocalizedService.printMessageToUser("AnswerAdvice");
     }
 }

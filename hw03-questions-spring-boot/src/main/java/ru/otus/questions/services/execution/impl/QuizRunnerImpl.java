@@ -9,7 +9,7 @@ import ru.otus.questions.domain.QuizUserRawResult;
 import ru.otus.questions.exception.RunNullQuizException;
 import ru.otus.questions.services.execution.AnswerReader;
 import ru.otus.questions.services.execution.QuizRunner;
-import ru.otus.questions.services.util.InputOutputService;
+import ru.otus.questions.services.util.InputOutputComponent;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,13 +21,13 @@ import java.util.stream.Collectors;
 @Service
 public class QuizRunnerImpl implements QuizRunner {
 
-    private final InputOutputService inputOutputServiceConsole;
+    private final InputOutputComponent inputOutputComponentConsole;
     private final AnswerReader<Answer> answerReader;
 
     @Autowired
-    public QuizRunnerImpl(InputOutputService inputOutputServiceConsole,
+    public QuizRunnerImpl(InputOutputComponent inputOutputComponentConsole,
                           AnswerReader<Answer> answerReader) {
-        this.inputOutputServiceConsole = inputOutputServiceConsole;
+        this.inputOutputComponentConsole = inputOutputComponentConsole;
         this.answerReader = answerReader;
     }
 
@@ -43,7 +43,7 @@ public class QuizRunnerImpl implements QuizRunner {
     }
 
     private void printQuestion(Map<Question, List<Answer>> quizUserAnswerMap, Question question) {
-        inputOutputServiceConsole.writeOutput(question.getText());
+        inputOutputComponentConsole.writeOutput(question.getText());
 
         Map<Integer, Answer> answersMap = buildAnswersMap(question.getAnswers());
         printAnswers(answersMap);
@@ -59,6 +59,6 @@ public class QuizRunnerImpl implements QuizRunner {
 
     private void printAnswers(Map<Integer, Answer> answersMap) {
         answersMap.forEach((integer, answer) ->
-                inputOutputServiceConsole.writeOutput(String.format("%s - %s", integer, answer.getText())));
+                inputOutputComponentConsole.writeOutput(String.format("%s - %s", integer, answer.getText())));
     }
 }
