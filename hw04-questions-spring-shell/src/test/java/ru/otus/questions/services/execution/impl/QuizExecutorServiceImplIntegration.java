@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.otus.questions.services.execution.QuizExecutorService;
-import ru.otus.questions.services.util.InputOutputService;
+import ru.otus.questions.services.util.InputOutputComponent;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -19,12 +19,12 @@ class QuizExecutorServiceImplIntegration {
     @Autowired
     private QuizExecutorService quizExecutorService;
     @MockBean
-    private InputOutputService inputOutputService;
+    private InputOutputComponent inputOutputComponent;
 
     @Test
     @DisplayName(value = "pass quiz")
     void quizPassed() {
-        when(inputOutputService.readInput())
+        when(inputOutputComponent.readInput())
                 .thenReturn("user")
                 .thenReturn("2")
                 .thenReturn("1,2")
@@ -38,7 +38,7 @@ class QuizExecutorServiceImplIntegration {
     @Test
     @DisplayName(value = "fail quiz")
     void quizFailed() {
-        when(inputOutputService.readInput())
+        when(inputOutputComponent.readInput())
                 .thenReturn("user")
                 .thenReturn("Q")
                 .thenReturn("1,2")

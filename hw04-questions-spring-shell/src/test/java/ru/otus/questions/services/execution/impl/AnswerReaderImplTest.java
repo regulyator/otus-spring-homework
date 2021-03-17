@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.questions.domain.Answer;
 import ru.otus.questions.services.execution.AnswerReader;
-import ru.otus.questions.services.util.InputOutputFacade;
+import ru.otus.questions.services.util.InputOutputLocalizedService;
 
 import java.util.List;
 import java.util.Map;
@@ -21,13 +21,13 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 class AnswerReaderImplTest {
     @MockBean
-    private InputOutputFacade inputOutputFacade;
+    private InputOutputLocalizedService inputOutputLocalizedService;
     @Autowired
     private AnswerReader<Answer> answerReader;
 
     @Test
     void readUserAnswersOneOption() {
-        when(inputOutputFacade.readInputFromUser()).thenReturn("1");
+        when(inputOutputLocalizedService.readInputFromUser()).thenReturn("1");
         Map<Integer, Answer> answerMap = buildAnswersMap(buildQuestion());
         List<Answer> readAnswers = answerReader.readUserAnswers(answerMap);
         assertEquals(List.of(new Answer("Alive", true)), readAnswers);
@@ -35,7 +35,7 @@ class AnswerReaderImplTest {
 
     @Test
     void readUserAnswersMultipleOption() {
-        when(inputOutputFacade.readInputFromUser()).thenReturn("1,2");
+        when(inputOutputLocalizedService.readInputFromUser()).thenReturn("1,2");
         Map<Integer, Answer> answerMap = buildAnswersMap(buildQuestion());
 
         List<Answer> readAnswers = answerReader.readUserAnswers(answerMap);
@@ -45,17 +45,17 @@ class AnswerReaderImplTest {
 
     @Test
     void readUserAnswersWrongOption() {
-        when(inputOutputFacade.readInputFromUser()).thenReturn("sdfsdf").thenReturn("3");
+        when(inputOutputLocalizedService.readInputFromUser()).thenReturn("sdfsdf").thenReturn("3");
         Map<Integer, Answer> answerMap = buildAnswersMap(buildQuestion());
 
         List<Answer> readAnswers = answerReader.readUserAnswers(answerMap);
         assertEquals(List.of(new Answer("It's a Dog!", false)), readAnswers);
-        verify(inputOutputFacade, times(2)).readInputFromUser();
+        verify(inputOutputLocalizedService, times(2)).readInputFromUser();
     }
 
     @Test
     void readUserAnswersSkip() {
-        when(inputOutputFacade.readInputFromUser()).thenReturn("Q");
+        when(inputOutputLocalizedService.readInputFromUser()).thenReturn("Q");
         Map<Integer, Answer> answerMap = buildAnswersMap(buildQuestion());
 
         List<Answer> readAnswers = answerReader.readUserAnswers(answerMap);
