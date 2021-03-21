@@ -1,0 +1,10 @@
+logging:
+  file:
+    path: './logs'
+    name: ${logging.file.path}/app.log
+
+spring:
+  shell:
+    command:
+      stacktrace:
+        enabled: false
