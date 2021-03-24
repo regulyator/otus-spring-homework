@@ -4,7 +4,7 @@ import java.util.Collection;
 
 public interface StandardDao<T> {
 
-    T insert(T entity);
+    long insert(T entity);
 
     void update(T entity);
 

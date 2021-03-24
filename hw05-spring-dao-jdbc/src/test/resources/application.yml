@@ -1,12 +1,8 @@
-ru:
-  otus:
-    hw:
-      locale: en
-      test:
-        file: quiz-test-source/questions_${ru.otus.hw.locale}.csv
-        threshold: 4
-
 spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    initialization-mode: always
+    data: data.sql
   main:
     banner-mode: off
   shell:

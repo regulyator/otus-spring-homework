@@ -4,6 +4,4 @@ import ru.otus.library.domain.Genre;
 
 public interface GenreDao extends StandardDao<Genre> {
 
-    Genre insertOrUpdate(Genre genre);
-
 }
