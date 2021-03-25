@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import ru.otus.library.dao.GenreDao;
 import ru.otus.library.domain.Genre;
 import ru.otus.library.exception.DaoInsertNonEmptyIdException;
@@ -25,6 +27,7 @@ import static org.mockito.Mockito.verify;
 class GenreDaoJdbcTest {
 
     public static final long EXIST_ID_GENRE = 2;
+    public static final long EXIST_NON_RELATED_ID_GENRE = 4;
     public static final long NON_EXIST_ID_GENRE = 6;
     public static final long EMPTY_ID_GENRE = 0L;
     public static final String EXIST_CAPTION_GENRE = "FANTASY TEST GENRE";
@@ -83,12 +86,28 @@ class GenreDaoJdbcTest {
     @DisplayName("delete GENRE by ID")
     @Test
     void shouldDeleteGenre() {
+        assertThatCode(() -> genreDao.findById(EXIST_NON_RELATED_ID_GENRE))
+                .doesNotThrowAnyException();
+
+        genreDao.deleteById(EXIST_NON_RELATED_ID_GENRE);
+
+        assertThatThrownBy(() -> genreDao.findById(EXIST_NON_RELATED_ID_GENRE))
+                .isInstanceOf(EmptyResultDataAccessException.class);
+        verify(genreDao, times(1)).deleteById(EXIST_NON_RELATED_ID_GENRE);
+    }
+
+    @DisplayName("throw DataIntegrityViolationException when delete GENRE related to books")
+    @Test
+    void shouldThrowExceptionWhenTryDeleteGenreRelatedToBooks() {
         assertThatCode(() -> genreDao.findById(EXIST_ID_GENRE))
                 .doesNotThrowAnyException();
 
-        genreDao.deleteById(EXIST_ID_GENRE);
+        assertThatThrownBy(() -> genreDao.deleteById(EXIST_ID_GENRE))
+                .isInstanceOf(DataIntegrityViolationException.class);
 
-        assertThat(2).isEqualTo(genreDao.findAll().size());
+        assertThatCode(() -> genreDao.findById(EXIST_ID_GENRE))
+                .doesNotThrowAnyException();
+
         verify(genreDao, times(1)).deleteById(EXIST_ID_GENRE);
     }
 

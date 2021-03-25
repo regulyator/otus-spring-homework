@@ -9,6 +9,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Genre {
     @EqualsAndHashCode.Include
-    private final long id;
+    private long id;
     private String caption;
 }
