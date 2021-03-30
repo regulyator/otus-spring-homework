@@ -17,7 +17,6 @@ import java.util.Collection;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -27,21 +26,34 @@ import static org.mockito.Mockito.verify;
 @Import(AuthorDaoJdbc.class)
 class AuthorDaoJdbcTest {
 
-    public static final long EXIST_ID_AUTHOR = 1;
-    public static final long EXIST_NON_RELATED_ID_AUTHOR = 7;
-    public static final long NON_EXIST_ID_AUTHOR = 8;
-    public static final long EMPTY_ID_AUTHOR = 0L;
-    public static final String EXIST_FIO_AUTHOR = "Peter Watts test author";
-    public static final String EXPECTED_UPDATED_FIO_AUTHOR = "Peter Watts test author UPDATED";
+    private static final long EXIST_ID_AUTHOR = 1;
+    private static final long EXIST_NON_RELATED_ID_AUTHOR = 4;
+    private static final long NON_EXIST_ID_AUTHOR = 8;
+    private static final long EMPTY_ID_AUTHOR = 0L;
+    private static final String EXIST_FIO_AUTHOR = "Peter Watts test author";
+    private static final String EXPECTED_UPDATED_FIO_AUTHOR = "Peter Watts test author UPDATED";
+    private static final String NEW_AUTHOR_FIO = "New author test";
 
     @Autowired
     @SpyBean
     private AuthorDao authorDao;
 
+    @DisplayName("return true if AUTHOR id exist")
+    @Test
+    void shouldReturnTrueIfAuthorIdExist() {
+        assertThat(true).isEqualTo(authorDao.isExistById(EXIST_ID_AUTHOR));
+    }
+
+    @DisplayName("return false if AUTHOR id not exist")
+    @Test
+    void shouldReturnTrueIfAuthorIdNotExist() {
+        assertThat(false).isEqualTo(authorDao.isExistById(NON_EXIST_ID_AUTHOR));
+    }
+
     @DisplayName("insert AUTHOR with generated ID")
     @Test
     void shouldInsertAuthorAndGenerateId() {
-        Author expectedAuthor = new Author(0L, "NEW AUTHOR TEST");
+        Author expectedAuthor = new Author(EMPTY_ID_AUTHOR, NEW_AUTHOR_FIO);
         long generatedId = authorDao.insert(expectedAuthor);
         Author actualAuthor = authorDao.findById(generatedId);
 
@@ -76,6 +88,7 @@ class AuthorDaoJdbcTest {
         Author expectedAuthor = new Author(EXIST_ID_AUTHOR, EXPECTED_UPDATED_FIO_AUTHOR);
 
         Author storedAuthor = authorDao.findById(EXIST_ID_AUTHOR);
+        assertThat(storedAuthor).usingRecursiveComparison().isNotEqualTo(expectedAuthor);
         storedAuthor.setFio(EXPECTED_UPDATED_FIO_AUTHOR);
         authorDao.update(storedAuthor);
         Author storedUpdatedAuthor = authorDao.findById(EXIST_ID_AUTHOR);
@@ -118,10 +131,10 @@ class AuthorDaoJdbcTest {
     void shouldThrowExceptionWhenTryInsertWithNonEmptyId() {
         Author insertedAuthor = new Author(NON_EXIST_ID_AUTHOR, EXIST_FIO_AUTHOR);
         Collection<Author> expectedAuthors = getAllExistingAuthors();
-        Collection<Author> actualAuthors = authorDao.findAll();
 
         assertThatThrownBy(() -> authorDao.insert(insertedAuthor))
                 .isInstanceOf(DaoInsertNonEmptyIdException.class);
+        Collection<Author> actualAuthors = authorDao.findAll();
 
         assertThat(actualAuthors).usingRecursiveComparison().isEqualTo(expectedAuthors);
     }
@@ -131,10 +144,10 @@ class AuthorDaoJdbcTest {
     void shouldThrowExceptionWhenTryUpdateWithEmptyId() {
         Author updatedAuthor = new Author(EMPTY_ID_AUTHOR, EXPECTED_UPDATED_FIO_AUTHOR);
         Collection<Author> expectedAuthors = getAllExistingAuthors();
-        Collection<Author> actualAuthors = authorDao.findAll();
 
         assertThatThrownBy(() -> authorDao.update(updatedAuthor))
                 .isInstanceOf(DaoUpdateEmptyIdException.class);
+        Collection<Author> actualAuthors = authorDao.findAll();
 
         assertThat(actualAuthors).usingRecursiveComparison().isEqualTo(expectedAuthors);
     }
@@ -142,11 +155,9 @@ class AuthorDaoJdbcTest {
     private List<Author> getAllExistingAuthors() {
         return List.of(
                 new Author(1, "Peter Watts test author"),
-                new Author(2, "MARIA TEST AUTHOR"),
-                new Author(3, "IVAN TEST AUTHOR"),
-                new Author(4, "PELEVIN TEST AUTHOR"),
-                new Author(5, "DOSTOEVSKIY TEST AUTHOR"),
-                new Author(6, "TOLSTOY TEST AUTHOR")
+                new Author(2, "Robert Hainline test author"),
+                new Author(3, "Arkady and Boris Strugatsky test author"),
+                new Author(4, "Vernor Vinge test author")
         );
     }
 

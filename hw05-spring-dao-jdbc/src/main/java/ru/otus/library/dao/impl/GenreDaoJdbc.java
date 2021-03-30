@@ -9,17 +9,26 @@ import org.springframework.stereotype.Repository;
 import ru.otus.library.dao.GenreDao;
 import ru.otus.library.dao.mapper.GenreMapper;
 import ru.otus.library.domain.Genre;
+import ru.otus.library.exception.DaoInsertNonEmptyIdException;
+import ru.otus.library.exception.DaoUpdateEmptyIdException;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+@SuppressWarnings("ConstantConditions")
 @Repository
 public class GenreDaoJdbc implements GenreDao {
     private final NamedParameterJdbcOperations namedParameterJdbcOperations;
 
     public GenreDaoJdbc(NamedParameterJdbcOperations namedParameterJdbcOperations) {
         this.namedParameterJdbcOperations = namedParameterJdbcOperations;
+    }
+
+    @Override
+    public boolean isExistById(long id) {
+        return namedParameterJdbcOperations.queryForObject("select count(id) from genre where id = :id",
+                Map.of("id", id), Integer.class) > 0;
     }
 
     @Override
@@ -58,5 +67,17 @@ public class GenreDaoJdbc implements GenreDao {
     @Override
     public void deleteById(long id) {
         namedParameterJdbcOperations.update("delete from genre where id = :id", Map.of("id", id));
+    }
+
+    private void checkIdForInsert(long id) {
+        if (id != 0L) {
+            throw new DaoInsertNonEmptyIdException("Call insert for non empty ID field!");
+        }
+    }
+
+    private void checkIdForUpdate(long id) {
+        if (id == 0L) {
+            throw new DaoUpdateEmptyIdException("Call update for empty ID field!");
+        }
     }
 }
