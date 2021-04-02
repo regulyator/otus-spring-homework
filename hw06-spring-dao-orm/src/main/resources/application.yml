@@ -1,0 +1,14 @@
+logging:
+  file:
+    path: './logs'
+    name: ${logging.file.path}/app.log
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    initialization-mode: always
+    data: data.sql
+  shell:
+    command:
+      stacktrace:
+        enabled: false
