@@ -5,9 +5,7 @@ import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import ru.otus.library.service.data.AuthorService;
 import ru.otus.library.service.data.BookService;
-import ru.otus.library.service.data.GenreService;
 import ru.otus.library.service.util.InputOutputComponent;
 
 @ShellComponent
@@ -15,18 +13,12 @@ import ru.otus.library.service.util.InputOutputComponent;
 public class LibraryAppShellBook {
     private final InputOutputComponent inputOutputComponent;
     private final BookService bookService;
-    private final AuthorService authorService;
-    private final GenreService genreService;
 
     @Autowired
     public LibraryAppShellBook(InputOutputComponent inputOutputComponent,
-                               BookService bookService,
-                               AuthorService authorService,
-                               GenreService genreService) {
+                               BookService bookService) {
         this.inputOutputComponent = inputOutputComponent;
         this.bookService = bookService;
-        this.authorService = authorService;
-        this.genreService = genreService;
     }
 
     @ShellMethod(key = "books-create", value = "Create new book with new Author and Genre")

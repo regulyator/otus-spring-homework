@@ -4,7 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,9 +16,6 @@ import java.util.Collection;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 @DisplayName("AuthorDaoJdbc should ")
 @JdbcTest
@@ -35,7 +31,6 @@ class AuthorDaoJdbcTest {
     private static final String NEW_AUTHOR_FIO = "New author test";
 
     @Autowired
-    @SpyBean
     private AuthorDao authorDao;
 
     @DisplayName("return true if AUTHOR id exist")
@@ -59,7 +54,6 @@ class AuthorDaoJdbcTest {
 
         assertThat(generatedId).isNotEqualTo(expectedAuthor.getId());
         assertThat(actualAuthor.getFio()).isEqualTo(expectedAuthor.getFio());
-        verify(authorDao, times(1)).insert(expectedAuthor);
     }
 
     @DisplayName("return AUTHOR by ID")
@@ -69,7 +63,6 @@ class AuthorDaoJdbcTest {
         Author actualAuthor = authorDao.findById(EXIST_ID_AUTHOR);
 
         assertThat(actualAuthor).usingRecursiveComparison().isEqualTo(expectedAuthor);
-        verify(authorDao, times(1)).findById(EXIST_ID_AUTHOR);
     }
 
     @DisplayName("return all AUTHOR")
@@ -79,7 +72,6 @@ class AuthorDaoJdbcTest {
         Collection<Author> actualAuthors = authorDao.findAll();
 
         assertThat(actualAuthors).usingRecursiveComparison().isEqualTo(expectedAuthors);
-        verify(authorDao, times(1)).findAll();
     }
 
     @DisplayName("update AUTHOR")
@@ -94,8 +86,6 @@ class AuthorDaoJdbcTest {
         Author storedUpdatedAuthor = authorDao.findById(EXIST_ID_AUTHOR);
 
         assertThat(storedUpdatedAuthor).usingRecursiveComparison().isEqualTo(expectedAuthor);
-        verify(authorDao, times(0)).insert(any());
-        verify(authorDao, times(1)).update(expectedAuthor);
     }
 
     @DisplayName("delete AUTHOR by ID")
@@ -108,7 +98,6 @@ class AuthorDaoJdbcTest {
 
         assertThatThrownBy(() -> authorDao.findById(EXIST_NON_RELATED_ID_AUTHOR))
                 .isInstanceOf(EmptyResultDataAccessException.class);
-        verify(authorDao, times(1)).deleteById(EXIST_NON_RELATED_ID_AUTHOR);
     }
 
     @DisplayName("throw DataIntegrityViolationException when delete AUTHOR related to books")
@@ -122,8 +111,6 @@ class AuthorDaoJdbcTest {
 
         assertThatCode(() -> authorDao.findById(EXIST_ID_AUTHOR))
                 .doesNotThrowAnyException();
-
-        verify(authorDao, times(1)).deleteById(EXIST_ID_AUTHOR);
     }
 
     @DisplayName("throw DaoInsertNonEmptyIdException when insert AUTHOR with non 0L ID")

@@ -4,7 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.EmptyResultDataAccessException;
 import ru.otus.library.dao.BookDao;
@@ -18,9 +17,6 @@ import java.util.Collection;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 @DisplayName("BookDaoJdbcTest should ")
 @JdbcTest
@@ -42,7 +38,6 @@ class BookDaoJdbcTest {
     private static final long EXIST_ID_GENRE = 3;
     private static final String EXIST_CAPTION_GENRE = "Sci-Fi test genre";
     @Autowired
-    @SpyBean
     private BookDao bookDao;
 
     @DisplayName("return true if BOOK id exist")
@@ -68,7 +63,6 @@ class BookDaoJdbcTest {
 
         expectedBook.setId(generatedId);
         assertThat(actualBook).usingRecursiveComparison().isEqualTo(expectedBook);
-        verify(bookDao, times(1)).insert(expectedBook);
     }
 
     @DisplayName("return BOOK by ID")
@@ -78,7 +72,6 @@ class BookDaoJdbcTest {
         Book actualBook = bookDao.findById(EXIST_ID_BOOK);
 
         assertThat(actualBook).usingRecursiveComparison().isEqualTo(expectedBook);
-        verify(bookDao, times(1)).findById(EXIST_ID_BOOK);
     }
 
     @DisplayName("return all BOOK")
@@ -88,7 +81,6 @@ class BookDaoJdbcTest {
         Collection<Book> actualBooks = bookDao.findAll();
 
         assertThat(actualBooks).usingRecursiveComparison().isEqualTo(expectedBooks);
-        verify(bookDao, times(1)).findAll();
     }
 
     @DisplayName("update BOOK")
@@ -105,8 +97,6 @@ class BookDaoJdbcTest {
         Book storedUpdatedBook = bookDao.findById(EXIST_ID_BOOK);
 
         assertThat(storedUpdatedBook).usingRecursiveComparison().isEqualTo(expectedBook);
-        verify(bookDao, times(0)).insert(any());
-        verify(bookDao, times(1)).update(expectedBook);
     }
 
     @DisplayName("delete BOOK by ID")
@@ -119,7 +109,6 @@ class BookDaoJdbcTest {
 
         assertThatThrownBy(() -> bookDao.findById(EXIST_ID_BOOK))
                 .isInstanceOf(EmptyResultDataAccessException.class);
-        verify(bookDao, times(1)).deleteById(EXIST_ID_BOOK);
     }
 
     @DisplayName("throw DaoInsertNonEmptyIdException when insert BOOK with non 0L ID")

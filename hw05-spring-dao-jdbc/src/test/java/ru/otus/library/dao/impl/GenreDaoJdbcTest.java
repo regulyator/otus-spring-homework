@@ -4,7 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,9 +16,6 @@ import java.util.Collection;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 @DisplayName("GenreDaoJdbc should ")
 @JdbcTest
@@ -34,7 +30,6 @@ class GenreDaoJdbcTest {
     private static final String EXPECTED_UPDATED_CAPTION_GENRE = "Fantasy test genre UPDATED";
     private static final String NEW_GENRE_CAPTION = "New genre";
     @Autowired
-    @SpyBean
     private GenreDao genreDao;
 
 
@@ -59,7 +54,6 @@ class GenreDaoJdbcTest {
 
         assertThat(generatedId).isNotEqualTo(expectedGenre.getId());
         assertThat(actualGenre.getCaption()).isEqualTo(expectedGenre.getCaption());
-        verify(genreDao, times(1)).insert(expectedGenre);
     }
 
     @DisplayName("return GENRE by ID")
@@ -69,7 +63,6 @@ class GenreDaoJdbcTest {
         Genre actualGenre = genreDao.findById(EXIST_ID_GENRE);
 
         assertThat(actualGenre).usingRecursiveComparison().isEqualTo(expectedGenre);
-        verify(genreDao, times(1)).findById(EXIST_ID_GENRE);
     }
 
     @DisplayName("return all GENRE")
@@ -79,7 +72,6 @@ class GenreDaoJdbcTest {
         Collection<Genre> actualGenres = genreDao.findAll();
 
         assertThat(actualGenres).usingRecursiveComparison().isEqualTo(expectedGenres);
-        verify(genreDao, times(1)).findAll();
     }
 
     @DisplayName("update GENRE")
@@ -94,8 +86,6 @@ class GenreDaoJdbcTest {
         Genre storedUpdatedGenre = genreDao.findById(EXIST_ID_GENRE);
 
         assertThat(storedUpdatedGenre).usingRecursiveComparison().isEqualTo(expectedGenre);
-        verify(genreDao, times(0)).insert(any());
-        verify(genreDao, times(1)).update(expectedGenre);
     }
 
     @DisplayName("delete GENRE by ID")
@@ -108,7 +98,6 @@ class GenreDaoJdbcTest {
 
         assertThatThrownBy(() -> genreDao.findById(EXIST_NON_RELATED_ID_GENRE))
                 .isInstanceOf(EmptyResultDataAccessException.class);
-        verify(genreDao, times(1)).deleteById(EXIST_NON_RELATED_ID_GENRE);
     }
 
     @DisplayName("throw DataIntegrityViolationException when delete GENRE related to books")
@@ -122,8 +111,6 @@ class GenreDaoJdbcTest {
 
         assertThatCode(() -> genreDao.findById(EXIST_ID_GENRE))
                 .doesNotThrowAnyException();
-
-        verify(genreDao, times(1)).deleteById(EXIST_ID_GENRE);
     }
 
     @DisplayName("throw DaoInsertNonEmptyIdException when insert GENRE with non 0L ID")
