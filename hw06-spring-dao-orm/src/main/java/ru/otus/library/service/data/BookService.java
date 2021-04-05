@@ -1,12 +1,29 @@
 package ru.otus.library.service.data;
 
 import ru.otus.library.domain.Book;
+import ru.otus.library.domain.dto.BookDto;
+
+import java.util.Collection;
 
 public interface BookService extends StandardService<Book> {
 
-    Book create(String bookName, String authorFio, String genreCaption);
+    Book create(String bookName, long idGenre, long[] idAuthors);
 
-    Book create(String bookName, long authorId, long genreId);
+    Book changeBookName(long idBook, String newBookName);
 
-    void update(long bookId, String bookName, long authorId, long genreId);
+    Book changeBookGenre(long idBook, long newIdGenre);
+
+    Book addBookAuthor(long idBook, long idAuthor);
+
+    Book removeBookAuthor(long idBook, long idAuthor);
+
+    Book addBookComment(long idBook, String newCommentCaption);
+
+    Book removeBookComment(long idBook, long idComment);
+
+    BookDto getByIdDto(long id);
+
+    Collection<BookDto> getAllDto();
+
+
 }

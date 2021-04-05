@@ -1,21 +1,21 @@
 INSERT INTO AUTHOR (ID, FIO)
-VALUES (1, 'Peter Watts');
+VALUES (1, 'Peter Watts test author');
 INSERT INTO AUTHOR (ID, FIO)
-VALUES (2, 'Robert Hainline');
+VALUES (2, 'Robert Hainline test author');
 INSERT INTO AUTHOR (ID, FIO)
-VALUES (3, 'Arkady and Boris Strugatsky');
+VALUES (3, 'Arkady and Boris Strugatsky test author');
 INSERT INTO AUTHOR (ID, FIO)
-VALUES (4, 'Vernor Vinge');
+VALUES (4, 'Vernor Vinge test author');
 
 INSERT INTO GENRE (ID, CAPTION)
-VALUES (1, 'Horror');
+VALUES (1, 'Horror test genre');
 INSERT INTO GENRE (ID, CAPTION)
-VALUES (2, 'Fantasy');
+VALUES (2, 'Fantasy test genre');
 INSERT INTO GENRE (ID, CAPTION)
-VALUES (3, 'Sci-Fi');
+VALUES (3, 'Sci-Fi test genre');
 
 INSERT INTO BOOK (ID, BOOK_NAME, ID_GENRE)
-VALUES (1, 'Blindsight', 3);
+VALUES (1, 'Blindsight test', 3);
 INSERT INTO BOOK (ID, BOOK_NAME, ID_GENRE)
 VALUES (2, 'The Moon Is a Harsh Mistress', 3);
 INSERT INTO BOOK (ID, BOOK_NAME, ID_GENRE)
@@ -54,3 +54,7 @@ INSERT INTO COMMENT (ID, CAPTION, ID_BOOK)
 VALUES (6, 'ohhhhh', 3);
 INSERT INTO COMMENT (ID, CAPTION, ID_BOOK)
 VALUES (7, 'Not so bad', 3);
+INSERT INTO COMMENT (ID, CAPTION, ID_BOOK)
+VALUES (8, 'Another comment', 4);
+INSERT INTO COMMENT (ID, CAPTION, ID_BOOK)
+VALUES (9, 'And more comment', 5);

@@ -6,7 +6,6 @@ import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import ru.otus.library.domain.Genre;
 import ru.otus.library.service.data.GenreService;
 import ru.otus.library.service.util.InputOutputComponent;
 
@@ -41,7 +40,7 @@ public class LibraryAppShellGenre {
     @ShellMethod(key = "genres-update", value = "Update genre")
     public void updateGenre(@ShellOption({"GenreID"}) long genreId,
                             @ShellOption({"GenreCaption"}) String genreCaption) {
-        genreService.update(new Genre(genreId, genreCaption));
+        genreService.changeGenreCaption(genreId, genreCaption);
     }
 
     @ShellMethod(key = "genres-remove", value = "Remove genre by id")

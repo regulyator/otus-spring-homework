@@ -6,7 +6,6 @@ import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import ru.otus.library.domain.Author;
 import ru.otus.library.service.data.AuthorService;
 import ru.otus.library.service.util.InputOutputComponent;
 
@@ -41,7 +40,7 @@ public class LibraryAppShellAuthor {
     @ShellMethod(key = "authors-update", value = "Update author")
     public void updateAuthor(@ShellOption({"AuthorID"}) long authorId,
                              @ShellOption({"AuthorFio"}) String authorFio) {
-        authorService.update(new Author(authorId, authorFio));
+        authorService.changeAuthorFio(authorId, authorFio);
     }
 
     @ShellMethod(key = "authors-remove", value = "Remove author by id")

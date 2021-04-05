@@ -21,36 +21,58 @@ public class LibraryAppShellBook {
         this.bookService = bookService;
     }
 
-    @ShellMethod(key = "books-create", value = "Create new book with new Author and Genre")
+    @ShellMethod(key = "books-create", value = "Create new book with Authors and Genre")
     public void createBook(@ShellOption({"BookName"}) String bookName,
-                           @ShellOption({"AuthorFio"}) String authorFio,
-                           @ShellOption({"GenreCaption"}) String genreCaption) {
-        bookService.create(bookName, authorFio, genreCaption);
-    }
-
-    @ShellMethod(key = "books-create-er", value = "Create new book with existing Author and Genre")
-    public void createBook(@ShellOption({"BookName"}) String bookName,
-                           @ShellOption({"AuthorID"}) long authorId,
-                           @ShellOption({"GenreID"}) long genreId) {
-        bookService.create(bookName, authorId, genreId);
+                           @ShellOption({"GenreId"}) long genreId,
+                           @ShellOption({"AuthorsIds"}) long[] authorsIds
+    ) {
+        bookService.create(bookName, genreId, authorsIds);
     }
 
     @ShellMethod(key = "books", value = "Show book by id")
     public void getBook(@ShellOption({"BookID"}) long bookId) {
-        inputOutputComponent.writeOutput(bookService.getById(bookId).toString());
+        inputOutputComponent.writeOutput(bookService.getByIdDto(bookId).toString());
     }
 
     @ShellMethod(key = "books-all", value = "Show all books")
     public void getAllBooks() {
-        bookService.getAll().forEach(book -> inputOutputComponent.writeOutput(book.toString()));
+        bookService.getAllDto().forEach(book -> inputOutputComponent.writeOutput(book.toString()));
     }
 
-    @ShellMethod(key = "books-update", value = "Update book with existing Author and Genre")
-    public void updateBook(@ShellOption({"BookID"}) long bookId,
-                           @ShellOption({"BookName"}) String bookName,
-                           @ShellOption({"AuthorID"}) long authorId,
-                           @ShellOption({"GenreID"}) long genreId) {
-        bookService.update(bookId, bookName, authorId, genreId);
+    @ShellMethod(key = "books-update-name", value = "Update book name")
+    public void updateBookName(@ShellOption({"BookID"}) long bookId,
+                               @ShellOption({"BookName"}) String bookName) {
+        bookService.changeBookName(bookId, bookName);
+    }
+
+    @ShellMethod(key = "books-update-genre", value = "Update book genre")
+    public void updateBookName(@ShellOption({"BookID"}) long bookId,
+                               @ShellOption({"GenreId"}) long genreId) {
+        bookService.changeBookGenre(bookId, genreId);
+    }
+
+    @ShellMethod(key = "books-add-author", value = "Add author to book")
+    public void addBookAuthor(@ShellOption({"BookID"}) long bookId,
+                              @ShellOption({"AuthorsId"}) long authorsId) {
+        bookService.addBookAuthor(bookId, authorsId);
+    }
+
+    @ShellMethod(key = "books-remove-author", value = "Remove author from book")
+    public void removeBookAuthor(@ShellOption({"BookID"}) long bookId,
+                                 @ShellOption({"AuthorsId"}) long authorsId) {
+        bookService.removeBookAuthor(bookId, authorsId);
+    }
+
+    @ShellMethod(key = "books-add-comment", value = "Add comment to book")
+    public void addBookComment(@ShellOption({"BookID"}) long bookId,
+                               @ShellOption({"Comment"}) String newComment) {
+        bookService.addBookComment(bookId, newComment);
+    }
+
+    @ShellMethod(key = "books-remove-comment", value = "Remove comment from book")
+    public void removeBookComment(@ShellOption({"BookID"}) long bookId,
+                                  @ShellOption({"CommentId"}) long commentId) {
+        bookService.removeBookComment(bookId, commentId);
     }
 
     @ShellMethod(key = "books-remove", value = "Remove book by id")

@@ -4,7 +4,7 @@ import ru.otus.library.domain.Genre;
 
 public interface GenreService extends StandardService<Genre> {
 
-    boolean checkExistById(long id);
+    Genre create(String genreCaption);
 
-    Genre create(String newGenreCaption);
+    Genre changeGenreCaption(long idGenre, String newGenreCaption);
 }

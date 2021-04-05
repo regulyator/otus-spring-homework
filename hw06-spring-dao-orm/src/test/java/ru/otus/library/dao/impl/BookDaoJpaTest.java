@@ -1,44 +1,48 @@
 package ru.otus.library.dao.impl;
 
+import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
-import org.springframework.dao.EmptyResultDataAccessException;
 import ru.otus.library.dao.BookDao;
 import ru.otus.library.domain.Author;
 import ru.otus.library.domain.Book;
+import ru.otus.library.domain.Comment;
 import ru.otus.library.domain.Genre;
-import ru.otus.library.exception.DaoInsertNonEmptyIdException;
-import ru.otus.library.exception.DaoUpdateEmptyIdException;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
-@DisplayName("BookDaoJdbcTest should ")
+@DisplayName("BookDaoJpa should ")
 @DataJpaTest
 @Import(BookDaoJpa.class)
 class BookDaoJpaTest {
 
 
+    public static final long EXPECTED_QUERY_COUNT = 2L;
     private static final long EXIST_ID_BOOK = 1;
     private static final long EMPTY_ID_BOOK = 0L;
     private static final String NEW_BOOK_NAME = "New book test";
-    private static final String EXIST_BOOK_NAME = "Blindsight book test";
-
-    private static final String UPDATED_BOOK_NAME = "HORROR TEST BOOK UPDATED";
-    private static final Author UPDATED_BOOK_AUTHOR = new Author(2, "Robert Hainline test author");
+    private static final String EXIST_BOOK_NAME = "Blindsight test";
+    private static final int EXPECTED_NUMBER_OF_BOOKS = 5;
+    private static final String UPDATED_BOOK_NAME = "TEST BOOK UPDATED";
     private static final Genre UPDATED_BOOK_GENRE = new Genre(2, "Fantasy test genre");
-
     private static final long EXIST_ID_AUTHOR = 1;
     private static final String EXIST_FIO_AUTHOR = "Peter Watts test author";
     private static final long EXIST_ID_GENRE = 3;
     private static final String EXIST_CAPTION_GENRE = "Sci-Fi test genre";
     @Autowired
     private BookDao bookDao;
+    @Autowired
+    private TestEntityManager testEntityManager;
 
     @DisplayName("return true if BOOK id exist")
     @Test
@@ -55,21 +59,22 @@ class BookDaoJpaTest {
     @DisplayName("insert BOOK with generated ID")
     @Test
     void shouldInsertBookAndGenerateId() {
-        Book expectedBook = getNewBook();
-        long generatedId = bookDao.insert(expectedBook);
-        Book actualBook = bookDao.findById(generatedId);
+        Collection<Book> oldExistingBooks = bookDao.findAll();
+        Book book = getNewBook();
+        bookDao.save(book);
 
-        assertThat(generatedId).isNotEqualTo(expectedBook.getId());
+        Collection<Book> newExistingBooks = bookDao.findAll();
 
-        expectedBook.setId(generatedId);
-        assertThat(actualBook).usingRecursiveComparison().isEqualTo(expectedBook);
+        assertThat(true).isEqualTo(book.getId() > 0L);
+        assertThat(oldExistingBooks).isNotEqualTo(newExistingBooks);
+        assertThat(true).isEqualTo(newExistingBooks.contains(book));
     }
 
     @DisplayName("return BOOK by ID")
     @Test
     void shouldReturnBookById() {
         Book expectedBook = getExistBook();
-        Book actualBook = bookDao.findById(EXIST_ID_BOOK);
+        Book actualBook = bookDao.findById(EXIST_ID_BOOK).orElse(null);
 
         assertThat(actualBook).usingRecursiveComparison().isEqualTo(expectedBook);
     }
@@ -77,27 +82,74 @@ class BookDaoJpaTest {
     @DisplayName("return all BOOK")
     @Test
     void shouldReturnAllBook() {
-        Collection<Book> expectedBooks = getAllExistingBook();
-        Collection<Book> actualBooks = bookDao.findAll();
+        SessionFactory sessionFactory = testEntityManager.getEntityManager().getEntityManagerFactory()
+                .unwrap(SessionFactory.class);
+        sessionFactory.getStatistics().setStatisticsEnabled(true);
 
-        assertThat(actualBooks).usingRecursiveComparison().isEqualTo(expectedBooks);
+        Collection<Book> books = bookDao.findAll();
+        assertThat(books).isNotNull().hasSize(EXPECTED_NUMBER_OF_BOOKS)
+                .allMatch(book -> !book.getBookName().equals(""))
+                .allMatch(book -> book.getGenre() != null)
+                .allMatch(book -> book.getAuthors().size() > 0)
+                .allMatch(book -> book.getComments().size() > 0);
+        assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(EXPECTED_QUERY_COUNT);
     }
 
     @DisplayName("update BOOK")
     @Test
     void shouldUpdateBook() {
-        Book expectedBook = new Book(EXIST_ID_BOOK, UPDATED_BOOK_NAME, UPDATED_BOOK_AUTHOR, UPDATED_BOOK_GENRE);
+        Book expectedBook = getExpectedUpdateBook();
 
-        Book storedBook = bookDao.findById(EXIST_ID_BOOK);
+        Book storedBook = bookDao.findById(EXIST_ID_BOOK).orElse(null);
         assertThat(storedBook).usingRecursiveComparison().isNotEqualTo(expectedBook);
-        storedBook.setBookName(UPDATED_BOOK_NAME);
-        storedBook.setAuthor(UPDATED_BOOK_AUTHOR);
+        Objects.requireNonNull(storedBook).setBookName(UPDATED_BOOK_NAME);
+        storedBook.setAuthors(getUpdatedAuthors());
         storedBook.setGenre(UPDATED_BOOK_GENRE);
-        bookDao.update(storedBook);
-        Book storedUpdatedBook = bookDao.findById(EXIST_ID_BOOK);
+        bookDao.save(storedBook);
+        Book storedUpdatedBook = bookDao.findById(EXIST_ID_BOOK).orElse(null);
 
-        assertThat(storedUpdatedBook).usingRecursiveComparison().isEqualTo(expectedBook);
+        assertThat(storedUpdatedBook).isNotNull();
+        assertThat(expectedBook.getId()).isEqualTo(storedUpdatedBook.getId());
+        assertThat(expectedBook.getBookName()).isEqualTo(storedBook.getBookName());
+        assertThat(expectedBook.getGenre()).isEqualTo(storedUpdatedBook.getGenre());
+        assertThat(storedUpdatedBook.getAuthors()).hasSize(2)
+                .isEqualTo(expectedBook.getAuthors());
     }
+
+    @DisplayName("add new comment to BOOK")
+    @Test
+    void shouldAddNewCommentToBook() {
+        Comment newComment = new Comment(0L, "NEW COMMENT");
+        Book expectedBook = getExistBook();
+        expectedBook.getComments().add(newComment);
+
+        Book storedBook = bookDao.findById(EXIST_ID_BOOK).orElse(null);
+        Objects.requireNonNull(storedBook).getComments().add(newComment);
+        bookDao.save(storedBook);
+        Book storedUpdatedBook = bookDao.findById(EXIST_ID_BOOK).orElse(null);
+
+        assertThat(storedUpdatedBook).isNotNull();
+        assertThat(storedUpdatedBook.getComments()).hasSize(4)
+                .anyMatch(comment -> comment.getCaption().equals(newComment.getCaption()));
+    }
+
+    @DisplayName("delete comment from BOOK")
+    @Test
+    void shouldDeleteCommentFromBook() {
+        Comment removedComment = new Comment(3, "atata");
+        Book expectedBook = getExistBook();
+        expectedBook.getComments().remove(removedComment);
+
+        Book storedBook = bookDao.findById(EXIST_ID_BOOK).orElse(null);
+        Objects.requireNonNull(storedBook).getComments().remove(removedComment);
+        bookDao.save(storedBook);
+        Book storedUpdatedBook = bookDao.findById(EXIST_ID_BOOK).orElse(null);
+
+        assertThat(storedUpdatedBook).isNotNull();
+        assertThat(storedUpdatedBook.getComments()).hasSize(2)
+                .noneMatch(comment -> comment.equals(removedComment));
+    }
+
 
     @DisplayName("delete BOOK by ID")
     @Test
@@ -106,63 +158,35 @@ class BookDaoJpaTest {
                 .doesNotThrowAnyException();
 
         bookDao.deleteById(EXIST_ID_BOOK);
+        testEntityManager.clear();
 
-        assertThatThrownBy(() -> bookDao.findById(EXIST_ID_BOOK))
-                .isInstanceOf(EmptyResultDataAccessException.class);
-    }
-
-    @DisplayName("throw DaoInsertNonEmptyIdException when insert BOOK with non 0L ID")
-    @Test
-    void shouldThrowExceptionWhenTryInsertWithNonEmptyId() {
-        Book insertedBook = getExistBook();
-        Collection<Book> expectedBooks = getAllExistingBook();
-
-        assertThatThrownBy(() -> bookDao.insert(insertedBook))
-                .isInstanceOf(DaoInsertNonEmptyIdException.class);
-        Collection<Book> actualBooks = bookDao.findAll();
-
-        assertThat(actualBooks).usingRecursiveComparison().isEqualTo(expectedBooks);
-    }
-
-    @DisplayName("throw DaoUpdateEmptyIdException when update BOOK with 0L ID")
-    @Test
-    void shouldThrowExceptionWhenTryUpdateWithEmptyId() {
-        Book updatedBook = getNewBook();
-        Collection<Book> expectedBooks = getAllExistingBook();
-
-        assertThatThrownBy(() -> bookDao.update(updatedBook))
-                .isInstanceOf(DaoUpdateEmptyIdException.class);
-        Collection<Book> actualBooks = bookDao.findAll();
-
-        assertThat(actualBooks).usingRecursiveComparison().isEqualTo(expectedBooks);
-    }
-
-    private Collection<Book> getAllExistingBook() {
-        return List.of(
-                new Book(1, "Blindsight book test",
-                        new Author(1, "Peter Watts test author"),
-                        new Genre(3, "Sci-Fi test genre")),
-                new Book(2, "The Moon Is a Harsh Mistress book test",
-                        new Author(2, "Robert Hainline test author"),
-                        new Genre(3, "Sci-Fi test genre")),
-                new Book(3, "Prisoners of Power book test",
-                        new Author(3, "Arkady and Boris Strugatsky test author"),
-                        new Genre(2, "Fantasy test genre"))
-        );
+        assertThat(true).isEqualTo(bookDao.findById(EXIST_ID_BOOK).isEmpty());
     }
 
     private Book getNewBook() {
-        return new Book(EMPTY_ID_BOOK,
-                NEW_BOOK_NAME,
-                getExistAuthor(),
-                getExistGenre());
+        Book book = new Book();
+        book.setBookName(NEW_BOOK_NAME);
+        book.setGenre(getExistGenre());
+        book.getAuthors().addAll(Set.of(getExistAuthor()));
+        return book;
     }
 
     private Book getExistBook() {
         return new Book(EXIST_ID_BOOK,
                 EXIST_BOOK_NAME,
-                getExistAuthor(),
-                getExistGenre());
+                getExistGenre(),
+                Set.of(getExistAuthor()),
+                getExistComments()
+        );
+    }
+
+    private Book getExpectedUpdateBook() {
+        Book book = new Book();
+        book.setId(EXIST_ID_BOOK);
+        book.setBookName(UPDATED_BOOK_NAME);
+        book.setGenre(UPDATED_BOOK_GENRE);
+        book.setAuthors(getUpdatedAuthors());
+        return book;
     }
 
     private Author getExistAuthor() {
@@ -173,4 +197,20 @@ class BookDaoJpaTest {
         return new Genre(EXIST_ID_GENRE, EXIST_CAPTION_GENRE);
     }
 
+
+    private Set<Comment> getExistComments() {
+        Set<Comment> comments = new HashSet<>();
+        comments.add(new Comment(1, "nice book!"));
+        comments.add(new Comment(2, "So complicated"));
+        comments.add(new Comment(3, "atata"));
+        return comments;
+    }
+
+    private Set<Author> getUpdatedAuthors() {
+
+        Set<Author> authors = new HashSet<>();
+        authors.add(new Author(1, "Peter Watts test author"));
+        authors.add(new Author(2, "Robert Hainline test author"));
+        return authors;
+    }
 }

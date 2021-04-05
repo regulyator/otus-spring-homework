@@ -18,6 +18,7 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @EqualsAndHashCode.Include
     @Column(name = "caption", nullable = false)
     private String caption;
 }

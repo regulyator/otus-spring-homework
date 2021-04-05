@@ -2,8 +2,11 @@ package ru.otus.library.service.data.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.library.dao.GenreDao;
 import ru.otus.library.domain.Genre;
+import ru.otus.library.exception.EntityNotFoundException;
 import ru.otus.library.service.data.GenreService;
 
 import java.util.Collection;
@@ -18,38 +21,46 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean checkExistById(long id) {
         return genreDao.isExistById(id);
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public Genre create(String newGenreCaption) {
-        return create(new Genre(0L, newGenreCaption));
+        return genreDao.save(new Genre(0L, newGenreCaption));
     }
 
     @Override
-    public void update(Genre genre) {
-        genreDao.update(genre);
+    @Transactional
+    public Genre createOrUpdate(Genre genre) {
+        return genreDao.save(genre);
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public Genre changeGenreCaption(long idGenre, String newGenreCaption) {
+        Genre genre = genreDao.findById(idGenre).orElseThrow(EntityNotFoundException::new);
+        genre.setCaption(newGenreCaption);
+        return genreDao.save(genre);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
     public Genre getById(long id) {
-        return genreDao.findById(id);
+        return genreDao.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Collection<Genre> getAll() {
         return genreDao.findAll();
     }
 
     @Override
+    @Transactional
     public void removeById(long id) {
         genreDao.deleteById(id);
-    }
-
-    private Genre create(Genre genre) {
-        final long generatedId = genreDao.insert(genre);
-        genre.setId(generatedId);
-        return genre;
     }
 }

@@ -4,22 +4,23 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.library.dao.AuthorDao;
 import ru.otus.library.domain.Author;
-import ru.otus.library.exception.DaoInsertNonEmptyIdException;
-import ru.otus.library.exception.DaoUpdateEmptyIdException;
 
+import javax.persistence.PersistenceException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.*;
 
-@DisplayName("AuthorDaoJdbc should ")
+@DisplayName("AuthorDaoJpa should ")
 @DataJpaTest
 @Import(AuthorDaoJpa.class)
+@Transactional
 class AuthorDaoJpaTest {
 
     private static final long EXIST_ID_AUTHOR = 1;
@@ -32,6 +33,8 @@ class AuthorDaoJpaTest {
 
     @Autowired
     private AuthorDao authorDao;
+    @Autowired
+    private TestEntityManager testEntityManager;
 
     @DisplayName("return true if AUTHOR id exist")
     @Test
@@ -45,24 +48,38 @@ class AuthorDaoJpaTest {
         assertThat(false).isEqualTo(authorDao.isExistById(NON_EXIST_ID_AUTHOR));
     }
 
-    @DisplayName("insert AUTHOR with generated ID")
+    @DisplayName("insert new AUTHOR")
     @Test
     void shouldInsertAuthorAndGenerateId() {
-        Author expectedAuthor = new Author(EMPTY_ID_AUTHOR, NEW_AUTHOR_FIO);
-        long generatedId = authorDao.insert(expectedAuthor);
-        Author actualAuthor = authorDao.findById(generatedId);
+        Collection<Author> oldExistingAuthors = authorDao.findAll();
 
-        assertThat(generatedId).isNotEqualTo(expectedAuthor.getId());
-        assertThat(actualAuthor.getFio()).isEqualTo(expectedAuthor.getFio());
+        Author author = new Author();
+        author.setFio(NEW_AUTHOR_FIO);
+        Author actualAuthor = authorDao.save(author);
+
+        Collection<Author> newExistingAuthors = authorDao.findAll();
+
+        assertThat(true).isEqualTo(author.getId() > 0L);
+        assertThat(oldExistingAuthors).isNotEqualTo(newExistingAuthors);
+        assertThat(true).isEqualTo(newExistingAuthors.contains(actualAuthor));
     }
 
     @DisplayName("return AUTHOR by ID")
     @Test
     void shouldReturnAuthorById() {
         Author expectedAuthor = new Author(EXIST_ID_AUTHOR, EXIST_FIO_AUTHOR);
-        Author actualAuthor = authorDao.findById(EXIST_ID_AUTHOR);
+        Author actualAuthor = authorDao.findById(EXIST_ID_AUTHOR).orElse(null);
 
         assertThat(actualAuthor).usingRecursiveComparison().isEqualTo(expectedAuthor);
+    }
+
+    @DisplayName("return all AUTHOR by ids")
+    @Test
+    void shouldReturnAllAuthorsByIds() {
+        Collection<Author> expectedAuthors = getExpectedByIdsAuthors();
+        Collection<Author> actualAuthors = authorDao.findAll(List.of(1L, 3L));
+
+        assertThat(actualAuthors).usingRecursiveComparison().isEqualTo(expectedAuthors);
     }
 
     @DisplayName("return all AUTHOR")
@@ -79,11 +96,10 @@ class AuthorDaoJpaTest {
     void shouldUpdateAuthor() {
         Author expectedAuthor = new Author(EXIST_ID_AUTHOR, EXPECTED_UPDATED_FIO_AUTHOR);
 
-        Author storedAuthor = authorDao.findById(EXIST_ID_AUTHOR);
+        Author storedAuthor = authorDao.findById(EXIST_ID_AUTHOR).orElse(null);
         assertThat(storedAuthor).usingRecursiveComparison().isNotEqualTo(expectedAuthor);
-        storedAuthor.setFio(EXPECTED_UPDATED_FIO_AUTHOR);
-        authorDao.update(storedAuthor);
-        Author storedUpdatedAuthor = authorDao.findById(EXIST_ID_AUTHOR);
+        Objects.requireNonNull(storedAuthor).setFio(EXPECTED_UPDATED_FIO_AUTHOR);
+        Author storedUpdatedAuthor = authorDao.save(storedAuthor);
 
         assertThat(storedUpdatedAuthor).usingRecursiveComparison().isEqualTo(expectedAuthor);
     }
@@ -95,48 +111,22 @@ class AuthorDaoJpaTest {
                 .doesNotThrowAnyException();
 
         authorDao.deleteById(EXIST_NON_RELATED_ID_AUTHOR);
+        testEntityManager.clear();
 
-        assertThatThrownBy(() -> authorDao.findById(EXIST_NON_RELATED_ID_AUTHOR))
-                .isInstanceOf(EmptyResultDataAccessException.class);
+        assertThat(true).isEqualTo(authorDao.findById(EXIST_NON_RELATED_ID_AUTHOR).isEmpty());
     }
 
-    @DisplayName("throw DataIntegrityViolationException when delete AUTHOR related to books")
+    @DisplayName("throw PersistenceException when delete AUTHOR related to books")
     @Test
     void shouldThrowExceptionWhenTryDeleteAuthorRelatedToBooks() {
         assertThatCode(() -> authorDao.findById(EXIST_ID_AUTHOR))
                 .doesNotThrowAnyException();
 
         assertThatThrownBy(() -> authorDao.deleteById(EXIST_ID_AUTHOR))
-                .isInstanceOf(DataIntegrityViolationException.class);
+                .isInstanceOf(PersistenceException.class);
 
         assertThatCode(() -> authorDao.findById(EXIST_ID_AUTHOR))
                 .doesNotThrowAnyException();
-    }
-
-    @DisplayName("throw DaoInsertNonEmptyIdException when insert AUTHOR with non 0L ID")
-    @Test
-    void shouldThrowExceptionWhenTryInsertWithNonEmptyId() {
-        Author insertedAuthor = new Author(NON_EXIST_ID_AUTHOR, EXIST_FIO_AUTHOR);
-        Collection<Author> expectedAuthors = getAllExistingAuthors();
-
-        assertThatThrownBy(() -> authorDao.insert(insertedAuthor))
-                .isInstanceOf(DaoInsertNonEmptyIdException.class);
-        Collection<Author> actualAuthors = authorDao.findAll();
-
-        assertThat(actualAuthors).usingRecursiveComparison().isEqualTo(expectedAuthors);
-    }
-
-    @DisplayName("throw DaoUpdateEmptyIdException when update AUTHOR with 0L ID")
-    @Test
-    void shouldThrowExceptionWhenTryUpdateWithEmptyId() {
-        Author updatedAuthor = new Author(EMPTY_ID_AUTHOR, EXPECTED_UPDATED_FIO_AUTHOR);
-        Collection<Author> expectedAuthors = getAllExistingAuthors();
-
-        assertThatThrownBy(() -> authorDao.update(updatedAuthor))
-                .isInstanceOf(DaoUpdateEmptyIdException.class);
-        Collection<Author> actualAuthors = authorDao.findAll();
-
-        assertThat(actualAuthors).usingRecursiveComparison().isEqualTo(expectedAuthors);
     }
 
     private List<Author> getAllExistingAuthors() {
@@ -145,6 +135,13 @@ class AuthorDaoJpaTest {
                 new Author(2, "Robert Hainline test author"),
                 new Author(3, "Arkady and Boris Strugatsky test author"),
                 new Author(4, "Vernor Vinge test author")
+        );
+    }
+
+    private List<Author> getExpectedByIdsAuthors() {
+        return List.of(
+                new Author(1, "Peter Watts test author"),
+                new Author(3, "Arkady and Boris Strugatsky test author")
         );
     }
 

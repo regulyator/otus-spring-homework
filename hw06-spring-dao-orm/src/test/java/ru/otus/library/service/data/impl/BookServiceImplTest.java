@@ -9,74 +9,87 @@ import org.springframework.test.annotation.DirtiesContext;
 import ru.otus.library.dao.BookDao;
 import ru.otus.library.domain.Author;
 import ru.otus.library.domain.Book;
+import ru.otus.library.domain.Comment;
 import ru.otus.library.domain.Genre;
-import ru.otus.library.exception.NoSuchReferenceIdException;
 import ru.otus.library.service.data.AuthorService;
 import ru.otus.library.service.data.BookService;
+import ru.otus.library.service.data.CommentService;
 import ru.otus.library.service.data.GenreService;
 
+import java.util.HashSet;
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = BookServiceImpl.class)
 @DisplayName(value = "BookServiceImpl should ")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class BookServiceImplTest {
-    public static final long NEW_ID = 100L;
-    public static final Author TEST_NEW_AUTHOR = new Author(10L, "TEST AUTHOR");
-    public static final Genre TEST_NEW_GENRE = new Genre(15L, "TEST GENRE");
-    public static final String TEST_BOOK_NAME = "TEST BOOK";
+    private static final Book TEST_BOOK = new Book(100L, "TEST_BOOK", new Genre(10L, "TEST GENRE"), new HashSet<>(), new HashSet<>());
+    private static final Author TEST_NEW_AUTHOR = new Author(10L, "TEST AUTHOR");
+    private static final Comment TEST_NEW_COMMENT = new Comment(20L, "TEST COMMENT");
+    private static final String NEW_COMMENT_CAPTION = "TEST COMMENT";
+    private static final long AUTHOR_ID = 10L;
+    private static final long COMMENT_ID = 20L;
+    private static final long ID_TEST_BOOK = 100L;
     @MockBean
     private BookDao bookDao;
     @MockBean
     private AuthorService authorService;
     @MockBean
     private GenreService genreService;
+    @MockBean
+    private CommentService commentService;
     @Autowired
     private BookService bookService;
 
     @Test
-    @DisplayName("insert new BOOK with new author and genre and set id")
-    void shouldInsertNewBookWithNewAuthorAndGenreAndSetId() {
-        when(bookDao.insert(any())).thenReturn(NEW_ID);
-        when(authorService.create(anyString())).thenReturn(TEST_NEW_AUTHOR);
-        when(genreService.create(anyString())).thenReturn(TEST_NEW_GENRE);
-        when(authorService.checkExistById(TEST_NEW_AUTHOR.getId())).thenReturn(true);
-        when(genreService.checkExistById(TEST_NEW_GENRE.getId())).thenReturn(true);
+    @DisplayName("add author to Book")
+    void shouldAddAuthorToBook() {
+        Book expectedBook = TEST_BOOK;
+        expectedBook.getAuthors().add(TEST_NEW_AUTHOR);
 
-        Book newBook = bookService.create(TEST_BOOK_NAME, TEST_NEW_AUTHOR.getFio(), TEST_NEW_GENRE.getCaption());
+        when(bookDao.findById(anyLong())).thenReturn(Optional.of(TEST_BOOK));
+        when(bookDao.save(any())).thenAnswer(invocation -> invocation.getArguments()[0]);
+        when(authorService.getById(AUTHOR_ID)).thenReturn(TEST_NEW_AUTHOR);
 
-        assertThat(NEW_ID).isEqualTo(newBook.getId());
-        assertThat(TEST_NEW_AUTHOR).usingRecursiveComparison().isEqualTo(newBook.getAuthor());
-        assertThat(TEST_NEW_GENRE).usingRecursiveComparison().isEqualTo(newBook.getGenre());
+        Book actualBook = bookService.addBookAuthor(ID_TEST_BOOK, AUTHOR_ID);
+        assertThat(expectedBook).usingRecursiveComparison().isEqualTo(actualBook);
     }
 
     @Test
-    @DisplayName("insert new BOOK with referenced author and genre and set id")
-    void shouldInsertNewBookWithReferencedAuthorAndGenreAndSetId() {
-        when(bookDao.insert(any())).thenReturn(NEW_ID);
-        when(authorService.checkExistById(TEST_NEW_AUTHOR.getId())).thenReturn(true);
-        when(genreService.checkExistById(TEST_NEW_GENRE.getId())).thenReturn(true);
+    @DisplayName("remove author from Book")
+    void shouldRemoveAuthorFromBook() {
+        Book expectedBook = TEST_BOOK;
 
-        Book newBook = bookService.create(TEST_BOOK_NAME, TEST_NEW_AUTHOR.getId(), TEST_NEW_GENRE.getId());
+        Book sourceBook = TEST_BOOK;
+        sourceBook.getAuthors().add(TEST_NEW_AUTHOR);
 
-        assertThat(NEW_ID).isEqualTo(newBook.getId());
-        assertThat(TEST_NEW_AUTHOR.getId()).isEqualTo(newBook.getAuthor().getId());
-        assertThat(TEST_NEW_GENRE.getId()).isEqualTo(newBook.getGenre().getId());
+        when(bookDao.findById(anyLong())).thenReturn(Optional.of(sourceBook));
+        when(bookDao.save(any())).thenAnswer(invocation -> invocation.getArguments()[0]);
+        when(authorService.getById(AUTHOR_ID)).thenReturn(TEST_NEW_AUTHOR);
+
+        Book actualBook = bookService.removeBookAuthor(ID_TEST_BOOK, AUTHOR_ID);
+        assertThat(expectedBook).usingRecursiveComparison().isEqualTo(actualBook);
     }
 
     @Test
-    @DisplayName("throw NoSuchReferenceIdException when create BOOK with missing referenced author and genre")
-    void shouldThrowNoSuchReferenceIdExceptionInsertNewBookWithMissingReferenced() {
-        when(bookDao.insert(any())).thenReturn(NEW_ID);
-        when(authorService.checkExistById(TEST_NEW_AUTHOR.getId())).thenReturn(false);
-        when(genreService.checkExistById(TEST_NEW_GENRE.getId())).thenReturn(false);
+    @DisplayName("remove comment from Book")
+    void shouldRemoveCommentFromBook() {
+        Book expectedBook = TEST_BOOK;
 
-        assertThatThrownBy(() -> bookService.create(TEST_BOOK_NAME, TEST_NEW_AUTHOR.getId(), TEST_NEW_GENRE.getId()))
-                .isInstanceOf(NoSuchReferenceIdException.class);
+        Book sourceBook = TEST_BOOK;
+        sourceBook.getComments().add(TEST_NEW_COMMENT);
+
+        when(bookDao.findById(anyLong())).thenReturn(Optional.of(sourceBook));
+        when(bookDao.save(any())).thenAnswer(invocation -> invocation.getArguments()[0]);
+        when(commentService.getById(COMMENT_ID)).thenReturn(TEST_NEW_COMMENT);
+
+        Book actualBook = bookService.removeBookComment(ID_TEST_BOOK, COMMENT_ID);
+        assertThat(expectedBook).usingRecursiveComparison().isEqualTo(actualBook);
     }
 
 }
