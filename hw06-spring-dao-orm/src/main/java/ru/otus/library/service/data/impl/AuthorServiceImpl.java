@@ -28,7 +28,7 @@ public class AuthorServiceImpl implements AuthorService {
 
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional()
     public Author create(String newAuthorFio) {
         return authorDao.save(new Author(0L, newAuthorFio));
     }
@@ -40,7 +40,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional()
     public Author changeAuthorFio(long idAuthor, String newAuthorFio) {
         Author author = authorDao.findById(idAuthor).orElseThrow(EntityNotFoundException::new);
         author.setFio(newAuthorFio);

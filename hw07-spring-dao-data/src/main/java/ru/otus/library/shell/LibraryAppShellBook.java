@@ -63,18 +63,6 @@ public class LibraryAppShellBook {
         bookService.removeBookAuthor(bookId, authorsId);
     }
 
-    @ShellMethod(key = "books-add-comment", value = "Add comment to book")
-    public void addBookComment(@ShellOption({"BookID"}) long bookId,
-                               @ShellOption({"Comment"}) String newComment) {
-        bookService.addBookComment(bookId, newComment);
-    }
-
-    @ShellMethod(key = "books-remove-comment", value = "Remove comment from book")
-    public void removeBookComment(@ShellOption({"BookID"}) long bookId,
-                                  @ShellOption({"CommentId"}) long commentId) {
-        bookService.removeBookComment(bookId, commentId);
-    }
-
     @ShellMethod(key = "books-remove", value = "Remove book by id")
     public void removeBook(@ShellOption({"BookID"}) long bookId) {
         bookService.removeById(bookId);

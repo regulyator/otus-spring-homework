@@ -1,4 +1,4 @@
-package ru.otus.library.dao.impl;
+package ru.otus.library.repository;
 
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.DisplayName;
@@ -9,9 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.otus.library.domain.Author;
 import ru.otus.library.domain.Book;
-import ru.otus.library.domain.Comment;
 import ru.otus.library.domain.Genre;
-import ru.otus.library.repository.BookRepository;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -20,14 +18,14 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DisplayName("BookDaoJpa should ")
+@DisplayName("BookRepository should ")
 @DataJpaTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class BookRepositoryJpaTest {
 
 
     public static final long EXPECTED_QUERY_COUNT = 2L;
-    public static final long EXPECTED_QUERY_COUNT_ALL = 3L;
+    public static final long EXPECTED_QUERY_COUNT_ALL = 2L;
     private static final long EXIST_ID_BOOK = 1;
     private static final String EXIST_BOOK_NAME = "Blindsight test";
     private static final int EXPECTED_NUMBER_OF_BOOKS = 5;
@@ -67,8 +65,7 @@ class BookRepositoryJpaTest {
         assertThat(books).isNotNull().hasSize(EXPECTED_NUMBER_OF_BOOKS)
                 .allMatch(book -> !book.getBookName().equals(""))
                 .allMatch(book -> book.getGenre() != null)
-                .allMatch(book -> book.getAuthors().size() > 0)
-                .allMatch(book -> book.getComments().size() > 0);
+                .allMatch(book -> book.getAuthors().size() > 0);
         assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(EXPECTED_QUERY_COUNT_ALL);
     }
 
@@ -93,46 +90,11 @@ class BookRepositoryJpaTest {
                 .isEqualTo(expectedBook.getAuthors());
     }
 
-    @DisplayName("add new comment to BOOK")
-    @Test
-    void shouldAddNewCommentToBook() {
-        Comment newComment = new Comment(0L, "NEW COMMENT");
-        Book expectedBook = getExistBook();
-        expectedBook.getComments().add(newComment);
-
-        Book storedBook = bookRepository.findById(EXIST_ID_BOOK).orElse(null);
-        Objects.requireNonNull(storedBook).getComments().add(newComment);
-        bookRepository.save(storedBook);
-        Book storedUpdatedBook = bookRepository.findById(EXIST_ID_BOOK).orElse(null);
-
-        assertThat(storedUpdatedBook).isNotNull();
-        assertThat(storedUpdatedBook.getComments()).hasSize(4)
-                .anyMatch(comment -> comment.getCaption().equals(newComment.getCaption()));
-    }
-
-    @DisplayName("delete comment from BOOK")
-    @Test
-    void shouldDeleteCommentFromBook() {
-        Comment removedComment = new Comment(3, "atata");
-        Book expectedBook = getExistBook();
-        expectedBook.getComments().remove(removedComment);
-
-        Book storedBook = bookRepository.findById(EXIST_ID_BOOK).orElse(null);
-        Objects.requireNonNull(storedBook).getComments().remove(removedComment);
-        bookRepository.save(storedBook);
-        Book storedUpdatedBook = bookRepository.findById(EXIST_ID_BOOK).orElse(null);
-
-        assertThat(storedUpdatedBook).isNotNull();
-        assertThat(storedUpdatedBook.getComments()).hasSize(2)
-                .noneMatch(comment -> comment.equals(removedComment));
-    }
-
     private Book getExistBook() {
         return new Book(EXIST_ID_BOOK,
                 EXIST_BOOK_NAME,
                 getExistGenre(),
-                Set.of(getExistAuthor()),
-                getExistComments()
+                Set.of(getExistAuthor())
         );
     }
 
@@ -151,14 +113,6 @@ class BookRepositoryJpaTest {
 
     private Genre getExistGenre() {
         return new Genre(EXIST_ID_GENRE, EXIST_CAPTION_GENRE);
-    }
-
-    private Set<Comment> getExistComments() {
-        Set<Comment> comments = new HashSet<>();
-        comments.add(new Comment(1, "nice book!"));
-        comments.add(new Comment(2, "So complicated"));
-        comments.add(new Comment(3, "atata"));
-        return comments;
     }
 
     private Set<Author> getUpdatedAuthors() {

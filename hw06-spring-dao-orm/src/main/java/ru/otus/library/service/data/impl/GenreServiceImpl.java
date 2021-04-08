@@ -27,7 +27,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional()
     public Genre create(String newGenreCaption) {
         return genreDao.save(new Genre(0L, newGenreCaption));
     }
@@ -39,7 +39,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional()
     public Genre changeGenreCaption(long idGenre, String newGenreCaption) {
         Genre genre = genreDao.findById(idGenre).orElseThrow(EntityNotFoundException::new);
         genre.setCaption(newGenreCaption);

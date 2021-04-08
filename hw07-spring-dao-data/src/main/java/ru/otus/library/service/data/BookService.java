@@ -17,10 +17,6 @@ public interface BookService extends StandardService<Book> {
 
     Book removeBookAuthor(long idBook, long idAuthor);
 
-    Book addBookComment(long idBook, String newCommentCaption);
-
-    Book removeBookComment(long idBook, long idComment);
-
     BookDto getByIdDto(long id);
 
     Collection<BookDto> getAllDto();

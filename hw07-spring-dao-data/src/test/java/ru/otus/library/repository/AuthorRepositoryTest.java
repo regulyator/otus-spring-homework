@@ -1,23 +1,18 @@
-package ru.otus.library.dao.impl;
+package ru.otus.library.repository;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.library.domain.Author;
-import ru.otus.library.repository.AuthorRepository;
 
 import java.util.Collection;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DisplayName("AuthorDaoJpa should ")
+@DisplayName("AuthorRepository should ")
 @DataJpaTest
-@Transactional
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class AuthorRepositoryTest {
 
     @Autowired
