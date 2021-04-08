@@ -2,7 +2,6 @@ package ru.otus.library.service.data.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.library.dao.GenreDao;
 import ru.otus.library.domain.Genre;
@@ -27,7 +26,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional()
     public Genre create(String newGenreCaption) {
         return genreDao.save(new Genre(0L, newGenreCaption));
     }
@@ -39,7 +38,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional()
     public Genre changeGenreCaption(long idGenre, String newGenreCaption) {
         Genre genre = genreDao.findById(idGenre).orElseThrow(EntityNotFoundException::new);
         genre.setCaption(newGenreCaption);
@@ -47,7 +46,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
+    @Transactional(readOnly = true)
     public Genre getById(long id) {
         return genreDao.findById(id).orElseThrow(EntityNotFoundException::new);
     }

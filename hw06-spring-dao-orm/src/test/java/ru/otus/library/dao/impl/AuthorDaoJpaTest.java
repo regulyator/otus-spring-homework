@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.library.dao.AuthorDao;
 import ru.otus.library.domain.Author;
 
@@ -20,7 +19,6 @@ import static org.assertj.core.api.Assertions.*;
 @DisplayName("AuthorDaoJpa should ")
 @DataJpaTest
 @Import(AuthorDaoJpa.class)
-@Transactional
 class AuthorDaoJpaTest {
 
     private static final long EXIST_ID_AUTHOR = 1;

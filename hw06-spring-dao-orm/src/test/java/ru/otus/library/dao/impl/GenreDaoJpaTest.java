@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.library.dao.GenreDao;
 import ru.otus.library.domain.Genre;
 
@@ -20,7 +19,6 @@ import static org.assertj.core.api.Assertions.*;
 @DisplayName("GenreDaoJpa should ")
 @DataJpaTest
 @Import(GenreDaoJpa.class)
-@Transactional
 class GenreDaoJpaTest {
 
     private static final long EXIST_ID_GENRE = 2;

@@ -21,4 +21,7 @@ public class Comment {
     @EqualsAndHashCode.Include
     @Column(name = "caption", nullable = false)
     private String caption;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_book")
+    private Book book;
 }

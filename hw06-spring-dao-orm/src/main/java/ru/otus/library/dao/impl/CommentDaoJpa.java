@@ -24,7 +24,12 @@ public class CommentDaoJpa implements CommentDao {
 
     @Override
     public Comment save(@NonNull Comment comment) {
-        return entityManager.merge(comment);
+        if (comment.getId() <= 0L) {
+            entityManager.persist(comment);
+            return comment;
+        } else {
+            return entityManager.merge(comment);
+        }
     }
 
     @Override
@@ -35,6 +40,13 @@ public class CommentDaoJpa implements CommentDao {
     @Override
     public Collection<Comment> findAll() {
         return entityManager.createQuery("select c from Comment c", Comment.class)
+                .getResultList();
+    }
+
+    @Override
+    public Collection<Comment> findAllByBookId(long bookId) {
+        return entityManager.createQuery("select c from Comment c where c.book.id = :bookId", Comment.class)
+                .setParameter("bookId", bookId)
                 .getResultList();
     }
 

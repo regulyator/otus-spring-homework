@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Import;
 import ru.otus.library.dao.BookDao;
 import ru.otus.library.domain.Author;
 import ru.otus.library.domain.Book;
-import ru.otus.library.domain.Comment;
 import ru.otus.library.domain.Genre;
 
 import java.util.Collection;
@@ -28,7 +27,7 @@ class BookDaoJpaTest {
 
 
     public static final long EXPECTED_QUERY_COUNT = 2L;
-    private static final long EXIST_ID_BOOK = 1;
+    private static final long EXIST_ID_BOOK = 1L;
     private static final long EMPTY_ID_BOOK = 0L;
     private static final String NEW_BOOK_NAME = "New book test";
     private static final String EXIST_BOOK_NAME = "Blindsight test";
@@ -90,8 +89,7 @@ class BookDaoJpaTest {
         assertThat(books).isNotNull().hasSize(EXPECTED_NUMBER_OF_BOOKS)
                 .allMatch(book -> !book.getBookName().equals(""))
                 .allMatch(book -> book.getGenre() != null)
-                .allMatch(book -> book.getAuthors().size() > 0)
-                .allMatch(book -> book.getComments().size() > 0);
+                .allMatch(book -> book.getAuthors().size() > 0);
         assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(EXPECTED_QUERY_COUNT);
     }
 
@@ -115,41 +113,6 @@ class BookDaoJpaTest {
         assertThat(storedUpdatedBook.getAuthors()).hasSize(2)
                 .isEqualTo(expectedBook.getAuthors());
     }
-
-    @DisplayName("add new comment to BOOK")
-    @Test
-    void shouldAddNewCommentToBook() {
-        Comment newComment = new Comment(0L, "NEW COMMENT");
-        Book expectedBook = getExistBook();
-        expectedBook.getComments().add(newComment);
-
-        Book storedBook = bookDao.findById(EXIST_ID_BOOK).orElse(null);
-        Objects.requireNonNull(storedBook).getComments().add(newComment);
-        bookDao.save(storedBook);
-        Book storedUpdatedBook = bookDao.findById(EXIST_ID_BOOK).orElse(null);
-
-        assertThat(storedUpdatedBook).isNotNull();
-        assertThat(storedUpdatedBook.getComments()).hasSize(4)
-                .anyMatch(comment -> comment.getCaption().equals(newComment.getCaption()));
-    }
-
-    @DisplayName("delete comment from BOOK")
-    @Test
-    void shouldDeleteCommentFromBook() {
-        Comment removedComment = new Comment(3, "atata");
-        Book expectedBook = getExistBook();
-        expectedBook.getComments().remove(removedComment);
-
-        Book storedBook = bookDao.findById(EXIST_ID_BOOK).orElse(null);
-        Objects.requireNonNull(storedBook).getComments().remove(removedComment);
-        bookDao.save(storedBook);
-        Book storedUpdatedBook = bookDao.findById(EXIST_ID_BOOK).orElse(null);
-
-        assertThat(storedUpdatedBook).isNotNull();
-        assertThat(storedUpdatedBook.getComments()).hasSize(2)
-                .noneMatch(comment -> comment.equals(removedComment));
-    }
-
 
     @DisplayName("delete BOOK by ID")
     @Test
@@ -175,8 +138,7 @@ class BookDaoJpaTest {
         return new Book(EXIST_ID_BOOK,
                 EXIST_BOOK_NAME,
                 getExistGenre(),
-                Set.of(getExistAuthor()),
-                getExistComments()
+                Set.of(getExistAuthor())
         );
     }
 
@@ -195,15 +157,6 @@ class BookDaoJpaTest {
 
     private Genre getExistGenre() {
         return new Genre(EXIST_ID_GENRE, EXIST_CAPTION_GENRE);
-    }
-
-
-    private Set<Comment> getExistComments() {
-        Set<Comment> comments = new HashSet<>();
-        comments.add(new Comment(1, "nice book!"));
-        comments.add(new Comment(2, "So complicated"));
-        comments.add(new Comment(3, "atata"));
-        return comments;
     }
 
     private Set<Author> getUpdatedAuthors() {

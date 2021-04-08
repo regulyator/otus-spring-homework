@@ -38,7 +38,7 @@ public class BookDaoJpa implements BookDao {
     public Optional<Book> findById(long id) {
         try {
             return Optional.ofNullable(entityManager
-                    .createQuery("select b from Book b left join fetch b.comments left join fetch b.genre where b.id = :id", Book.class)
+                    .createQuery("select b from Book b left join fetch b.genre where b.id = :id", Book.class)
                     .setParameter("id", id)
                     .getSingleResult());
         } catch (NoResultException ex) {
@@ -49,7 +49,7 @@ public class BookDaoJpa implements BookDao {
     @Override
     public List<Book> findAll() {
         return entityManager
-                .createQuery("select distinct b from Book b left join fetch b.comments left join fetch b.genre ", Book.class)
+                .createQuery("select distinct b from Book b left join fetch b.genre ", Book.class)
                 .getResultList();
     }
 

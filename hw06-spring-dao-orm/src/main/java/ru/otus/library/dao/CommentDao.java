@@ -15,5 +15,7 @@ public interface CommentDao {
 
     Collection<Comment> findAll();
 
+    Collection<Comment> findAllByBookId(long bookId);
+
     void deleteById(long id);
 }

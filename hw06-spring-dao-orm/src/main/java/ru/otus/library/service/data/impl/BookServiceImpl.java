@@ -6,13 +6,11 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.library.dao.BookDao;
 import ru.otus.library.domain.Author;
 import ru.otus.library.domain.Book;
-import ru.otus.library.domain.Comment;
 import ru.otus.library.domain.Genre;
 import ru.otus.library.domain.dto.BookDto;
 import ru.otus.library.exception.EntityNotFoundException;
 import ru.otus.library.service.data.AuthorService;
 import ru.otus.library.service.data.BookService;
-import ru.otus.library.service.data.CommentService;
 import ru.otus.library.service.data.GenreService;
 
 import java.util.Collection;
@@ -26,17 +24,14 @@ public class BookServiceImpl implements BookService {
     private final BookDao bookDao;
     private final AuthorService authorService;
     private final GenreService genreService;
-    private final CommentService commentService;
 
     @Autowired
     public BookServiceImpl(BookDao bookDao,
                            AuthorService authorService,
-                           GenreService genreService,
-                           CommentService commentService) {
+                           GenreService genreService) {
         this.bookDao = bookDao;
         this.authorService = authorService;
         this.genreService = genreService;
-        this.commentService = commentService;
     }
 
     @Override
@@ -85,29 +80,6 @@ public class BookServiceImpl implements BookService {
         Book book = bookDao.findById(idBook).orElseThrow(EntityNotFoundException::new);
         Author removedAuthor = authorService.getById(idAuthor);
         book.getAuthors().remove(removedAuthor);
-        return bookDao.save(book);
-    }
-
-    @Override
-    @Transactional
-    public Book addBookComment(long idBook, String newCommentCaption) {
-        Book book = bookDao.findById(idBook).orElseThrow(EntityNotFoundException::new);
-
-        Comment newComment = new Comment();
-        newComment.setCaption(newCommentCaption);
-        book.getComments().add(newComment);
-
-        return bookDao.save(book);
-    }
-
-    @Override
-    @Transactional
-    public Book removeBookComment(long idBook, long idComment) {
-        Book book = bookDao.findById(idBook).orElseThrow(EntityNotFoundException::new);
-
-        Comment removedComment = commentService.getById(idComment);
-        book.getComments().remove(removedComment);
-
         return bookDao.save(book);
     }
 

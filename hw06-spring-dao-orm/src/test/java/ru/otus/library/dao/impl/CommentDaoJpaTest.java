@@ -6,13 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.library.dao.CommentDao;
+import ru.otus.library.domain.Author;
+import ru.otus.library.domain.Book;
 import ru.otus.library.domain.Comment;
+import ru.otus.library.domain.Genre;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -20,13 +22,15 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 @DisplayName("CommentDaoJpa should ")
 @DataJpaTest
 @Import(CommentDaoJpa.class)
-@Transactional
 class CommentDaoJpaTest {
 
     public static final long EXIST_COMMENT_ID = 1L;
     public static final long NON_EXIST_COMMENT_ID = 20L;
-    public static final Comment EXIST_COMMENT = new Comment(1L, "nice book!");
     public static final String UPDATED_COMMENT_CAPTION = "UPDATED COMMENT CAPTION";
+    public static final String EXIST_COMMENT_CAPTION = "nice book!";
+    public static final String NEW_COMMENT_CAPTION = "NEW COMMENT";
+
+
     @Autowired
     private CommentDao commentDao;
     @Autowired
@@ -44,33 +48,70 @@ class CommentDaoJpaTest {
         assertThat(false).isEqualTo(commentDao.isExistById(NON_EXIST_COMMENT_ID));
     }
 
+    @DisplayName("insert COMMENT")
+    @Test
+    void shouldInsertCommentAndGenerateId() {
+        Collection<Comment> oldExistingComments = commentDao.findAll();
+
+        Comment comment = new Comment();
+        comment.setId(0L);
+        comment.setCaption(NEW_COMMENT_CAPTION);
+        comment.setBook(getExistBook());
+
+        commentDao.save(comment);
+
+        Collection<Comment> newExistingComments = commentDao.findAll();
+
+        assertThat(true).isEqualTo(comment.getId() > 0L);
+        assertThat(oldExistingComments).isNotEqualTo(newExistingComments);
+        assertThat(true).isEqualTo(newExistingComments.contains(comment));
+    }
+
     @DisplayName("return COMMENT by ID")
     @Test
     void shouldReturnCommentById() {
         Comment actualComment = commentDao.findById(EXIST_COMMENT_ID).orElse(null);
 
-        assertThat(actualComment).usingRecursiveComparison().isEqualTo(EXIST_COMMENT);
+        assertThat(actualComment).isNotNull()
+                .returns(getExistComment().getBook(), Comment::getBook)
+                .returns(getExistComment().getId(), Comment::getId)
+                .returns(getExistComment().getCaption(), Comment::getCaption);
     }
 
     @DisplayName("return all COMMENT")
     @Test
     void shouldReturnAllComment() {
-        Collection<Comment> expectedComments = getAllExistingComments();
         Collection<Comment> actualComments = commentDao.findAll();
 
-        assertThat(actualComments).usingRecursiveComparison().isEqualTo(expectedComments);
+        assertThat(actualComments).isNotNull().hasSize(9)
+                .allMatch(comment -> !comment.getCaption().equals(""))
+                .allMatch(comment -> comment.getBook() != null);
+    }
+
+    @DisplayName("return all COMMENT by BOOK ID")
+    @Test
+    void shouldReturnAllCommentByBookId() {
+        Collection<Comment> actualComment = commentDao.findAllByBookId(1L);
+
+        assertThat(actualComment).isNotNull().hasSize(3)
+                .allMatch(comment -> comment.getBook().equals(getExistBook()))
+                .allMatch(comment -> !comment.getCaption().isEmpty());
     }
 
     @DisplayName("update COMMENT")
     @Test
     void shouldUpdateComment() {
-        Comment expectedComment = new Comment(EXIST_COMMENT_ID, UPDATED_COMMENT_CAPTION);
+        Comment expectedComment = getUpdatedComment();
         Comment storedComment = commentDao.findById(EXIST_COMMENT_ID).orElse(null);
 
         assertThat(storedComment).usingRecursiveComparison().isNotEqualTo(expectedComment);
         Objects.requireNonNull(storedComment).setCaption(UPDATED_COMMENT_CAPTION);
         storedComment = commentDao.save(storedComment);
-        assertThat(storedComment).usingRecursiveComparison().isEqualTo(expectedComment);
+
+        assertThat(storedComment).isNotNull()
+                .returns(expectedComment.getBook(), Comment::getBook)
+                .returns(expectedComment.getId(), Comment::getId)
+                .returns(expectedComment.getCaption(), Comment::getCaption);
     }
 
     @DisplayName("delete COMMENT by ID")
@@ -86,17 +127,20 @@ class CommentDaoJpaTest {
         assertThat(true).isEqualTo(commentDao.findById(EXIST_COMMENT_ID).isEmpty());
     }
 
-    private Collection<Comment> getAllExistingComments() {
-        return List.of(
-                new Comment(1, "nice book!"),
-                new Comment(2, "So complicated"),
-                new Comment(3, "atata"),
-                new Comment(4, "Mooooooon!"),
-                new Comment(5, "What a brilliant book!"),
-                new Comment(6, "ohhhhh"),
-                new Comment(7, "Not so bad"),
-                new Comment(8, "Another comment"),
-                new Comment(9, "And more comment")
+
+    private Comment getExistComment() {
+        return new Comment(EXIST_COMMENT_ID, EXIST_COMMENT_CAPTION, getExistBook());
+    }
+
+    private Comment getUpdatedComment() {
+        return new Comment(EXIST_COMMENT_ID, UPDATED_COMMENT_CAPTION, getExistBook());
+    }
+
+    private Book getExistBook() {
+        return new Book(1L,
+                "Blindsight test",
+                new Genre(3L, "Sci-Fi test genre"),
+                Set.of(new Author(1L, "Peter Watts test author"))
         );
     }
 

@@ -2,7 +2,6 @@ package ru.otus.library.service.data.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.library.dao.AuthorDao;
 import ru.otus.library.domain.Author;
@@ -28,7 +27,7 @@ public class AuthorServiceImpl implements AuthorService {
 
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional()
     public Author create(String newAuthorFio) {
         return authorDao.save(new Author(0L, newAuthorFio));
     }
@@ -40,7 +39,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional()
     public Author changeAuthorFio(long idAuthor, String newAuthorFio) {
         Author author = authorDao.findById(idAuthor).orElseThrow(EntityNotFoundException::new);
         author.setFio(newAuthorFio);
@@ -48,7 +47,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
+    @Transactional(readOnly = true)
     public Author getById(long id) {
         return authorDao.findById(id).orElseThrow(EntityNotFoundException::new);
     }
@@ -60,7 +59,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
+    @Transactional(readOnly = true)
     public Collection<Author> getAll(Collection<Long> authorsIds) {
         return authorDao.findAll(authorsIds);
     }
