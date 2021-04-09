@@ -7,4 +7,6 @@
 * **hw03-questions-spring-boot** - ДЗ: Перенести приложение для тестирования студентов на Spring Boot
 * **hw04-questions-spring-shell** - ДЗ: Перевести приложение для проведения опросов на Spring Shell
 * **hw05-spring-dao-jdbc** - ДЗ: Создать приложение хранящее информацию о книгах в библиотеке
+* **hw06-spring-dao-orm** - ДЗ: Переписать приложение для хранения книг на ORM
+* **hw07-spring-dao-data** - ДЗ: Библиотеку на Spring Data JPA
 
