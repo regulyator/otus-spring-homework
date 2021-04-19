@@ -7,17 +7,17 @@ import java.util.Collection;
 
 public interface BookService extends StandardService<Book> {
 
-    Book create(String bookName, long idGenre, long[] idAuthors);
+    Book create(String bookName, String idGenre, Collection<String> idAuthors);
 
-    Book changeBookName(long idBook, String newBookName);
+    Book changeBookName(String idBook, String newBookName);
 
-    Book changeBookGenre(long idBook, long newIdGenre);
+    Book changeBookGenre(String idBook, String newIdGenre);
 
-    Book addBookAuthor(long idBook, long idAuthor);
+    Book addBookAuthor(String idBook, String idAuthor);
 
-    Book removeBookAuthor(long idBook, long idAuthor);
+    Book removeBookAuthor(String idBook, String idAuthor);
 
-    BookDto getByIdDto(long id);
+    BookDto getByIdDto(String id);
 
     Collection<BookDto> getAllDto();
 

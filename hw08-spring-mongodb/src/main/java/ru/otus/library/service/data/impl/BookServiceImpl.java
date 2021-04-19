@@ -15,6 +15,7 @@ import ru.otus.library.service.data.GenreService;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
@@ -36,8 +37,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public Book create(String bookName, long idGenre, long[] idAuthors) {
-        Set<Author> authors = new HashSet<>(authorService.getAll(LongStream.of(idAuthors).boxed().collect(Collectors.toList())));
+    public Book create(String bookName, String idGenre, Collection<String> idAuthors) {
+        Set<Author> authors = new HashSet<>(authorService.getAll(idAuthors));
         Genre genre = genreService.getById(idGenre);
 
         Book newBook = new Book();
@@ -50,7 +51,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public Book changeBookName(long idBook, String newBookName) {
+    public Book changeBookName(String idBook, String newBookName) {
         Book book = bookRepository.findById(idBook).orElseThrow(EntityNotFoundException::new);
         book.setBookName(newBookName);
         return bookRepository.save(book);
@@ -58,7 +59,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public Book changeBookGenre(long idBook, long newIdGenre) {
+    public Book changeBookGenre(String idBook, String newIdGenre) {
         Book book = bookRepository.findById(idBook).orElseThrow(EntityNotFoundException::new);
         Genre genre = genreService.getById(newIdGenre);
         book.setGenre(genre);
@@ -67,7 +68,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public Book addBookAuthor(long idBook, long idAuthor) {
+    public Book addBookAuthor(String idBook, String idAuthor) {
         Book book = bookRepository.findById(idBook).orElseThrow(EntityNotFoundException::new);
         Author addedAuthor = authorService.getById(idAuthor);
         book.getAuthors().add(addedAuthor);
@@ -76,7 +77,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public Book removeBookAuthor(long idBook, long idAuthor) {
+    public Book removeBookAuthor(String idBook, String idAuthor) {
         Book book = bookRepository.findById(idBook).orElseThrow(EntityNotFoundException::new);
         Author removedAuthor = authorService.getById(idAuthor);
         book.getAuthors().remove(removedAuthor);
@@ -85,7 +86,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public boolean checkExistById(long id) {
+    public boolean checkExistById(String id) {
         return bookRepository.existsById(id);
     }
 
@@ -97,7 +98,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public Book getById(long id) {
+    public Book getById(String id) {
         return bookRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
@@ -109,13 +110,13 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public void removeById(long id) {
+    public void removeById(String id) {
         bookRepository.deleteById(id);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public BookDto getByIdDto(long id) {
+    public BookDto getByIdDto(String id) {
         return new BookDto(bookRepository.findById(id).orElseThrow(EntityNotFoundException::new));
     }
 

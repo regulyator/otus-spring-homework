@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 class AuthorRepositoryTest {
 
-    @Autowired
+    /*@Autowired
     private AuthorRepository authorRepository;
 
     @DisplayName("return all AUTHOR by ids")
@@ -32,6 +32,6 @@ class AuthorRepositoryTest {
                 new Author(1, "Peter Watts test author"),
                 new Author(3, "Arkady and Boris Strugatsky test author")
         );
-    }
+    }*/
 
 }

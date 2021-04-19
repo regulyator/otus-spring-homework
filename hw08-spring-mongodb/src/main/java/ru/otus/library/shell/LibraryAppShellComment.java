@@ -21,7 +21,7 @@ public class LibraryAppShellComment {
         this.commentService = commentService;
     }
 
-    @ShellMethod(key = "comments", value = "Show comment by id")
+    /*@ShellMethod(key = "comments", value = "Show comment by id")
     public void getComment(@ShellOption({"CommentID"}) long commentId) {
         inputOutputComponent.writeOutput(commentService.getByIdDto(commentId).toString());
     }
@@ -42,7 +42,7 @@ public class LibraryAppShellComment {
     @ShellMethod(key = "comments-remove", value = "Remove comment")
     public void removeBookComment(@ShellOption({"CommentId"}) long commentId) {
         commentService.removeComment(commentId);
-    }
+    }*/
 
 
 }

@@ -12,10 +12,10 @@ class CommentRepositoryTest {
     @Autowired
     private CommentRepository commentRepository;
 
-    @Test
+    /*@Test
     @DisplayName("return all COMMENTS by BOOK ID")
     void shouldReturnAllBookCommentByBookId() {
         System.out.println(commentRepository.findAllByBookId(BOOK_ID));
-    }
+    }*/
 
 }

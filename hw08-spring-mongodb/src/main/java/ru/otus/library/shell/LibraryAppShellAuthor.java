@@ -32,7 +32,7 @@ public class LibraryAppShellAuthor {
         authorService.getAll().forEach(author -> inputOutputComponent.writeOutput(author.toString()));
     }
 
-    @ShellMethod(key = "authors", value = "Show author by id")
+    /*@ShellMethod(key = "authors", value = "Show author by id")
     public void getAuthor(@ShellOption({"AuthorID"}) long authorId) {
         inputOutputComponent.writeOutput(authorService.getById(authorId).toString());
     }
@@ -50,7 +50,7 @@ public class LibraryAppShellAuthor {
         } catch (DataIntegrityViolationException ex) {
             inputOutputComponent.writeOutput("Error! Can't delete author referenced to book!");
         }
-    }
+    }*/
 
 
 }

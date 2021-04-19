@@ -6,5 +6,5 @@ public interface GenreService extends StandardService<Genre> {
 
     Genre create(String genreCaption);
 
-    Genre changeGenreCaption(long idGenre, String newGenreCaption);
+    Genre changeGenreCaption(String idGenre, String newGenreCaption);
 }

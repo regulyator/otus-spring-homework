@@ -27,7 +27,7 @@ class CommentServiceImplTest {
     @Autowired
     private CommentService commentService;
 
-    @Test
+    /*@Test
     @DisplayName("add COMMENT to BOOK by BOOK ID")
     void shouldAddCommentToBook() {
         when(bookService.getById(ID_BOOK)).thenReturn(new Book());
@@ -38,6 +38,6 @@ class CommentServiceImplTest {
         assertThat(actualComment).isNotNull();
         assertThat(actualComment.getBook()).isNotNull();
         assertThat(actualComment.getCaption()).isEqualTo(NEW_COMMENT_CAPTION);
-    }
+    }*/
 
 }

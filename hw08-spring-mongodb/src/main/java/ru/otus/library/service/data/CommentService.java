@@ -7,17 +7,13 @@ import java.util.Collection;
 
 public interface CommentService {
 
-    Comment getById(long id);
+    Comment getById(String id);
 
-    CommentDto getByIdDto(long id);
+    CommentDto getByIdDto(String id);
 
-    Comment updateCommentCaption(long id, String newCommentCaption);
+    Comment updateCommentCaption(String id, String newCommentCaption);
 
-    Collection<Comment> getAllBookComment(long bookId);
+    Comment addCommentToBook(String idBook, String newCommentCaption);
 
-    Collection<CommentDto> getAllBookCommentDto(long bookId);
-
-    Comment addCommentToBook(long idBook, String newCommentCaption);
-
-    void removeComment(long idComment);
+    void removeComment(String idComment);
 }

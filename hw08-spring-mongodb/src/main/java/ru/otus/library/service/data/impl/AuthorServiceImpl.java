@@ -23,7 +23,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     @Transactional(readOnly = true)
-    public boolean checkExistById(long id) {
+    public boolean checkExistById(String id) {
         return authorRepository.existsById(id);
     }
 
@@ -31,7 +31,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     @Transactional()
     public Author create(String newAuthorFio) {
-        return authorRepository.save(new Author(0L, newAuthorFio));
+        return authorRepository.save(new Author(null, newAuthorFio));
     }
 
     @Override
@@ -42,7 +42,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     @Transactional()
-    public Author changeAuthorFio(long idAuthor, String newAuthorFio) {
+    public Author changeAuthorFio(String idAuthor, String newAuthorFio) {
         Author author = authorRepository.findById(idAuthor).orElseThrow(EntityNotFoundException::new);
         author.setFio(newAuthorFio);
         return authorRepository.save(author);
@@ -50,7 +50,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
-    public Author getById(long id) {
+    public Author getById(String id) {
         return authorRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
@@ -62,13 +62,13 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
-    public Collection<Author> getAll(List<Long> authorsIds) {
+    public Collection<Author> getAll(Collection<String> authorsIds) {
         return authorRepository.findAllByIdIn(authorsIds);
     }
 
     @Override
     @Transactional
-    public void removeById(long id) {
+    public void removeById(String id) {
         authorRepository.deleteById(id);
     }
 }

@@ -1,6 +1,5 @@
 package ru.otus.library.repository;
 
-import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,7 @@ class BookRepositoryJpaTest {
     private static final String EXIST_BOOK_NAME = "Blindsight test";
     private static final int EXPECTED_NUMBER_OF_BOOKS = 5;
     private static final String UPDATED_BOOK_NAME = "TEST BOOK UPDATED";
-    private static final Genre UPDATED_BOOK_GENRE = new Genre(2, "Fantasy test genre");
+    //private static final Genre UPDATED_BOOK_GENRE = new Genre(2, "Fantasy test genre");
     private static final long EXIST_ID_AUTHOR = 1;
     private static final String EXIST_FIO_AUTHOR = "Peter Watts test author";
     private static final long EXIST_ID_GENRE = 3;
@@ -40,7 +39,7 @@ class BookRepositoryJpaTest {
     @Autowired
     private TestEntityManager testEntityManager;
 
-    @DisplayName("return BOOK by ID and have no N+1")
+    /*@DisplayName("return BOOK by ID and have no N+1")
     @Test
     void shouldReturnBookById() {
         SessionFactory sessionFactory = testEntityManager.getEntityManager().getEntityManagerFactory()
@@ -121,5 +120,5 @@ class BookRepositoryJpaTest {
         authors.add(new Author(1, "Peter Watts test author"));
         authors.add(new Author(2, "Robert Hainline test author"));
         return authors;
-    }
+    }*/
 }

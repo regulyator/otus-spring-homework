@@ -9,7 +9,7 @@ public interface AuthorService extends StandardService<Author> {
 
     Author create(String authorFio);
 
-    Author changeAuthorFio(long idAuthor, String newAuthorFio);
+    Author changeAuthorFio(String idAuthor, String newAuthorFio);
 
-    Collection<Author> getAll(List<Long> authorsIds);
+    Collection<Author> getAll(Collection<String> authorsIds);
 }

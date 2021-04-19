@@ -32,7 +32,7 @@ public class LibraryAppShellGenre {
         genreService.getAll().forEach(author -> inputOutputComponent.writeOutput(author.toString()));
     }
 
-    @ShellMethod(key = "genres", value = "Show genre by id")
+    /*@ShellMethod(key = "genres", value = "Show genre by id")
     public void getGenre(@ShellOption({"GenreID"}) long genreId) {
         inputOutputComponent.writeOutput(genreService.getById(genreId).toString());
     }
@@ -50,7 +50,7 @@ public class LibraryAppShellGenre {
         } catch (DataIntegrityViolationException ex) {
             inputOutputComponent.writeOutput("Error! Can't delete genre referenced to book!");
         }
-    }
+    }*/
 
 
 }

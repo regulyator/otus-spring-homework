@@ -21,7 +21,7 @@ public class LibraryAppShellBook {
         this.bookService = bookService;
     }
 
-    @ShellMethod(key = "books-create", value = "Create new book with Authors and Genre")
+    /*@ShellMethod(key = "books-create", value = "Create new book with Authors and Genre")
     public void createBook(@ShellOption({"BookName"}) String bookName,
                            @ShellOption({"GenreId"}) long genreId,
                            @ShellOption({"AuthorsIds"}) long[] authorsIds
@@ -66,7 +66,7 @@ public class LibraryAppShellBook {
     @ShellMethod(key = "books-remove", value = "Remove book by id")
     public void removeBook(@ShellOption({"BookID"}) long bookId) {
         bookService.removeById(bookId);
-    }
+    }*/
 
 
 }

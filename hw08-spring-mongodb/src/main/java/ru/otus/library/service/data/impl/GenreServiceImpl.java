@@ -22,14 +22,14 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     @Transactional(readOnly = true)
-    public boolean checkExistById(long id) {
+    public boolean checkExistById(String id) {
         return genreRepository.existsById(id);
     }
 
     @Override
     @Transactional()
     public Genre create(String newGenreCaption) {
-        return genreRepository.save(new Genre(0L, newGenreCaption));
+        return genreRepository.save(new Genre(null, newGenreCaption));
     }
 
     @Override
@@ -40,7 +40,7 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     @Transactional()
-    public Genre changeGenreCaption(long idGenre, String newGenreCaption) {
+    public Genre changeGenreCaption(String idGenre, String newGenreCaption) {
         Genre genre = genreRepository.findById(idGenre).orElseThrow(EntityNotFoundException::new);
         genre.setCaption(newGenreCaption);
         return genreRepository.save(genre);
@@ -48,7 +48,7 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = true)
-    public Genre getById(long id) {
+    public Genre getById(String id) {
         return genreRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
@@ -60,7 +60,7 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     @Transactional
-    public void removeById(long id) {
+    public void removeById(String id) {
         genreRepository.deleteById(id);
     }
 }

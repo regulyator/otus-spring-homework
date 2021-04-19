@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(classes = BookServiceImpl.class)
 @DisplayName(value = "BookServiceImpl should ")
 class BookServiceImplTest {
-    private static final Book TEST_BOOK = new Book(100L, "TEST_BOOK", new Genre(10L, "TEST GENRE"), new HashSet<>());
+    /*private static final Book TEST_BOOK = new Book(100L, "TEST_BOOK", new Genre(10L, "TEST GENRE"), new HashSet<>());
     private static final Author TEST_NEW_AUTHOR = new Author(10L, "TEST AUTHOR");
     private static final long AUTHOR_ID = 10L;
     private static final long ID_TEST_BOOK = 100L;
@@ -64,6 +64,6 @@ class BookServiceImplTest {
 
         Book actualBook = bookService.removeBookAuthor(ID_TEST_BOOK, AUTHOR_ID);
         assertThat(TEST_BOOK).usingRecursiveComparison().isEqualTo(actualBook);
-    }
+    }*/
 
 }

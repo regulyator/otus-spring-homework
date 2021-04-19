@@ -13,7 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @ToString
 public class BookDto {
-    private final long id;
+    private final String id;
     private final String bookName;
     private final Genre genre;
     private final Set<Author> authors;

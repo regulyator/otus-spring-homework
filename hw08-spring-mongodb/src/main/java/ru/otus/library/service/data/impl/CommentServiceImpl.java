@@ -11,9 +11,6 @@ import ru.otus.library.repository.CommentRepository;
 import ru.otus.library.service.data.BookService;
 import ru.otus.library.service.data.CommentService;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
-
 @Service
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
@@ -28,45 +25,33 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional(readOnly = true)
-    public Comment getById(long id) {
+    public Comment getById(String id) {
         return commentRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
-    public CommentDto getByIdDto(long id) {
+    public CommentDto getByIdDto(String id) {
         return new CommentDto(commentRepository.findById(id).orElseThrow(EntityNotFoundException::new));
     }
 
     @Override
     @Transactional
-    public Comment updateCommentCaption(long id, String newCommentCaption) {
+    public Comment updateCommentCaption(String id, String newCommentCaption) {
         Comment comment = commentRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         comment.setCaption(newCommentCaption);
         return commentRepository.save(comment);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Collection<Comment> getAllBookComment(long bookId) {
-        return commentRepository.findAllByBookId(bookId);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Collection<CommentDto> getAllBookCommentDto(long bookId) {
-        return commentRepository.findAllByBookId(bookId).stream().map(CommentDto::new).collect(Collectors.toList());
-    }
-
-    @Override
     @Transactional
-    public Comment addCommentToBook(long idBook, String newCommentCaption) {
+    public Comment addCommentToBook(String idBook, String newCommentCaption) {
         Book book = bookService.getById(idBook);
-        return commentRepository.save(new Comment(0L, newCommentCaption, book));
+        return commentRepository.save(new Comment(null, newCommentCaption, book));
     }
 
     @Override
     @Transactional
-    public void removeComment(long idComment) {
+    public void removeComment(String idComment) {
         commentRepository.deleteById(idComment);
     }
 }

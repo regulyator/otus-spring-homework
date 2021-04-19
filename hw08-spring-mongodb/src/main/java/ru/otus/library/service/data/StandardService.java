@@ -4,13 +4,13 @@ import java.util.Collection;
 
 public interface StandardService<T> {
 
-    boolean checkExistById(long id);
+    boolean checkExistById(String id);
 
     T createOrUpdate(T entity);
 
-    T getById(long id);
+    T getById(String id);
 
     Collection<T> getAll();
 
-    void removeById(long id);
+    void removeById(String id);
 }

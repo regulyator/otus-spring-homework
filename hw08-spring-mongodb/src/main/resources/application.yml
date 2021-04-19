@@ -4,15 +4,17 @@ logging:
     name: ${logging.file.path}/app.log
 
 spring:
-  datasource:
-    url: jdbc:h2:mem:testdb
-    initialization-mode: always
-  jpa:
-    generate-ddl: false
-    hibernate:
-      ddl-auto: validate
-    show-sql: false
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/library
   shell:
     command:
       stacktrace:
         enabled: false
+
+mongock:
+  runner-type: applicationrunner
+  change-logs-scan-package:
+    - ru.otus.library.mongock.changelog
+
+
