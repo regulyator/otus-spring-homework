@@ -20,5 +20,6 @@ public class Comment {
     @EqualsAndHashCode.Include
     @Field("caption")
     private String caption;
+    @Field("book")
     private Book book;
 }

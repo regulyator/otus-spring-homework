@@ -13,7 +13,7 @@ spring:
         enabled: false
 
 mongock:
-  runner-type: applicationrunner
+  runner-type: initializingbean
   change-logs-scan-package:
     - ru.otus.library.mongock.changelog
 
