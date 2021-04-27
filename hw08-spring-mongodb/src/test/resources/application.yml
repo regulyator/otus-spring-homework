@@ -1,15 +1,7 @@
 spring:
-  datasource:
-    url: jdbc:h2:mem:testdb
-    initialization-mode: always
-    data: test-data.sql
-
-  jpa:
-    generate-ddl: false
-    hibernate:
-      ddl-auto: validate
-    show-sql: true
-
+  data:
+    mongodb:
+      uri: mongodb://localhost:10099/librarytest
   main:
     banner-mode: off
   shell:
@@ -19,3 +11,8 @@ spring:
 logging:
   level:
     ROOT: ERROR
+
+mongock:
+  runner-type: applicationrunner
+  change-logs-scan-package:
+    - ru.otus.library.mongock.changelog.test

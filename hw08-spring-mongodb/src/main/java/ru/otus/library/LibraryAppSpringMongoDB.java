@@ -9,6 +9,10 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableMongock
 @EnableMongoRepositories
 public class LibraryAppSpringMongoDB {
+    //как уже упоминали проблема на маках с арм процессорами
+    static {
+        System.setProperty("os.arch", "i686_64");
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(LibraryAppSpringMongoDB.class, args);

@@ -9,8 +9,8 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -29,6 +29,9 @@ public class Book {
     private Genre genre;
 
     @DBRef(lazy = true)
-    private Set<Author> authors = new HashSet<>();
+    private List<Author> authors = new ArrayList<>();
+
+    @Field("comments")
+    private List<Comment> comments = new ArrayList<>();
 
 }

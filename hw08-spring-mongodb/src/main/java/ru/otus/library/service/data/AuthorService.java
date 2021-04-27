@@ -11,5 +11,5 @@ public interface AuthorService extends StandardService<Author> {
 
     Author changeAuthorFio(String idAuthor, String newAuthorFio);
 
-    Collection<Author> getAll(Collection<String> authorsIds);
+    List<Author> getAll(Collection<String> authorsIds);
 }

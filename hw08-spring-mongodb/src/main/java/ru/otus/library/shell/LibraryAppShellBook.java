@@ -8,6 +8,8 @@ import org.springframework.shell.standard.ShellOption;
 import ru.otus.library.service.data.BookService;
 import ru.otus.library.service.util.InputOutputComponent;
 
+import java.util.Collection;
+
 @ShellComponent
 @ShellCommandGroup("Book commands")
 public class LibraryAppShellBook {
@@ -21,16 +23,16 @@ public class LibraryAppShellBook {
         this.bookService = bookService;
     }
 
-    /*@ShellMethod(key = "books-create", value = "Create new book with Authors and Genre")
+    @ShellMethod(key = "books-create", value = "Create new book with Authors and Genre")
     public void createBook(@ShellOption({"BookName"}) String bookName,
-                           @ShellOption({"GenreId"}) long genreId,
-                           @ShellOption({"AuthorsIds"}) long[] authorsIds
+                           @ShellOption({"GenreId"}) String genreId,
+                           @ShellOption({"AuthorsIds"}) Collection<String> authorsIds
     ) {
         bookService.create(bookName, genreId, authorsIds);
     }
 
     @ShellMethod(key = "books", value = "Show book by id")
-    public void getBook(@ShellOption({"BookID"}) long bookId) {
+    public void getBook(@ShellOption({"BookID"}) String bookId) {
         inputOutputComponent.writeOutput(bookService.getByIdDto(bookId).toString());
     }
 
@@ -40,33 +42,50 @@ public class LibraryAppShellBook {
     }
 
     @ShellMethod(key = "books-update-name", value = "Update book name")
-    public void updateBookName(@ShellOption({"BookID"}) long bookId,
+    public void updateBookName(@ShellOption({"BookID"}) String bookId,
                                @ShellOption({"BookName"}) String bookName) {
         bookService.changeBookName(bookId, bookName);
     }
 
     @ShellMethod(key = "books-update-genre", value = "Update book genre")
-    public void updateBookName(@ShellOption({"BookID"}) long bookId,
-                               @ShellOption({"GenreId"}) long genreId) {
+    public void updateBookGenre(@ShellOption({"BookID"}) String bookId,
+                                @ShellOption({"GenreId"}) String genreId) {
         bookService.changeBookGenre(bookId, genreId);
     }
 
     @ShellMethod(key = "books-add-author", value = "Add author to book")
-    public void addBookAuthor(@ShellOption({"BookID"}) long bookId,
-                              @ShellOption({"AuthorsId"}) long authorsId) {
+    public void addBookAuthor(@ShellOption({"BookID"}) String bookId,
+                              @ShellOption({"AuthorsId"}) String authorsId) {
         bookService.addBookAuthor(bookId, authorsId);
     }
 
     @ShellMethod(key = "books-remove-author", value = "Remove author from book")
-    public void removeBookAuthor(@ShellOption({"BookID"}) long bookId,
-                                 @ShellOption({"AuthorsId"}) long authorsId) {
+    public void removeBookAuthor(@ShellOption({"BookID"}) String bookId,
+                                 @ShellOption({"AuthorsId"}) String authorsId) {
         bookService.removeBookAuthor(bookId, authorsId);
     }
 
+    @ShellMethod(key = "books-add-comment", value = "Add comment to book")
+    public void addBookComment(@ShellOption({"BookID"}) String bookId,
+                               @ShellOption({"Comment"}) String comment) {
+        bookService.addComment(bookId, comment);
+    }
+
+    @ShellMethod(key = "books-remove-comment", value = "Remove comment from book")
+    public void removeBookComment(@ShellOption({"BookID"}) String bookId,
+                                  @ShellOption({"CommentId"}) String commentId) {
+        bookService.removeCommentFromBook(bookId, commentId);
+    }
+
     @ShellMethod(key = "books-remove", value = "Remove book by id")
-    public void removeBook(@ShellOption({"BookID"}) long bookId) {
+    public void removeBook(@ShellOption({"BookID"}) String bookId) {
         bookService.removeById(bookId);
-    }*/
+    }
+
+    @ShellMethod(key = "books-comment", value = "Show book comments by id book")
+    public void getBookComments(@ShellOption({"BookID"}) String bookId) {
+        bookService.getAllBookComment(bookId).forEach(comment -> inputOutputComponent.writeOutput(comment.toString()));
+    }
 
 
 }
