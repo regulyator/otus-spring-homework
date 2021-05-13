@@ -35,3 +35,4 @@ build
 *.ipr
 *.idea
 logs
+/hw08-spring-mongodb/gradle.properties
