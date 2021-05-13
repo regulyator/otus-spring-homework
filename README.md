@@ -9,4 +9,5 @@
 * **hw05-spring-dao-jdbc** - ДЗ: Создать приложение хранящее информацию о книгах в библиотеке
 * **hw06-spring-dao-orm** - ДЗ: Переписать приложение для хранения книг на ORM
 * **hw07-spring-dao-data** - ДЗ: Библиотеку на Spring Data JPA
+* **hw08-spring-mongodb** - ДЗ: Использовать MongoDB и spring-data для хранения информации о книгах
 
