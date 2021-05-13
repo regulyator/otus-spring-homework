@@ -9,10 +9,11 @@ import org.bson.types.ObjectId;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Comment {
-    private String id = ObjectId.get().toHexString();
+    private String id;
     private String caption;
 
     public Comment(String caption) {
+        this.id = ObjectId.get().toHexString();
         this.caption = caption;
     }
 }

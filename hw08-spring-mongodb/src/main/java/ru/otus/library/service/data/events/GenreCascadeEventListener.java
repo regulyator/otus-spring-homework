@@ -35,15 +35,7 @@ public class GenreCascadeEventListener extends AbstractMongoEventListener<Genre>
     public void onAfterSave(AfterSaveEvent<Genre> event) {
         if (Objects.requireNonNull(event.getDocument()).containsKey("_id")) {
             final Genre updatedGenre = event.getSource();
-            List<Book> booksContainsGenre = bookRepository.findAllByGenre_Id(updatedGenre.getId());
-            booksContainsGenre
-                    .stream()
-                    .filter(book -> !book.getGenre().getCaption().equals(updatedGenre.getCaption()))
-                    .map(book -> {
-                        book.setGenre(updatedGenre);
-                        return book;
-                    })
-                    .forEach(bookRepository::save);
+            bookRepository.updateBooksGenre(updatedGenre);
         }
     }
 }
