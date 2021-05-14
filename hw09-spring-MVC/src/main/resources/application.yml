@@ -12,6 +12,9 @@ spring:
       stacktrace:
         enabled: false
 
+server:
+  port: 8099
+
 mongock:
   runner-type: initializingbean
   change-logs-scan-package:
