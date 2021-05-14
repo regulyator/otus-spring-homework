@@ -1,0 +1,18 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:10099/librarytest
+  main:
+    banner-mode: off
+  shell:
+    interactive:
+      enabled: false
+
+logging:
+  level:
+    ROOT: ERROR
+
+mongock:
+  runner-type: applicationrunner
+  change-logs-scan-package:
+    - ru.otus.library.mongock.changelog.test
