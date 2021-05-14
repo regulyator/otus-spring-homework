@@ -17,6 +17,7 @@ public class MainController {
 
     @GetMapping("/")
     public String main(Model model) {
+        model.addAttribute("books", bookRepository.findAll());
         return "main";
     }
 }
