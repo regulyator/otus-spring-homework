@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Edit Book</title>
+</head>
+
+<body>
+<h2> Edit book </h2>
+<form action="#" th:action="@{/books}" th:object="${bookDto}" method="post">
+    <input type="hidden" th:field="*{id}" >
+    <div>
+        <label>Book name:</label>
+        <input type="text" th:field="*{bookName}"/>
+    </div>
+    <div>
+        <label>Genre:</label>
+        <select th:field="*{genre}">
+            <option th:each="genre : ${genres}"
+                    th:value="${genre.id}"
+                    th:text="${genre.caption}">Genre
+            </option>
+        </select>
+    </div>
+    <div>
+        <label>Comments:</label>
+        <div th:each="comment, commentStat: ${bookDto.comments}">
+            <input th:value="${comment}" th:field="*{comments[__${commentStat.index}__].caption}"/>
+        </div>
+    </div>
+    <p><input type="submit" value="Save"/><input type="reset" value="Cancel"/></p>
+</form>
+
+<h4> Authors: </h4>
+<ul>
+    <li th:each="author : ${bookDto.authors}" th:text="${author.fio}"> Author</li>
+</ul>
+<h4> Comments: </h4>
+<ul>
+    <li th:each="comment : ${bookDto.comments}" th:text="${comment.caption}"> Comment</li>
+</ul>
+
+
+</body>
+</html>

@@ -3,27 +3,27 @@
 <head>
     <meta charset="utf-8">
     <title>Library app</title>
-
 </head>
 
 <body>
-    <H1>Welcome!</H1>
+<H1>Welcome to library!</H1>
 
-    <h2>All Books</h2>
+<h2>Books:</h2>
 
-    <table>
-        <thead>
-        <tr>
-            <th>Book name</th>
-            <th>Genre</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="book : ${books}">
-            <td th:text="${book.bookName}">Book Name</td>
-            <td th:text="${book.genre.caption}">Book Genre</td>
-        </tr>
-        </tbody>
-    </table>
+<table>
+    <thead>
+    <tr>
+        <th> Book Name </th>
+        <th> Genre </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}">
+        <td><span th:text="${book?.bookName}"> Name </span></td>
+        <td><span th:text="${book?.genre?.caption}"> Genre </span></td>
+        <td><a th:href="@{/books{bookId}(bookId=${book.id})}"> Edit </a></td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>
