@@ -7,10 +7,10 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/library
-  shell:
-    command:
-      stacktrace:
-        enabled: false
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
 
 server:
   port: 8099

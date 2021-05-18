@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<div th:fragment="comments">
+    <table>
+        <tbody>
+        <tr th:each="comment : ${bookDto.comments}">
+            <td><span th:text="${comment.caption}"> Text </span></td>
+            <td>
+                <form th:action="@{/books/{bookId}/comment/{commentId}(bookId=${bookDto.id}, commentId=${comment.id})}"
+                      th:method="delete">
+                    <button type="submit" class="btn">
+                        Delete
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <form th:action="@{/books/{bookId}/comment(bookId=${bookDto.id})}" th:method="put">
+        <div>
+            <input type="text" th:value="${newCommentText}" name="newCommentText"/>
+            <input type="submit" value="Add comment"/>
+        </div>
+    </form>
+</div>
+
+<div th:fragment="authors">
+    <table>
+        <tbody>
+        <tr th:each="author : ${bookDto.authors}">
+            <td><span th:text="${author.fio}"> fio </span></td>
+            <!--<td>
+                <form th:action="@{/books/{bookId}/comment/{commentId}(bookId=${bookDto.id}, commentId=${comment.id})}"
+                      th:method="delete">
+                    <button type="submit" class="btn">
+                        Delete
+                    </button>
+                </form>
+            </td>-->
+        </tr>
+        </tbody>
+    </table>
+    <form th:action="@{/books/{bookId}/author(bookId=${bookDto.id})}" th:method="put">
+        <div>
+            <select name="authorId">
+                <option th:each="author : ${authors}"
+                        th:value="${author.id}"
+                        th:text="${author.fio}"
+                        th:selected=null>
+                </option>
+            </select>
+            <input type="submit" value="Add author"/>
+        </div>
+    </form>
+</div>
+
+
+</body>
+</html>

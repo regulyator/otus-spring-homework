@@ -4,9 +4,6 @@ spring:
       uri: mongodb://localhost:10099/librarytest
   main:
     banner-mode: off
-  shell:
-    interactive:
-      enabled: false
 
 logging:
   level:
