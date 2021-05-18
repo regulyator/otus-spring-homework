@@ -3,33 +3,48 @@
 <head>
     <meta charset="utf-8">
     <title>Edit Book</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap-select/1.13.18/css/bootstrap-select.css}"/>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.6.0/css/bootstrap.min.css} "/>
 </head>
 
 <body>
-<h2> Edit book </h2>
-<form th:action="@{/books}" th:object="${bookDto}" method="post">
-    <input type="hidden" th:field="*{id}" >
-    <div>
-        <label>Book name:</label>
-        <input type="text" th:field="*{bookName}"/>
-    </div>
-    <div>
-        <label>Genre:</label>
-        <select th:field="*{genre}">
-            <option th:each="genre : ${genres}"
-                    th:value="${genre.id}"
-                    th:text="${genre.caption}">Genre
-            </option>
-        </select>
-    </div>
-    <p><input type="submit" value="Save"/><input type="reset" value="Cancel"/></p>
-</form>
-<h4>Comments:</h4>
-<div th:insert="Fragments :: comments"></div>
+<div class="container">
+    <h2> Edit book </h2>
+    <form th:action="@{/books}" th:object="${bookDto}" method="post">
+        <input type="hidden" th:field="*{id}">
+        <div>
+            <label>Book name:</label>
+            <input type="text" th:field="*{bookName}" required class="form-control"/>
+        </div>
+        <div>
+            <label>Genre:</label>
+            <select th:field="*{genre}" class="form-control selectpicker">
+                <option th:each="genre : ${genres}"
+                        th:value="${genre.id}"
+                        th:text="${genre.caption}">Genre
+                </option>
+            </select>
+        </div>
+        <p><input type="submit" value="Save"/>
+    </form>
+    <h4>Comments:</h4>
+    <div th:replace="Fragments :: comments"></div>
 
-<h4> Authors: </h4>
-<div th:insert="Fragments :: authors"></div>
+    <h4> Authors: </h4>
+    <div th:replace="Fragments :: authors"></div>
+
+    <button type="button" class="btn btn-outline-primary btn-sm">
+        <a href="/">Return</a>
+    </button>
+    <button type="button" class="btn btn-outline-danger btn-sm">
+        <a href="/">Delete book</a>
+    </button>
+</div>
 
 
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/webjars/bootstrap-select/js/bootstrap-select.js}"></script>
 </body>
 </html>

@@ -1,16 +1,40 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <body>
 <div th:fragment="comments">
-    <table>
+    <div class="m-sm-1" th:each="comment : ${bookDto.comments}">
+        <form th:action="@{/books/{bookId}/comment/{commentId}(bookId=${bookDto.id}, commentId=${comment.id})}"
+              th:method="delete">
+            <div class="input-group">
+                <input th:value="${comment.caption}" type="text" class="form-control" readonly>
+                <span class="input-group-btn">
+                        <input type="submit" value="Delete" class="btn btn-danger">
+                </span>
+            </div>
+        </form>
+    </div>
+
+    <div class="m-sm-1">
+        <form th:action="@{/books/{bookId}/comment(bookId=${bookDto.id})}" th:method="put">
+            <div class="input-group">
+                <input type="text" class="form-control" th:value="${newCommentText}" name="newCommentText" required>
+                <span class="input-group-btn">
+                        <input type="submit" value="Add comment" class="btn btn-success">
+                </span>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div th:fragment="authors">
+    <table class="table-light">
         <tbody>
-        <tr th:each="comment : ${bookDto.comments}">
-            <td><span th:text="${comment.caption}"> Text </span></td>
+        <tr th:each="author : ${bookDto.authors}">
+            <td><span th:text="${author.fio}"> fio </span></td>
             <td>
-                <form th:action="@{/books/{bookId}/comment/{commentId}(bookId=${bookDto.id}, commentId=${comment.id})}"
+                <form th:action="@{/books/{bookId}/author/{authorId}(bookId=${bookDto.id}, authorId=${author.id})}"
                       th:method="delete">
-                    <button type="submit" class="btn">
+                    <button type="submit" class="btn btn-danger btn-sm">
                         Delete
                     </button>
                 </form>
@@ -18,44 +42,18 @@
         </tr>
         </tbody>
     </table>
-    <form th:action="@{/books/{bookId}/comment(bookId=${bookDto.id})}" th:method="put">
+    <form th:action="@{/books/{bookId}/author(bookId=${bookDto.id})}" th:method="put" th:if="${!authors.isEmpty()}">
         <div>
-            <input type="text" th:value="${newCommentText}" name="newCommentText"/>
-            <input type="submit" value="Add comment"/>
-        </div>
-    </form>
-</div>
-
-<div th:fragment="authors">
-    <table>
-        <tbody>
-        <tr th:each="author : ${bookDto.authors}">
-            <td><span th:text="${author.fio}"> fio </span></td>
-            <!--<td>
-                <form th:action="@{/books/{bookId}/comment/{commentId}(bookId=${bookDto.id}, commentId=${comment.id})}"
-                      th:method="delete">
-                    <button type="submit" class="btn">
-                        Delete
-                    </button>
-                </form>
-            </td>-->
-        </tr>
-        </tbody>
-    </table>
-    <form th:action="@{/books/{bookId}/author(bookId=${bookDto.id})}" th:method="put">
-        <div>
-            <select name="authorId">
+            <select name="authorId" required class="form-select selectpicker">
+                <option value="">Select author</option>
                 <option th:each="author : ${authors}"
                         th:value="${author.id}"
-                        th:text="${author.fio}"
-                        th:selected=null>
+                        th:text="${author.fio}">
                 </option>
             </select>
-            <input type="submit" value="Add author"/>
+            <input type="submit" value="Add author" class="btn btn-success btn-sm"/>
         </div>
     </form>
 </div>
-
-
 </body>
 </html>

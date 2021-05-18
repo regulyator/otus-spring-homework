@@ -3,27 +3,40 @@
 <head>
     <meta charset="utf-8">
     <title>Library app</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap-select/1.13.18/css/bootstrap-select.css}"/>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.6.0/css/bootstrap.min.css}"/>
 </head>
 
 <body>
-<H1>Welcome to library!</H1>
+<div class="container">
+    <h2>Welcome to library!</h2>
+</div>
+<div class="container">
+    <table class="table table-hover">
+        <caption>Books</caption>
+        <thead>
+        <tr>
+            <th scope="col">Book Name</th>
+            <th scope="col">Genre</th>
+            <th scope="col">Edit</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td><span th:text="${book?.bookName}"> Name </span></td>
+            <td><span th:text="${book?.genre?.caption}"> Genre </span></td>
+            <td>
+                <button type="button" class="btn btn-light"><a th:href="@{/books/{bookId}(bookId=${book.id})}">
+                    Edit </a></button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
-<h2>Books:</h2>
-
-<table>
-    <thead>
-    <tr>
-        <th> Book Name </th>
-        <th> Genre </th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="book : ${books}">
-        <td><span th:text="${book?.bookName}"> Name </span></td>
-        <td><span th:text="${book?.genre?.caption}"> Genre </span></td>
-        <td><a th:href="@{/books/{bookId}(bookId=${book.id})}"> Edit </a></td>
-    </tr>
-    </tbody>
-</table>
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script th:src="@{/webjars/bootstrap-select/js/bootstrap-select.js}"></script>
 </body>
 </html>
