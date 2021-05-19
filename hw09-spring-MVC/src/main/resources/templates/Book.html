@@ -3,48 +3,53 @@
 <head>
     <meta charset="utf-8">
     <title>Edit Book</title>
-    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap-select/1.13.18/css/bootstrap-select.css}"/>
-    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.6.0/css/bootstrap.min.css} "/>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css} "/>
 </head>
 
 <body>
 <div class="container">
-    <h2> Edit book </h2>
+    <h2 th:text="${#strings.isEmpty(bookDto.id) ? 'Create new book':'Edit book'}"> Edit book </h2>
     <form th:action="@{/books}" th:object="${bookDto}" method="post">
         <input type="hidden" th:field="*{id}">
-        <div>
-            <label>Book name:</label>
-            <input type="text" th:field="*{bookName}" required class="form-control"/>
+        <div class="mb-3">
+            <label for="inputBookName" class="form-label">Book name</label>
+            <input type="text" th:field="*{bookName}" class="form-control" id="inputBookName" required/>
         </div>
-        <div>
-            <label>Genre:</label>
-            <select th:field="*{genre}" class="form-control selectpicker">
+        <div class="mb-3">
+            <label for="inputGenre" class="form-label">Genre</label>
+            <select th:field="*{genre}" class="form-select" id="inputGenre">
                 <option th:each="genre : ${genres}"
                         th:value="${genre.id}"
                         th:text="${genre.caption}">Genre
                 </option>
             </select>
         </div>
-        <p><input type="submit" value="Save"/>
+        <button type="submit" class="btn btn-primary">Save</button>
     </form>
-    <h4>Comments:</h4>
-    <div th:replace="Fragments :: comments"></div>
+    <div th:if="${!#strings.isEmpty(bookDto.id)}">
+        <h4> Authors: </h4>
+        <div th:replace="Fragments :: authors"></div>
+    </div>
 
-    <h4> Authors: </h4>
-    <div th:replace="Fragments :: authors"></div>
+    <div th:if="${!#strings.isEmpty(bookDto.id)}">
+        <h4>Comments:</h4>
+        <div th:replace="Fragments :: comments"></div>
+    </div>
 
-    <button type="button" class="btn btn-outline-primary btn-sm">
-        <a href="/">Return</a>
+    <p></p>
+    <a href="/books" class="btn btn-sm btn-outline-primary">Return to book list</a>
+    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteBookModal" th:if="${!#strings.isEmpty(bookDto.id)}">
+            Delete book
     </button>
-    <button type="button" class="btn btn-outline-danger btn-sm">
-        <a href="/">Delete book</a>
-    </button>
+
+    <div th:replace="Fragments :: deleteBook" th:if="${!#strings.isEmpty(bookDto.id)}"></div>
+
+
 </div>
 
 
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
-<script th:src="@{/webjars/bootstrap-select/js/bootstrap-select.js}"></script>
 </body>
 </html>

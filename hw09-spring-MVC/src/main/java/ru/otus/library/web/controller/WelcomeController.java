@@ -7,17 +7,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import ru.otus.library.service.data.BookService;
 
 @Controller
-public class MainController {
+public class WelcomeController {
     private final BookService bookService;
 
     @Autowired
-    public MainController(BookService bookService) {
+    public WelcomeController(BookService bookService) {
         this.bookService = bookService;
     }
 
     @GetMapping("/")
     public String main(Model model) {
-        model.addAttribute("books", bookService.getAllDto());
-        return "Main";
+        return "Welcome";
     }
 }

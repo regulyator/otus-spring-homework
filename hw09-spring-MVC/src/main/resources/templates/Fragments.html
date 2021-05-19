@@ -27,33 +27,59 @@
 </div>
 
 <div th:fragment="authors">
-    <table class="table-light">
-        <tbody>
-        <tr th:each="author : ${bookDto.authors}">
-            <td><span th:text="${author.fio}"> fio </span></td>
-            <td>
-                <form th:action="@{/books/{bookId}/author/{authorId}(bookId=${bookDto.id}, authorId=${author.id})}"
-                      th:method="delete">
-                    <button type="submit" class="btn btn-danger btn-sm">
-                        Delete
-                    </button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <form th:action="@{/books/{bookId}/author(bookId=${bookDto.id})}" th:method="put" th:if="${!authors.isEmpty()}">
-        <div>
-            <select name="authorId" required class="form-select selectpicker">
-                <option value="">Select author</option>
-                <option th:each="author : ${authors}"
-                        th:value="${author.id}"
-                        th:text="${author.fio}">
-                </option>
-            </select>
-            <input type="submit" value="Add author" class="btn btn-success btn-sm"/>
+    <div class="m-sm-1" th:each="author : ${bookDto.authors}">
+        <form th:action="@{/books/{bookId}/author/{authorId}(bookId=${bookDto.id}, authorId=${author.id})}"
+              th:method="delete">
+            <div class="input-group">
+                <input th:value="${author.fio}" type="text" class="form-control" readonly>
+                <span class="input-group-btn">
+                        <input type="submit" value="Delete" class="btn btn-danger">
+                </span>
+            </div>
+        </form>
+    </div>
+
+    <div class="m-sm-1" th:if="${!authors.isEmpty()}">
+        <form th:action="@{/books/{bookId}/author(bookId=${bookDto.id})}" th:method="put">
+            <div class="input-group">
+                <select name="authorId" required class="form-select">
+                    <option value="">Select author</option>
+                    <option th:each="author : ${authors}"
+                            th:value="${author.id}"
+                            th:text="${author.fio}">
+                    </option>
+                </select>
+                <span class="input-group-btn">
+                        <input type="submit" value="Add author" class="btn btn-success">
+                </span>
+            </div>
+        </form>
+    </div>
+
+    <div th:fragment="deleteBook">
+        <div class="modal fade" id="deleteBookModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Delete book?</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h5 th:text="${'Book for delete: '+ bookDto.getBookName()}">
+                            Book name
+                        </h5>
+                        <form th:action="@{/books/{bookId}(bookId=${bookDto.id})}" th:method="delete">
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-    </form>
+    </div>
+
 </div>
 </body>
 </html>
