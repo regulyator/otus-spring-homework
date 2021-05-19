@@ -7,5 +7,5 @@ public interface CustomBookRepository {
 
     Book deleteBookComment(String idBook, String idComment);
 
-    Book updateBooksGenre(Genre newGenre);
+    void updateBooksGenre(Genre newGenre);
 }

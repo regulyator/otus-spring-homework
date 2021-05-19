@@ -59,7 +59,7 @@ public class BookController {
 
     @PostMapping("/books")
     public String createOrUpdateBook(@ModelAttribute BookDto bookDto) {
-        if(Objects.isNull(bookDto.getId()) || bookDto.getId().isEmpty()){
+        if (Objects.isNull(bookDto.getId()) || bookDto.getId().isEmpty()) {
             Book newBook = new Book();
             bookService.createOrUpdate(newBook);
             bookDto.setId(newBook.getId());
@@ -82,7 +82,7 @@ public class BookController {
         return REDIRECT_BOOKS + bookId;
     }
 
-    @DeleteMapping("/books/{bookId}/comment/{commentId}")
+    @PutMapping("/books/{bookId}/comment/{commentId}")
     public String deleteComment(@PathVariable String bookId,
                                 @PathVariable String commentId) {
         bookService.removeCommentFromBook(bookId, commentId);
@@ -96,7 +96,7 @@ public class BookController {
         return REDIRECT_BOOKS + bookId;
     }
 
-    @DeleteMapping("/books/{bookId}/author/{authorId}")
+    @PutMapping("/books/{bookId}/author/{authorId}")
     public String deleteAuthorFromBook(@PathVariable String bookId,
                                        @PathVariable String authorId) {
         bookService.removeBookAuthor(bookId, authorId);

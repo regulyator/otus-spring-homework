@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
+import ru.otus.library.configuration.MongoConfiguration;
 import ru.otus.library.domain.Book;
 import ru.otus.library.domain.Genre;
 import ru.otus.library.exception.EntityNotFoundException;
@@ -12,10 +13,12 @@ import ru.otus.library.repository.AbstractRepositoryTest;
 import ru.otus.library.repository.BookRepository;
 import ru.otus.library.repository.GenreRepository;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("GenreCascadeEventListener should ")
-@Import(GenreCascadeEventListener.class)
+@Import({GenreCascadeEventListener.class, MongoConfiguration.class})
 class GenreCascadeEventListenerTest extends AbstractRepositoryTest {
 
     private static final String REFERENCE_GENRE_CAPTION = "Sci-Fi";
@@ -61,9 +64,11 @@ class GenreCascadeEventListenerTest extends AbstractRepositoryTest {
         genre.setCaption(UPDATED_GENRE_CAPTION);
         genreRepository.save(genre);
 
-        Book book = bookRepository.findByBookName(BOOK_NAME).orElseThrow(EntityNotFoundException::new);
+        List<Book> books = bookRepository.findAll();
 
-        assertThat(book.getGenre().getCaption()).isEqualTo(UPDATED_GENRE_CAPTION);
+
+        assertThat(books).isNotEmpty()
+                .noneMatch(book -> book.getGenre().getCaption().equals(REFERENCE_GENRE_CAPTION));
 
     }
 

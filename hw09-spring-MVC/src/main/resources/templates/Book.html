@@ -38,8 +38,9 @@
 
     <p></p>
     <a href="/books" class="btn btn-sm btn-outline-primary">Return to book list</a>
-    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteBookModal" th:if="${!#strings.isEmpty(bookDto.id)}">
-            Delete book
+    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteBookModal"
+            th:if="${!#strings.isEmpty(bookDto.id)}">
+        Delete book
     </button>
 
     <div th:replace="Fragments :: deleteBook" th:if="${!#strings.isEmpty(bookDto.id)}"></div>

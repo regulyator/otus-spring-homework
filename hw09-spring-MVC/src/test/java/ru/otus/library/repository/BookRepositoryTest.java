@@ -4,9 +4,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import ru.otus.library.configuration.MongoConfiguration;
 import ru.otus.library.domain.Book;
 import ru.otus.library.exception.EntityNotFoundException;
 
@@ -16,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("BookRepository should ")
 @DataMongoTest
+@Import(MongoConfiguration.class)
 class BookRepositoryTest {
 
     public static final int EXPECTED_UN_UPDATED_COMMENT_SIZE = 2;

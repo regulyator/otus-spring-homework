@@ -5,12 +5,10 @@ import org.springframework.data.mongodb.core.mapping.event.AbstractMongoEventLis
 import org.springframework.data.mongodb.core.mapping.event.AfterSaveEvent;
 import org.springframework.data.mongodb.core.mapping.event.BeforeDeleteEvent;
 import org.springframework.stereotype.Component;
-import ru.otus.library.domain.Book;
 import ru.otus.library.domain.Genre;
 import ru.otus.library.exception.ReferenceEntityException;
 import ru.otus.library.repository.BookRepository;
 
-import java.util.List;
 import java.util.Objects;
 
 @Component

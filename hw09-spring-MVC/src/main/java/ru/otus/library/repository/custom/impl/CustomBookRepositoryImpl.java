@@ -26,11 +26,10 @@ public class CustomBookRepositoryImpl implements CustomBookRepository {
     }
 
     @Override
-    public Book updateBooksGenre(Genre newGenre) {
+    public void updateBooksGenre(Genre newGenre) {
         Update updateGenre = new Update().set("genre", newGenre);
-        return mongoOperations.findAndModify(Query.query(Criteria.where("genre.id").is(newGenre.getId())),
+        mongoOperations.updateMulti(Query.query(Criteria.where("genre.id").is(newGenre.getId())),
                 updateGenre,
-                FindAndModifyOptions.options().returnNew(true),
                 Book.class);
     }
 }

@@ -2,21 +2,19 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <title>Library app</title>
+    <title>Error</title>
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
 </head>
 
 <body>
 <div class="container">
-    <h2>Welcome to library!</h2>
+    <h3 th:text="${'Error! Cant delete ' + entity}">Error! Cant delete entity reference to other!</h3>
+    <h4>First delete parent entity.</h4>
 </div>
 <div class="container">
-    <div class="list-group">
-        <a href="/books" class="list-group-item list-group-item-action">Book list</a>
-        <a href="/genres" class="list-group-item list-group-item-action">Genre list</a>
-        <a href="/authors" class="list-group-item list-group-item-action">Author list</a>
-    </div>
+    <a href="/" class="btn btn-sm btn-outline-secondary">Return home</a>
 </div>
+
 
 <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>

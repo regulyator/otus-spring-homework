@@ -1,7 +1,6 @@
 package ru.otus.library.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
-import ru.otus.library.domain.Author;
 import ru.otus.library.domain.Book;
 import ru.otus.library.repository.custom.CustomBookRepository;
 

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
+import ru.otus.library.configuration.MongoConfiguration;
 import ru.otus.library.domain.Author;
 import ru.otus.library.exception.EntityNotFoundException;
 import ru.otus.library.exception.ReferenceEntityException;
@@ -13,7 +14,7 @@ import ru.otus.library.repository.AuthorRepository;
 import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("AuthorCascadeEventListener should ")
-@Import(AuthorCascadeEventListener.class)
+@Import({AuthorCascadeEventListener.class, MongoConfiguration.class})
 class AuthorCascadeEventListenerTest extends AbstractRepositoryTest {
     private static final String REFERENCE_AUTHOR_FIO = "Peter Watts";
     private static final String NON_REFERENCE_AUTHOR_FIO = "Vernor Vinge";
