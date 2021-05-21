@@ -1,6 +1,7 @@
 package ru.otus.library.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -8,7 +9,11 @@ import ru.otus.library.domain.Author;
 import ru.otus.library.exception.ReferenceEntityException;
 import ru.otus.library.service.data.AuthorService;
 
-@Controller
+import java.util.Collection;
+import java.util.List;
+
+@RestController
+@RequestMapping("/library/api")
 public class AuthorController {
     private static final String REDIRECT_AUTHORS = "redirect:/authors";
     private final AuthorService authorService;
@@ -18,13 +23,13 @@ public class AuthorController {
         this.authorService = authorService;
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/authors")
-    public String getAllAuthors(Model model) {
-        model.addAttribute("authors", authorService.getAll());
-        return "Authors";
+    public Collection<Author> getAllAuthors() {
+        return authorService.getAll();
     }
 
-    @GetMapping("/authors/{authorId}/delete")
+    /*@GetMapping("/authors/{authorId}/delete")
     public String deleteAuthor(@PathVariable String authorId) {
         authorService.removeById(authorId);
         return REDIRECT_AUTHORS;
@@ -46,5 +51,5 @@ public class AuthorController {
     public String referenceDeleteErrorHandler(Model model) {
         model.addAttribute("entity", "Author");
         return "Reference error";
-    }
+    }*/
 }
