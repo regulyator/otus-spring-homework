@@ -11,9 +11,7 @@ public interface BookService extends StandardService<Book> {
 
     Book create(String bookName, String idGenre, Collection<String> idAuthors);
 
-    Book changeBookName(String idBook, String newBookName);
-
-    Book changeBookGenre(String idBook, String newIdGenre);
+    BookDto createOrUpdateAndSetIdIfNew(BookDto bookDto);
 
     Book addBookAuthor(String idBook, String idAuthor);
 

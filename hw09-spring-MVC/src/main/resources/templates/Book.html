@@ -10,7 +10,14 @@
 <div class="container">
     <h2 th:text="${#strings.isEmpty(bookDto.id) ? 'Create new book':'Edit book'}"> Edit book </h2>
     <form th:action="@{/books}" th:object="${bookDto}" method="post">
-        <input type="hidden" th:field="*{id}">
+        <input type="hidden" th:field="*{id}" th:if="${!#strings.isEmpty(bookDto.id)}">
+        <input type="hidden" th:field="*{authors}">
+        <div th:each="comment, commentStat : *{comments}">
+            <input th:type="hidden" th:field="*{comments[__${commentStat.index}__].id}"
+                   th:value="${bookDto.comments[__${commentStat.index}__].id}"/>
+            <input th:type="hidden" th:field="*{comments[__${commentStat.index}__].caption}"
+                   th:value="${bookDto.comments[__${commentStat.index}__].caption}"/>
+        </div>
         <div class="mb-3">
             <label for="inputBookName" class="form-label">Book name</label>
             <input type="text" th:field="*{bookName}" class="form-control" id="inputBookName" required/>

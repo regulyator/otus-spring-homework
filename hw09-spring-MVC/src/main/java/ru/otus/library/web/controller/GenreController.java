@@ -24,21 +24,21 @@ public class GenreController {
         return "Genres";
     }
 
-    @GetMapping("/genres/{genreId}/delete")
-    public String deleteAuthor(@PathVariable String genreId) {
+    @DeleteMapping("/genres/{genreId}/delete")
+    public String deleteGenre(@PathVariable String genreId) {
         genreService.removeById(genreId);
         return REDIRECT_GENRES;
     }
 
-    @PostMapping("/genres")
+    @PutMapping("/genres")
     public String updateGenre(@ModelAttribute Genre genre) {
-        genreService.changeGenreCaption(genre.getId(), genre.getCaption());
+        genreService.createOrUpdate(genre);
         return REDIRECT_GENRES;
     }
 
-    @PutMapping("/genres")
-    public String createGenre(@RequestParam String newGenreCaption) {
-        genreService.create(newGenreCaption);
+    @PostMapping("/genres")
+    public String createGenre(@ModelAttribute Genre genre) {
+        genreService.createOrUpdate(genre);
         return REDIRECT_GENRES;
     }
 

@@ -1,13 +1,11 @@
 package ru.otus.library.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import ru.otus.library.domain.dto.BookDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,5 +31,13 @@ public class Book {
 
     @Field("comments")
     private List<Comment> comments = new ArrayList<>();
+
+    public Book(@NonNull BookDto bookDto) {
+        this.id = bookDto.getId();
+        this.bookName = bookDto.getBookName();
+        this.genre = bookDto.getGenre();
+        this.authors = bookDto.getAuthors();
+        this.comments = bookDto.getComments();
+    }
 
 }

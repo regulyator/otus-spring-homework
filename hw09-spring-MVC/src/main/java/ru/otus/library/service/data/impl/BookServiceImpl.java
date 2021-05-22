@@ -48,18 +48,20 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book changeBookName(String idBook, String newBookName) {
-        Book book = bookRepository.findById(idBook).orElseThrow(EntityNotFoundException::new);
-        book.setBookName(newBookName);
-        return bookRepository.save(book);
-    }
+    public BookDto createOrUpdateAndSetIdIfNew(BookDto bookDto) {
+        if (Objects.isNull(bookDto.getId())) {
+            Book createdBook = bookRepository.save(new Book(bookDto));
+            bookDto.setId(createdBook.getId());
+        } else {
+            Book book = bookRepository.findById(bookDto.getId()).orElseThrow(EntityNotFoundException::new);
+            book.setBookName(bookDto.getBookName());
+            book.setGenre(bookDto.getGenre());
+            book.setAuthors(bookDto.getAuthors());
+            book.setComments(bookDto.getComments());
+            bookRepository.save(book);
+        }
 
-    @Override
-    public Book changeBookGenre(String idBook, String newIdGenre) {
-        Book book = bookRepository.findById(idBook).orElseThrow(EntityNotFoundException::new);
-        Genre genre = genreService.getById(newIdGenre);
-        book.setGenre(genre);
-        return bookRepository.save(book);
+        return bookDto;
     }
 
     @Override
