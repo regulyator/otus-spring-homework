@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Edit Book</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css} "/>
+</head>
+
+<body>
+<div class="container">
+    <h2 th:text="${#strings.isEmpty(bookDto.id) ? 'Create new book':'Edit book'}"> Edit book </h2>
+    <form th:action="@{/books}" th:object="${bookDto}" method="post">
+        <input type="hidden" th:field="*{id}" th:if="${!#strings.isEmpty(bookDto.id)}">
+        <input type="hidden" th:field="*{authors}">
+        <div th:each="comment, commentStat : *{comments}">
+            <input th:type="hidden" th:field="*{comments[__${commentStat.index}__].id}"
+                   th:value="${bookDto.comments[__${commentStat.index}__].id}"/>
+            <input th:type="hidden" th:field="*{comments[__${commentStat.index}__].caption}"
+                   th:value="${bookDto.comments[__${commentStat.index}__].caption}"/>
+        </div>
+        <div class="mb-3">
+            <label for="inputBookName" class="form-label">Book name</label>
+            <input type="text" th:field="*{bookName}" class="form-control" id="inputBookName" required/>
+        </div>
+        <div class="mb-3">
+            <label for="inputGenre" class="form-label">Genre</label>
+            <select th:field="*{genre}" class="form-select" id="inputGenre">
+                <option th:each="genre : ${genres}"
+                        th:value="${genre.id}"
+                        th:text="${genre.caption}">Genre
+                </option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+    <div th:if="${!#strings.isEmpty(bookDto.id)}">
+        <h4> Authors: </h4>
+        <div th:replace="Fragments :: authors"></div>
+    </div>
+
+    <div th:if="${!#strings.isEmpty(bookDto.id)}">
+        <h4>Comments:</h4>
+        <div th:replace="Fragments :: comments"></div>
+    </div>
+
+    <p></p>
+    <a href="/books" class="btn btn-sm btn-outline-primary">Return to book list</a>
+    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteBookModal"
+            th:if="${!#strings.isEmpty(bookDto.id)}">
+        Delete book
+    </button>
+
+    <div th:replace="Fragments :: deleteBook" th:if="${!#strings.isEmpty(bookDto.id)}"></div>
+
+
+</div>
+
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</body>
+</html>

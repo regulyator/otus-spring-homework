@@ -1,0 +1,23 @@
+logging:
+  file:
+    path: './logs'
+    name: ${logging.file.path}/app.log
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/library
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
+server:
+  port: 8099
+
+mongock:
+  runner-type: initializingbean
+  change-logs-scan-package:
+    - ru.otus.library.mongock.changelog
+
+
