@@ -24,21 +24,8 @@ public class AuthorServiceImpl implements AuthorService {
         return authorRepository.existsById(id);
     }
 
-
-    @Override
-    public Author create(String newAuthorFio) {
-        return authorRepository.save(new Author(null, newAuthorFio));
-    }
-
     @Override
     public Author createOrUpdate(Author author) {
-        return authorRepository.save(author);
-    }
-
-    @Override
-    public Author changeAuthorFio(String idAuthor, String newAuthorFio) {
-        Author author = authorRepository.findById(idAuthor).orElseThrow(EntityNotFoundException::new);
-        author.setFio(newAuthorFio);
         return authorRepository.save(author);
     }
 

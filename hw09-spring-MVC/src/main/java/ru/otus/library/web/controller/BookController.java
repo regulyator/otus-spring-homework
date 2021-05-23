@@ -5,14 +5,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.library.domain.Author;
-import ru.otus.library.domain.Book;
 import ru.otus.library.domain.dto.BookDto;
 import ru.otus.library.service.data.AuthorService;
 import ru.otus.library.service.data.BookService;
 import ru.otus.library.service.data.GenreService;
 
 import java.util.Collection;
-import java.util.Objects;
 
 @Controller
 public class BookController {
@@ -45,6 +43,7 @@ public class BookController {
         model.addAttribute("bookDto", bookDto);
         model.addAttribute("genres", genreService.getAll());
         model.addAttribute("authors", authors);
+        model.addAttribute("comments", bookDto.getComments());
         return "Book";
     }
 
@@ -59,13 +58,7 @@ public class BookController {
 
     @PostMapping("/books")
     public String createOrUpdateBook(@ModelAttribute BookDto bookDto) {
-        if (Objects.isNull(bookDto.getId()) || bookDto.getId().isEmpty()) {
-            Book newBook = new Book();
-            bookService.createOrUpdate(newBook);
-            bookDto.setId(newBook.getId());
-        }
-        bookService.changeBookName(bookDto.getId(), bookDto.getBookName());
-        bookService.changeBookGenre(bookDto.getId(), bookDto.getGenre().getId());
+        bookService.createOrUpdateAndSetIdIfNew(bookDto);
         return REDIRECT_BOOKS + bookDto.getId();
     }
 

@@ -24,21 +24,21 @@ public class AuthorController {
         return "Authors";
     }
 
-    @GetMapping("/authors/{authorId}/delete")
+    @DeleteMapping("/authors/{authorId}/delete")
     public String deleteAuthor(@PathVariable String authorId) {
         authorService.removeById(authorId);
         return REDIRECT_AUTHORS;
     }
 
-    @PostMapping("/authors")
+    @PutMapping("/authors")
     public String updateAuthor(@ModelAttribute Author author) {
-        authorService.changeAuthorFio(author.getId(), author.getFio());
+        authorService.createOrUpdate(author);
         return REDIRECT_AUTHORS;
     }
 
-    @PutMapping("/authors")
-    public String createAuthor(@RequestParam String newAuthorFio) {
-        authorService.create(newAuthorFio);
+    @PostMapping("/authors")
+    public String createAuthor(@ModelAttribute Author author) {
+        authorService.createOrUpdate(author);
         return REDIRECT_AUTHORS;
     }
 

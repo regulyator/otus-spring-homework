@@ -43,7 +43,7 @@ class AuthorControllerTest {
     @Test
     void shouldDeleteAuthor() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                .get("/authors/{authorId}/delete", AUTHOR_ID))
+                .delete("/authors/{authorId}/delete", AUTHOR_ID))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name(REDIRECT_AUTHORS));
 
@@ -54,24 +54,24 @@ class AuthorControllerTest {
     @Test
     void shouldUpdateAuthor() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                .post("/authors/")
+                .put("/authors/")
                 .flashAttr("author", AUTHOR))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name(REDIRECT_AUTHORS));
 
-        verify(authorService, times(1)).changeAuthorFio(AUTHOR.getId(), AUTHOR.getFio());
+        verify(authorService, times(1)).createOrUpdate(AUTHOR);
     }
 
     @DisplayName("create author")
     @Test
     void shouldCreateAuthor() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                .put("/authors/")
+                .post("/authors/")
                 .param("newAuthorFio", AUTHOR_FIO))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name(REDIRECT_AUTHORS));
 
-        verify(authorService, times(1)).create(AUTHOR_FIO);
+        verify(authorService, times(1)).createOrUpdate(new Author(null, AUTHOR_FIO));
     }
 
 }

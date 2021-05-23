@@ -24,19 +24,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public Genre create(String newGenreCaption) {
-        return genreRepository.save(new Genre(null, newGenreCaption));
-    }
-
-    @Override
     public Genre createOrUpdate(Genre genre) {
-        return genreRepository.save(genre);
-    }
-
-    @Override
-    public Genre changeGenreCaption(String idGenre, String newGenreCaption) {
-        Genre genre = genreRepository.findById(idGenre).orElseThrow(EntityNotFoundException::new);
-        genre.setCaption(newGenreCaption);
         return genreRepository.save(genre);
     }
 

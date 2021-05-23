@@ -7,9 +7,5 @@ import java.util.List;
 
 public interface AuthorService extends StandardService<Author> {
 
-    Author create(String authorFio);
-
-    Author changeAuthorFio(String idAuthor, String newAuthorFio);
-
     List<Author> getAll(Collection<String> authorsIds);
 }

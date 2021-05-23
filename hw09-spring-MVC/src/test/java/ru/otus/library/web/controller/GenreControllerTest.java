@@ -43,7 +43,7 @@ class GenreControllerTest {
     @Test
     void shouldDeleteGenre() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                .get("/genres/{genreId}/delete", GENRE_ID))
+                .delete("/genres/{genreId}/delete", GENRE_ID))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name(REDIRECT_GENRES));
 
@@ -54,24 +54,24 @@ class GenreControllerTest {
     @Test
     void shouldUpdateGenre() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                .post("/genres/")
+                .put("/genres/")
                 .flashAttr("genre", GENRE))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name(REDIRECT_GENRES));
 
-        verify(genreService, times(1)).changeGenreCaption(GENRE.getId(), GENRE.getCaption());
+        verify(genreService, times(1)).createOrUpdate(GENRE);
     }
 
     @DisplayName("create genre")
     @Test
     void shouldCreateGenre() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
-                .put("/genres/")
+                .post("/genres/")
                 .param("newGenreCaption", GENRE_CAPTION))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name(REDIRECT_GENRES));
 
-        verify(genreService, times(1)).create(GENRE_CAPTION);
+        verify(genreService, times(1)).createOrUpdate(new Genre(null, GENRE_CAPTION));
     }
 
 }
