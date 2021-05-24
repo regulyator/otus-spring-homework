@@ -36,3 +36,4 @@ build
 *.idea
 logs
 /hw08-spring-mongodb/gradle.properties
+/hw10-spring-Rest/out/
