@@ -29,6 +29,11 @@ public class AuthorController {
         return ResponseEntity.ok(authorService.create(newAuthorFio));
     }
 
+    @PostMapping("/authors")
+    public ResponseEntity<Author> updateAuthor(@RequestBody Author author) {
+        return ResponseEntity.ok(authorService.changeAuthorFio(author.getId(), author.getFio()));
+    }
+
     @DeleteMapping("/authors")
     public ResponseEntity<?> deleteAuthor(@RequestParam String authorId) {
         authorService.removeById(authorId);

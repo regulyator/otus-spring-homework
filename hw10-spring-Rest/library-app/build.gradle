@@ -1,0 +1,3 @@
+plugins {
+    id 'org.siouan.frontend-jdk11' version '5.1.0'
+}
