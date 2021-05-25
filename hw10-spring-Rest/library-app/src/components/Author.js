@@ -15,13 +15,10 @@ class Author extends React.Component {
 
     handleChange(event) {
         this.setState({authorFio: event.target.value});
-        console.log(this.props.author)
     }
 
     handleSubmit(event) {
         this.props.author.fio = this.state.authorFio;
-        console.log(this.props.author)
-        console.log(JSON.stringify(this.props.author))
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -45,7 +42,7 @@ class Author extends React.Component {
                 />
                 <InputGroup.Append>
                     <Button variant="success" onClick={this.handleSubmit}>Save</Button>
-                    <Button variant="danger">Delete</Button>
+                    <Button variant="danger" onClick={this.props.onDelete}>Delete</Button>
                 </InputGroup.Append>
             </InputGroup>
         )

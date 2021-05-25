@@ -6,26 +6,47 @@ import Accordion from "react-bootstrap/Accordion";
 import Button from "react-bootstrap/Button";
 import Author from "./Author";
 
-const AuthorList = (props) => {
-    return (
-        <Card>
-            <Card.Header>
-                <Accordion.Toggle as={Button} variant="link" eventKey={props.eventKeyAccording}>
-                    View {props.title}
-                </Accordion.Toggle>
-            </Card.Header>
-            <Accordion.Collapse eventKey={props.eventKeyAccording}>
-                <>
-                    <Card.Body>{props.description}</Card.Body>
-                    <div>
-                        {props.authors.map((author) => (
-                            <Author key={author.id} author={author}/>
-                        ))}
-                    </div>
-                </>
-            </Accordion.Collapse>
-        </Card>
-    )
+class AuthorList extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            eventKeyAccording: props.eventKeyAccording,
+            title: props.title,
+            description: props.description,
+            authors: props.authors,
+            open: true
+        };
+    }
+
+    handleDelete = () => {
+        alert("Button Clicked!");
+    };
+
+    render() {
+        return (
+            <Card>
+                <Card.Header>
+                    <Accordion.Toggle as={Button}  eventKey={this.state.eventKeyAccording} onClick={this.handleTooggle(this.setState({ open: !this.state.open}))}>
+                        View {this.state.title}
+                    </Accordion.Toggle>
+                </Card.Header>
+                <Accordion.Collapse eventKey={this.state.eventKeyAccording}>
+                    <>
+                        <Card.Body>{this.state.description}</Card.Body>
+                        <div>
+                            {this.state.authors.map((author) => (
+                                <Author key={author.id} author={author} onDelete={this.handleDelete}/>
+                            ))}
+                        </div>
+                    </>
+                </Accordion.Collapse>
+            </Card>
+        )
+    }
+
+    handleTooggle(event) {
+        this.state.console.log(this.state.open)
+    }
 };
 
 export default AuthorList

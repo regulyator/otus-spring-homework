@@ -40,14 +40,7 @@ public class AuthorController {
         return ResponseEntity.ok().build();
     }
 
-    /*@PostMapping("/authors")
-    public String updateAuthor(@ModelAttribute Author author) {
-        authorService.changeAuthorFio(author.getId(), author.getFio());
-        return REDIRECT_AUTHORS;
-    }
-
-
-
+    /*
     @ExceptionHandler({ReferenceEntityException.class})
     public String referenceDeleteErrorHandler(Model model) {
         model.addAttribute("entity", "Author");
