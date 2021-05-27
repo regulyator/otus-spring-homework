@@ -13,9 +13,19 @@ class AuthorList extends React.Component {
             eventKeyAccording: props.eventKeyAccording,
             title: props.title,
             description: props.description,
-            authors: props.authors,
+            authors: [],
             open: true
         };
+    }
+
+    componentDidMount() {
+        const apiUrlAllAuthors = '/library/api/authors';
+        fetch(apiUrlAllAuthors)
+            .then(res => res.json())
+            .then((data) => {
+                this.setState({ authors: data })
+            })
+            .catch(console.log)
     }
 
     handleDelete = () => {
@@ -26,7 +36,7 @@ class AuthorList extends React.Component {
         return (
             <Card>
                 <Card.Header>
-                    <Accordion.Toggle as={Button}  eventKey={this.state.eventKeyAccording} onClick={this.handleTooggle(this.setState({ open: !this.state.open}))}>
+                    <Accordion.Toggle as={Button}  eventKey={this.state.eventKeyAccording} >
                         View {this.state.title}
                     </Accordion.Toggle>
                 </Card.Header>
@@ -42,10 +52,6 @@ class AuthorList extends React.Component {
                 </Accordion.Collapse>
             </Card>
         )
-    }
-
-    handleTooggle(event) {
-        this.state.console.log(this.state.open)
     }
 };
 
