@@ -101,11 +101,9 @@ class BookControllerTest {
                 .post("/books")
                 .flashAttr("bookDto", bookDto))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name(REDIRECT_BOOKS + null));
+                .andExpect(view().name(REDIRECT_BOOKS + bookDto.getId()));
 
-        verify(bookService, times(1)).createOrUpdate(any());
-        verify(bookService, times(1)).changeBookName(bookDto.getId(), bookDto.getBookName());
-        verify(bookService, times(1)).changeBookGenre(bookDto.getId(), bookDto.getGenre().getId());
+        verify(bookService, times(1)).createOrUpdateAndSetIdIfNew(bookDto);
     }
 
     @DisplayName("update book")
@@ -117,9 +115,7 @@ class BookControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name(REDIRECT_BOOKS + BOOK_DTO.getId()));
 
-        verify(bookService, times(0)).createOrUpdate(any());
-        verify(bookService, times(1)).changeBookName(BOOK_DTO.getId(), BOOK_DTO.getBookName());
-        verify(bookService, times(1)).changeBookGenre(BOOK_DTO.getId(), BOOK_DTO.getGenre().getId());
+        verify(bookService, times(1)).createOrUpdateAndSetIdIfNew(BOOK_DTO);
     }
 
     @DisplayName("delete book")
