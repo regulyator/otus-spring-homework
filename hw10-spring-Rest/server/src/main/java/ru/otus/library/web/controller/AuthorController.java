@@ -11,7 +11,6 @@ import ru.otus.library.service.data.AuthorService;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/library/api")
 public class AuthorController {
     private final AuthorService authorService;
 
@@ -20,22 +19,22 @@ public class AuthorController {
         this.authorService = authorService;
     }
 
-    @GetMapping("/authors")
+    @GetMapping("/library/api/authors")
     public ResponseEntity<Collection<Author>> getAllAuthors() {
         return ResponseEntity.ok(authorService.getAll());
     }
 
-    @PutMapping("/authors")
+    @PutMapping("/library/api/authors")
     public ResponseEntity<Author> updateAuthor(@RequestBody Author author) {
         return ResponseEntity.ok(authorService.createOrUpdate(author));
     }
 
-    @PostMapping("/authors")
+    @PostMapping("/library/api/authors")
     public ResponseEntity<Author> createAuthor(@RequestBody Author author) {
         return ResponseEntity.ok(authorService.createOrUpdate(author));
     }
 
-    @DeleteMapping("/authors/{authorId}")
+    @DeleteMapping("/library/api/authors/{authorId}")
     public ResponseEntity<Void> deleteAuthor(@PathVariable String authorId) {
         authorService.removeById(authorId);
         return ResponseEntity.ok().build();
@@ -43,6 +42,6 @@ public class AuthorController {
 
     @ExceptionHandler({ReferenceEntityException.class})
     public ResponseEntity<String> referenceDeleteErrorHandler() {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Reference delete error! First remove this author from Books!");
+        return new ResponseEntity<>("Reference delete error! First remove this author from Books!", HttpStatus.BAD_REQUEST);
     }
 }

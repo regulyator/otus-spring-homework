@@ -35,20 +35,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book create(String bookName, String idGenre, Collection<String> idAuthors) {
-        List<Author> authors = authorService.getAll(idAuthors);
-        Genre genre = genreService.getById(idGenre);
-
-        Book newBook = new Book();
-        newBook.setBookName(bookName);
-        newBook.setGenre(genre);
-        newBook.setAuthors(authors);
-
-        return bookRepository.save(newBook);
-    }
-
-    @Override
-    public BookDto createOrUpdateAndSetIdIfNew(BookDto bookDto) {
+    public BookDto createOrUpdate(BookDto bookDto) {
         if (Objects.isNull(bookDto.getId())) {
             Book createdBook = bookRepository.save(new Book(bookDto));
             bookDto.setId(createdBook.getId());

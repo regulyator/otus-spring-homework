@@ -1,10 +1,12 @@
 package ru.otus.library.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.library.domain.Author;
+import ru.otus.library.domain.Book;
 import ru.otus.library.domain.dto.BookDto;
 import ru.otus.library.service.data.AuthorService;
 import ru.otus.library.service.data.BookService;
@@ -12,9 +14,8 @@ import ru.otus.library.service.data.GenreService;
 
 import java.util.Collection;
 
-@Controller
+@RestController
 public class BookController {
-    private static final String REDIRECT_BOOKS = "redirect:/books/";
     private final BookService bookService;
     private final GenreService genreService;
     private final AuthorService authorService;
@@ -28,13 +29,22 @@ public class BookController {
         this.authorService = authorService;
     }
 
-    @GetMapping("/books")
-    public String getAllBooks(Model model) {
-        model.addAttribute("books", bookService.getAllDto());
-        return "Books";
+    @GetMapping("/library/api/books")
+    public ResponseEntity<Collection<BookDto>> getAllBooks() {
+        return ResponseEntity.ok(bookService.getAllDto());
     }
 
-    @GetMapping("/books/{bookId}")
+    @PutMapping("/library/api/books")
+    public ResponseEntity<BookDto> updateBook(@RequestBody BookDto book) {
+        return ResponseEntity.ok(bookService.createOrUpdate(book));
+    }
+
+    @PostMapping("/library/api/books")
+    public ResponseEntity<BookDto> createBook(@RequestBody BookDto book) {
+        return ResponseEntity.ok(bookService.createOrUpdate(book));
+    }
+
+   /* @GetMapping("/library/api/books/{bookId}")
     public String getBook(Model model, @PathVariable String bookId) {
         BookDto bookDto = bookService.getByIdDto(bookId);
         Collection<Author> authors = authorService.getAll();
@@ -94,7 +104,7 @@ public class BookController {
                                        @PathVariable String authorId) {
         bookService.removeBookAuthor(bookId, authorId);
         return REDIRECT_BOOKS + bookId;
-    }
+    }*/
 
 
 }

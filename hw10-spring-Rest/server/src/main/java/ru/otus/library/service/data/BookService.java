@@ -9,9 +9,7 @@ import java.util.List;
 
 public interface BookService extends StandardService<Book> {
 
-    Book create(String bookName, String idGenre, Collection<String> idAuthors);
-
-    BookDto createOrUpdateAndSetIdIfNew(BookDto bookDto);
+    BookDto createOrUpdate(BookDto bookDto);
 
     Book addBookAuthor(String idBook, String idAuthor);
 

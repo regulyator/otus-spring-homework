@@ -3,8 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react'
 import Button from "react-bootstrap/Button";
 import {FormControl, InputGroup} from "react-bootstrap";
-
-
+import {createOrUpdateAuthor} from "../../common/ApiServiceAuthors";
 
 export default class Author extends React.Component {
     constructor(props) {
@@ -23,13 +22,7 @@ export default class Author extends React.Component {
     }
 
     handleSubmit(event) {
-        if(this.state.author.id === null){
-            console.log("create");
-            createAuthor.apply(this);
-        } else {
-            console.log("update");
-            updateAuthor.apply(this);
-        }
+        createOrUpdateAuthor.call(this, this.state.author.id === null);
         event.preventDefault();
 
     }
@@ -51,28 +44,4 @@ export default class Author extends React.Component {
             </InputGroup>
         )
     }
-
-
 };
-
-function createAuthor() {
-    const requestOptions = {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(this.state.author)
-    };
-    fetch('/library/api/authors', requestOptions)
-        .then(response => response.json())
-        .then(data => this.setState({author: data}));
-}
-
-function updateAuthor() {
-    const requestOptions = {
-        method: 'PUT',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(this.state.author)
-    };
-    fetch('/library/api/authors', requestOptions)
-        .then(response => response.json())
-        .then(data => this.setState({author: data}));
-}
