@@ -14,6 +14,7 @@ import java.util.List;
 @ToString
 @Getter
 @Setter
+@EqualsAndHashCode
 public class BookDto {
     private String id;
     private String bookName;

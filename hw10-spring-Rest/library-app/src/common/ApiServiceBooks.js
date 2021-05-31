@@ -1,4 +1,5 @@
 const apiUrlBooks = '/library/api/books/';
+const apiUrlPathNewComment = '/comment?newCommentText='
 
 export function loadAllBooks() {
     return fetch(apiUrlBooks)
@@ -18,17 +19,27 @@ export function loadBook(bookId) {
         .catch(console.log)
 }
 
-export function createOrUpdateBook(create) {
-    const requestOptions = {
-        method: create ? 'POST' : 'PUT',
+export function createOrUpdateBook(book) {
+    return fetch(apiUrlBooks, {
+        method: book.id === null ? 'POST' : 'PUT',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(this.state.book)
-    };
-
-    fetch(apiUrlBooks, requestOptions)
+        body: JSON.stringify(book)
+    })
         .then(response => response.json())
-        .then(data => this.setState({book: data}))
-        .then(() => alert(create ? 'Book created!' : 'Book updated!'));
+        .then(data => {
+            return data
+        });
+}
+
+export function addCommentToBook(bookId, commentText) {
+    return fetch(apiUrlBooks + bookId + apiUrlPathNewComment + commentText, {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'}
+    })
+        .then(response => response.json())
+        .then(data => {
+            return data
+        });
 }
 
 export function deleteBook(book) {
@@ -37,7 +48,7 @@ export function deleteBook(book) {
         headers: {'Content-Type': 'application/json'}
     }).then(response => {
             if (response.ok) {
-                alert("Genre deleted!");
+                alert("Book deleted!");
             } else {
                 response.text().then(text => {
                     alert(text)

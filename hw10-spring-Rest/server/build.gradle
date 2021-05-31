@@ -1,5 +1,6 @@
 plugins {
     id 'org.springframework.boot' version '2.4.3'
+    id 'org.siouan.frontend-jdk11' version '5.2.0'
     id 'java'
 }
 
@@ -39,4 +40,23 @@ dependencyManagement {
 
 test {
     useJUnitPlatform()
+}
+
+tasks.register('processFrontendResources', Copy) {
+    // Directory containing the artifacts in the frontend project
+    def frontendBuildDir = file("${project(':library-app').buildDir}/")
+    // Directory where the frontend artifacts must be copied to be packaged alltogether with the backend by the 'war'
+    // plugin.
+    def frontendResourcesDir = file("${project.buildDir}/resources/main/public")
+
+    group 'Frontend'
+    description 'Process frontend resources'
+    dependsOn project(':library-app').tasks.named('assembleFrontend')
+
+    from frontendBuildDir
+    into frontendResourcesDir
+}
+
+tasks.named('processResources') {
+    dependsOn tasks.named('processFrontendResources')
 }

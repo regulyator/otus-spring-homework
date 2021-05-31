@@ -62,7 +62,8 @@ export default class GenreList extends React.Component {
                             <Button className="m-2 btn btn-success"
                                     onClick={this.addGenre}>Add genre</Button>
                             <Button className="btn btn-secondary"
-                                    onClick={() => loadAllGenres().then(value => this.setState({genres: value}))}>Refresh genre list</Button>
+                                    onClick={() => loadAllGenres().then(value => this.setState({genres: value}))}>Refresh
+                                genre list</Button>
                         </>
                     </Accordion.Collapse>
                 </Card>

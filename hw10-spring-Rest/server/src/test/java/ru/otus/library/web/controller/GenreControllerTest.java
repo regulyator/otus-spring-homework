@@ -1,19 +1,25 @@
 package ru.otus.library.web.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.otus.library.domain.Genre;
 import ru.otus.library.service.data.GenreService;
 
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import java.util.Collections;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 @DisplayName("GenreController should")
 @WebMvcTest(controllers = GenreController.class)
@@ -21,8 +27,8 @@ class GenreControllerTest {
     private static final String GENRE_ID = "gId";
     private static final String GENRE_CAPTION = "CAPTION";
     private static final Genre GENRE = new Genre(GENRE_ID, GENRE_CAPTION);
-    private static final String REDIRECT_GENRES = "redirect:/genres";
-    private static final String GENRES_VIEW = "Genres";
+    @Autowired
+    private ObjectMapper objectMapper;
     @Autowired
     private MockMvc mockMvc;
     @MockBean
@@ -31,33 +37,40 @@ class GenreControllerTest {
     @DisplayName("get all genres")
     @Test
     void shouldGetAllGenres() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders
-                .get("/genres"))
+        when(genreService.getAll()).thenReturn(Collections.singletonList(GENRE));
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+                .get("/library/api/genres"))
                 .andExpect(status().isOk())
-                .andExpect(view().name(GENRES_VIEW));
+                .andReturn();
+
+        String json = result.getResponse().getContentAsString();
+        List<Genre> resultGenres = objectMapper.readValue(json, new TypeReference<List<Genre>>() {
+        });
+
+        assertThat(resultGenres).isNotNull()
+                .hasSize(1)
+                .allMatch(genre -> genre.equals(GENRE));
 
         verify(genreService, times(1)).getAll();
     }
 
-    @DisplayName("delete genre")
-    @Test
-    void shouldDeleteGenre() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders
-                .delete("/genres/{genreId}/delete", GENRE_ID))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name(REDIRECT_GENRES));
-
-        verify(genreService, times(1)).removeById(GENRE_ID);
-    }
 
     @DisplayName("update genre")
     @Test
     void shouldUpdateGenre() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders
-                .put("/genres/")
-                .flashAttr("genre", GENRE))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name(REDIRECT_GENRES));
+        when(genreService.createOrUpdate(GENRE)).thenReturn(GENRE);
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+                .put("/library/api/genres")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(GENRE)))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+
+        String json = result.getResponse().getContentAsString();
+        Genre resultGenre = objectMapper.readValue(json, Genre.class);
+
+        assertThat(resultGenre).isNotNull()
+                .isEqualTo(GENRE);
 
         verify(genreService, times(1)).createOrUpdate(GENRE);
     }
@@ -65,13 +78,31 @@ class GenreControllerTest {
     @DisplayName("create genre")
     @Test
     void shouldCreateGenre() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/genres/")
-                .param("newGenreCaption", GENRE_CAPTION))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(view().name(REDIRECT_GENRES));
+        when(genreService.createOrUpdate(GENRE)).thenReturn(GENRE);
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+                .post("/library/api/genres")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(GENRE)))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
 
-        verify(genreService, times(1)).createOrUpdate(new Genre(null, GENRE_CAPTION));
+        String json = result.getResponse().getContentAsString();
+        Genre resultGenre = objectMapper.readValue(json, Genre.class);
+
+        assertThat(resultGenre).isNotNull()
+                .isEqualTo(GENRE);
+
+        verify(genreService, times(1)).createOrUpdate(GENRE);
+    }
+
+    @DisplayName("delete genre")
+    @Test
+    void shouldDeleteGenre() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                .delete("/library/api/genres/{genreId}", GENRE_ID))
+                .andExpect(status().is2xxSuccessful());
+
+        verify(genreService, times(1)).removeById(GENRE_ID);
     }
 
 }

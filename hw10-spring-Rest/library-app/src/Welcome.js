@@ -10,7 +10,7 @@ export default class Welcome extends React.Component {
 
     render() {
         return (
-            <Accordion >
+            <Accordion>
                 <h2>Welcome to library!</h2>
                 <BookList title='Books' eventKeyAccording="0"/>
                 <GenreList title='Genres' eventKeyAccording="1"/>

@@ -2,10 +2,8 @@ package ru.otus.library.service.data.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.otus.library.domain.Author;
 import ru.otus.library.domain.Book;
 import ru.otus.library.domain.Comment;
-import ru.otus.library.domain.Genre;
 import ru.otus.library.domain.dto.BookDto;
 import ru.otus.library.exception.EntityNotFoundException;
 import ru.otus.library.repository.BookRepository;
@@ -15,7 +13,6 @@ import ru.otus.library.service.data.GenreService;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -52,23 +49,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book addBookAuthor(String idBook, String idAuthor) {
-        Book book = bookRepository.findById(idBook).orElseThrow(EntityNotFoundException::new);
-        Author addedAuthor = authorService.getById(idAuthor);
-        book.getAuthors().add(addedAuthor);
-        return bookRepository.save(book);
-    }
-
-    @Override
-    public Book removeBookAuthor(String idBook, String idAuthor) {
-        Book book = bookRepository.findById(idBook).orElseThrow(EntityNotFoundException::new);
-        Author removedAuthor = authorService.getById(idAuthor);
-        book.getAuthors().remove(removedAuthor);
-        return bookRepository.save(book);
-    }
-
-    @Override
-    public Book addComment(String idBook, String commentCaption) {
+    public BookDto addComment(String idBook, String commentCaption) {
         Book book = bookRepository.findById(idBook).orElseThrow(EntityNotFoundException::new);
 
         if (Objects.isNull(book.getComments())) {
@@ -76,12 +57,7 @@ public class BookServiceImpl implements BookService {
         }
 
         book.getComments().add(new Comment(commentCaption));
-        return bookRepository.save(book);
-    }
-
-    @Override
-    public Book removeCommentFromBook(String idBook, String idComment) {
-        return bookRepository.deleteBookComment(idBook, idComment);
+        return new BookDto(bookRepository.save(book));
     }
 
     @Override
@@ -117,10 +93,5 @@ public class BookServiceImpl implements BookService {
     @Override
     public Collection<BookDto> getAllDto() {
         return this.getAll().stream().map(BookDto::new).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Comment> getAllBookComment(String id) {
-        return getById(id).getComments();
     }
 }

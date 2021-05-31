@@ -6,6 +6,8 @@ import Accordion from "react-bootstrap/Accordion";
 import Button from "react-bootstrap/Button";
 import Book from "./Book";
 import {deleteBook, loadAllBooks} from "../../common/ApiServiceBooks";
+import {loadAllAuthors} from "../../common/ApiServiceAuthors";
+import {loadAllGenres} from "../../common/ApiServiceGenres";
 
 
 export default class BookList extends React.Component {
@@ -14,11 +16,18 @@ export default class BookList extends React.Component {
         this.state = {
             eventKeyAccording: props.eventKeyAccording,
             title: props.title,
-            books: []
+            books: [],
+            genres: [],
+            authors: []
         };
 
         this.booksListToggle = this.booksListToggle.bind(this);
         this.addBook = this.addBook.bind(this);
+    }
+
+    componentDidMount() {
+        loadAllAuthors().then(data => this.setState({authors: data}));
+        loadAllGenres().then(data => this.setState({genres: data}));
     }
 
 
@@ -31,13 +40,13 @@ export default class BookList extends React.Component {
 
     addBook() {
         this.setState({
-            books: this.state.books.concat({id: null, bookName: ''})
+            books: this.state.books.concat({id: null, bookName: 'NEW BOOK'})
         })
     }
 
     handleDelete = (book) => {
         deleteBook(book).then(() => loadAllBooks().then((data) => {
-            this.setState({books: data})
+            this.setState({books: data});
         }));
 
     };
@@ -57,8 +66,12 @@ export default class BookList extends React.Component {
                         <>
                             <Card.Body>
                                 <div>
-                                    {this.state.books.map((book) => (
-                                        <Book key={book.id} book={book} onDelete={this.handleDelete}/>
+                                    {this.state.books.map((book, index) => (
+                                        <Book genres={this.state.genres}
+                                              authors={this.state.authors}
+                                              book={book}
+                                              key={index}
+                                              onDelete={this.handleDelete}/>
                                     ))}
                                 </div>
                             </Card.Body>
@@ -66,7 +79,8 @@ export default class BookList extends React.Component {
                             <Button className="m-2 btn btn-success"
                                     onClick={this.addBook}>Add book</Button>
                             <Button className="btn btn-secondary"
-                                    onClick={() => loadAllBooks().then(value => this.setState({books: value}))}>Refresh book list</Button>
+                                    onClick={() => loadAllBooks().then(value => this.setState({books: value}))}>Refresh
+                                book list</Button>
                         </>
                     </Accordion.Collapse>
                 </Card>
