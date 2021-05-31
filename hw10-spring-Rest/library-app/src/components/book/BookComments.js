@@ -4,10 +4,19 @@ import Button from "react-bootstrap/Button";
 import {addCommentToBook, createOrUpdateBook} from "../../common/ApiServiceBooks";
 
 export default class BookComments extends React.Component {
+    static getDerivedStateFromProps(props, state) {
+        if (props.book.id !== state.bookId) {
+            return {bookId: props.book.id}
+        } else {
+            return null;
+        }
+    }
+
     constructor(props) {
         super(props);
         this.state = {
             book: props.book,
+            bookId: props.book.id,
             newCommentText: ''
         };
 
@@ -35,7 +44,7 @@ export default class BookComments extends React.Component {
     }
 
     handleAddNewComment() {
-        addCommentToBook(this.state.book.id, this.state.newCommentText).then(value => this.setState({
+        addCommentToBook(this.state.bookId, this.state.newCommentText).then(value => this.setState({
             book: value,
             newCommentText: ''
         }))
@@ -48,11 +57,11 @@ export default class BookComments extends React.Component {
                    aria-labelledby="contained-modal-title-vcenter"
                    centered>
                 <Modal.Header>
-                    <Modal.Title>{this.state.book.bookName}</Modal.Title>
+                    <Modal.Title>{this.props.book.bookName}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {this.state.book.comments?.map((comment) => (
-                            <InputGroup className="mb-1 p-1">
+                    {this.state.book.comments?.map((comment, index) => (
+                            <InputGroup className="mb-1 p-1" key={index}>
                                 <FormControl type="text"
                                              placeholder="Comment"
                                              aria-label="Comment"

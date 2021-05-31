@@ -1,6 +1,5 @@
 plugins {
     id 'org.springframework.boot' version '2.4.3'
-    id 'org.siouan.frontend-jdk11' version '5.2.0'
     id 'java'
 }
 
@@ -17,8 +16,6 @@ dependencies {
 
     implementation 'com.github.cloudyrock.mongock:mongock-spring-v5'
     implementation 'com.github.cloudyrock.mongock:mongodb-springdata-v3-driver'
-    implementation 'org.webjars:bootstrap:5.0.0'
-    implementation 'org.webjars:webjars-locator:0.40'
 
 
     compileOnly 'org.projectlombok:lombok:1.18.12'
@@ -44,14 +41,14 @@ test {
 
 tasks.register('processFrontendResources', Copy) {
     // Directory containing the artifacts in the frontend project
-    def frontendBuildDir = file("${project(':library-app').buildDir}/")
+    def frontendBuildDir = file("${project(':hw10-spring-Rest:library-app').buildDir}")
     // Directory where the frontend artifacts must be copied to be packaged alltogether with the backend by the 'war'
     // plugin.
-    def frontendResourcesDir = file("${project.buildDir}/resources/main/public")
+    def frontendResourcesDir = file("${project(':hw10-spring-Rest:server').projectDir}/src/main/resources/static")
 
     group 'Frontend'
     description 'Process frontend resources'
-    dependsOn project(':library-app').tasks.named('assembleFrontend')
+    dependsOn project(':hw10-spring-Rest:library-app').tasks.named('assembleFrontend')
 
     from frontendBuildDir
     into frontendResourcesDir

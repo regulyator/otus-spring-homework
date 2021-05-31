@@ -19,19 +19,11 @@ export default class Book extends React.Component {
             bookAuthors: props.book.authors
         };
 
-        this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChangeGenre = this.handleChangeGenre.bind(this);
         this.handleChangeBookName = this.handleChangeBookName.bind(this);
         this.handleChangeAuthors = this.handleChangeAuthors.bind(this);
         this.handleSave = this.handleSave.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
-    }
-
-
-    handleSubmit(event) {
-        createOrUpdateBook(this.state.book).then(value => this.setState({book: value}));
-        event.preventDefault();
-
     }
 
     handleCancel() {
@@ -66,7 +58,7 @@ export default class Book extends React.Component {
 
     handleChangeGenre(event) {
         this.setState(state => {
-            state.bookGenre = state.genres.find((genre) => {
+            state.bookGenre = this.props.genres.find((genre) => {
                 return genre.id === event.target.value;
             })
             return {bookGenre: state.bookGenre}
@@ -82,7 +74,7 @@ export default class Book extends React.Component {
         }
 
         this.setState(state => {
-            state.bookAuthors = state.authors.filter((author) => {
+            state.bookAuthors = this.props.authors.filter((author) => {
                 return selectedAuthorsIDs.includes(author.id);
             })
             return {bookAuthors: state.bookAuthors}

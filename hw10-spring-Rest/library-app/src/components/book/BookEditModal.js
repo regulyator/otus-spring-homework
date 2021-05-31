@@ -42,7 +42,7 @@ export default class BookEditModal extends React.Component {
                         <Form.Group controlId="formBookAuthors">
                             <Form.Label>Example multiple select</Form.Label>
                             <Form.Control as="select" multiple
-                                          value={this.props.bookAuthors?.map(value => value.id)}
+                                          value={this.props.bookAuthors?.map(value => value?.id)}
                                           onChange={this.props.handleBookAuthorsChange}>
                                 {this.props.authors.map((author) =>
                                     <option key={author.id}
