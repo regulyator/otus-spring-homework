@@ -3,9 +3,6 @@ const apiUrlAuthors = '/library/api/authors/';
 export function loadAllAuthors() {
     return fetch(apiUrlAuthors)
         .then(res => res.json())
-        .then((data) => {
-            return data;
-        })
         .catch(console.log)
 }
 

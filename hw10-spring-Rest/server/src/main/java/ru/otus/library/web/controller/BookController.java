@@ -13,16 +13,10 @@ import java.util.Collection;
 @RestController
 public class BookController {
     private final BookService bookService;
-    private final GenreService genreService;
-    private final AuthorService authorService;
 
     @Autowired
-    public BookController(BookService bookService,
-                          GenreService genreService,
-                          AuthorService authorService) {
+    public BookController(BookService bookService) {
         this.bookService = bookService;
-        this.genreService = genreService;
-        this.authorService = authorService;
     }
 
     @GetMapping("/library/api/books")
@@ -56,68 +50,6 @@ public class BookController {
         bookService.removeById(bookId);
         return ResponseEntity.ok().build();
     }
-
-   /* @GetMapping("/library/api/books/{bookId}")
-    public String getBook(Model model, @PathVariable String bookId) {
-        BookDto bookDto = bookService.getByIdDto(bookId);
-        Collection<Author> authors = authorService.getAll();
-        authors.removeAll(bookDto.getAuthors());
-
-        model.addAttribute("bookDto", bookDto);
-        model.addAttribute("genres", genreService.getAll());
-        model.addAttribute("authors", authors);
-        model.addAttribute("comments", bookDto.getComments());
-        return "Book";
-    }
-
-    @GetMapping("/books/new")
-    public String createBook(Model model) {
-        BookDto newBook = new BookDto();
-        model.addAttribute("bookDto", newBook);
-        model.addAttribute("genres", genreService.getAll());
-        model.addAttribute("authors", authorService.getAll());
-        return "Book";
-    }
-
-    @PostMapping("/books")
-    public String createOrUpdateBook(@ModelAttribute BookDto bookDto) {
-        bookService.createOrUpdateAndSetIdIfNew(bookDto);
-        return REDIRECT_BOOKS + bookDto.getId();
-    }
-
-    @DeleteMapping("/books/{bookId}")
-    public String deleteBook(@PathVariable String bookId) {
-        bookService.removeById(bookId);
-        return REDIRECT_BOOKS;
-    }
-
-    @PutMapping("/books/{bookId}/comment")
-    public String addCommentToBook(@PathVariable String bookId,
-                                   @RequestParam String newCommentText) {
-        bookService.addComment(bookId, newCommentText);
-        return REDIRECT_BOOKS + bookId;
-    }
-
-    @PutMapping("/books/{bookId}/comment/{commentId}")
-    public String deleteComment(@PathVariable String bookId,
-                                @PathVariable String commentId) {
-        bookService.removeCommentFromBook(bookId, commentId);
-        return REDIRECT_BOOKS + bookId;
-    }
-
-    @PutMapping("/books/{bookId}/author")
-    public String addAuthorToBook(@PathVariable String bookId,
-                                  @RequestParam String authorId) {
-        bookService.addBookAuthor(bookId, authorId);
-        return REDIRECT_BOOKS + bookId;
-    }
-
-    @PutMapping("/books/{bookId}/author/{authorId}")
-    public String deleteAuthorFromBook(@PathVariable String bookId,
-                                       @PathVariable String authorId) {
-        bookService.removeBookAuthor(bookId, authorId);
-        return REDIRECT_BOOKS + bookId;
-    }*/
 
 
 }
