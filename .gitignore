@@ -36,3 +36,5 @@ build
 *.idea
 logs
 /hw08-spring-mongodb/gradle.properties
+/hw10-spring-Rest/out/
+/hw10-spring-Rest/library-app/node_modules/

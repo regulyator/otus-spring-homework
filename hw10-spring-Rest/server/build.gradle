@@ -1,0 +1,59 @@
+plugins {
+    id 'org.springframework.boot' version '2.4.3'
+    id 'java'
+}
+
+group = 'ru.otus'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    implementation 'org.springframework.boot:spring-boot-starter-logging'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+    implementation 'com.github.cloudyrock.mongock:mongock-spring-v5'
+    implementation 'com.github.cloudyrock.mongock:mongodb-springdata-v3-driver'
+
+
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
+
+    runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+}
+
+dependencyManagement {
+    dependencies {
+        imports {
+            mavenBom("com.github.cloudyrock.mongock:mongock-bom:4.1.19")
+        }
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.register('processFrontendResources', Copy) {
+    // Directory containing the artifacts in the frontend project
+    def frontendBuildDir = file("${project(':hw10-spring-Rest:library-app').buildDir}")
+    // Directory where the frontend artifacts must be copied to be packaged alltogether with the backend by the 'war'
+    // plugin.
+    def frontendResourcesDir = file("${project(':hw10-spring-Rest:server').projectDir}/src/main/resources/static")
+
+    group 'Frontend'
+    description 'Process frontend resources'
+    dependsOn project(':hw10-spring-Rest:library-app').tasks.named('assembleFrontend')
+
+    from frontendBuildDir
+    into frontendResourcesDir
+}
+
+tasks.named('processResources') {
+    dependsOn tasks.named('processFrontendResources')
+}

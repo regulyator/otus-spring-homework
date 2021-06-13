@@ -8,3 +8,6 @@ include 'hw06-spring-dao-orm'
 include 'hw07-spring-dao-data'
 include 'hw08-spring-mongodb'
 include 'hw09-spring-MVC'
+include 'hw10-spring-Rest:server'
+include 'hw10-spring-Rest:library-app'
+
