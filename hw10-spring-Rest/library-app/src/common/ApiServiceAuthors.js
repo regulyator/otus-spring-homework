@@ -12,26 +12,15 @@ export function createOrUpdateAuthor(create) {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(this.state.author)
     };
-    fetch(apiUrlAuthors, requestOptions)
-        .then(response => response.json())
-        .then(data => this.setState({author: data}))
-        .then(() => alert(create ? 'Author created!' : 'Author updated!'));
+    return fetch(apiUrlAuthors, requestOptions)
+        .then(response => response.json());
 }
 
 export function deleteAuthor(author) {
     return fetch(apiUrlAuthors + author.id, {
         method: 'DELETE',
         headers: {'Content-Type': 'application/json'}
-    }).then(response => {
-            if (response.ok) {
-                alert("Author deleted!");
-            } else {
-                response.text().then(text => {
-                    alert(text);
-                })
-            }
-        }
-    ).catch(reason =>
+    }).catch(reason =>
         console.log(reason)
     )
 }

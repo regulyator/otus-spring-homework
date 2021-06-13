@@ -16,24 +16,32 @@ export default class GenreList extends React.Component {
             genres: []
         };
 
-        this.genresListToggle = this.genresListToggle.bind(this);
-        this.addGenre = this.addGenre.bind(this);
     }
 
-    genresListToggle() {
+    genresListToggle = () => {
         if (this.state.genres.length === 0) {
             loadAllGenres().then(value => this.setState({genres: value}));
         }
     }
 
-    addGenre() {
+    addGenre = () => {
         this.setState({
             genres: this.state.genres.concat({id: null, caption: ''})
         })
     }
 
     handleDelete = (genre) => {
-        deleteGenre(genre).then(() => loadAllGenres().then((data) => {
+        deleteGenre(genre)
+            .then(response => {
+                    if (response.ok) {
+                        alert("Genre deleted!");
+                    } else {
+                        response.text().then(text => {
+                            alert(text)
+                        })
+                    }
+                }
+            ).then(() => loadAllGenres().then((data) => {
             this.setState({genres: data})
         }));
     }

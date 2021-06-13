@@ -19,14 +19,9 @@ export default class Book extends React.Component {
             bookAuthors: props.book.authors
         };
 
-        this.handleChangeGenre = this.handleChangeGenre.bind(this);
-        this.handleChangeBookName = this.handleChangeBookName.bind(this);
-        this.handleChangeAuthors = this.handleChangeAuthors.bind(this);
-        this.handleSave = this.handleSave.bind(this);
-        this.handleCancel = this.handleCancel.bind(this);
     }
 
-    handleCancel() {
+    handleCancel = () => {
         this.setState(state => {
             return {
                 bookName: state.book.bookName,
@@ -37,7 +32,7 @@ export default class Book extends React.Component {
         this.setEditBookShow(false);
     }
 
-    handleSave() {
+    handleSave = () => {
         let updatedBook = Object.assign({}, this.state.book);
 
         updatedBook.bookName = this.state.bookName;
@@ -56,7 +51,7 @@ export default class Book extends React.Component {
             .then(() => this.setEditBookShow(false));
     }
 
-    handleChangeGenre(event) {
+    handleChangeGenre = (event) => {
         this.setState(state => {
             state.bookGenre = this.props.genres.find((genre) => {
                 return genre.id === event.target.value;
@@ -65,7 +60,7 @@ export default class Book extends React.Component {
         });
     }
 
-    handleChangeAuthors(event) {
+    handleChangeAuthors = (event) => {
         const selectedAuthorsIDs = [];
         let selectedOptions = event.target.selectedOptions
 
@@ -81,7 +76,7 @@ export default class Book extends React.Component {
         });
     }
 
-    handleChangeBookName(event) {
+    handleChangeBookName = (event) => {
         this.setState(state => {
             state.bookName = event.target.value
             return {bookName: state.bookName}

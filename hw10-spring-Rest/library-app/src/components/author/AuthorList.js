@@ -16,24 +16,32 @@ export default class AuthorList extends React.Component {
             authors: []
         };
 
-        this.authorsListToggle = this.authorsListToggle.bind(this);
-        this.addAuthor = this.addAuthor.bind(this);
     }
 
-    authorsListToggle() {
+    authorsListToggle = () => {
         if (this.state.authors.length === 0) {
             loadAllAuthors().then(value => this.setState({authors: value}));
         }
     }
 
-    addAuthor() {
+    addAuthor = () => {
         this.setState({
             authors: this.state.authors.concat({id: null, fio: ''})
         })
     }
 
     handleDelete = (author) => {
-        deleteAuthor(author).then(() => loadAllAuthors().then((data) => {
+        deleteAuthor(author)
+            .then(response => {
+                    if (response.ok) {
+                        alert("Author deleted!");
+                    } else {
+                        response.text().then(text => {
+                            alert(text);
+                        })
+                    }
+                }
+            ).then(() => loadAllAuthors().then((data) => {
             this.setState({authors: data})
         }));
     }

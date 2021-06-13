@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.otus.library.domain.Genre;
 import ru.otus.library.exception.ReferenceEntityException;
 import ru.otus.library.service.data.GenreService;
@@ -31,7 +32,11 @@ public class GenreController {
 
     @PostMapping("/library/api/genres")
     public ResponseEntity<Genre> createGenre(@RequestBody Genre genre) {
-        return ResponseEntity.ok(genreService.createOrUpdate(genre));
+        Genre createdGenre = genreService.createOrUpdate(genre);
+        return ResponseEntity.created(
+                ServletUriComponentsBuilder
+                        .fromCurrentRequest().path("/{id}")
+                        .buildAndExpand(createdGenre.getId()).toUri()).body(createdGenre);
     }
 
     @DeleteMapping("/library/api/genres/{genreId}")

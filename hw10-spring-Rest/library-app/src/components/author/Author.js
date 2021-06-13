@@ -9,20 +9,20 @@ export default class Author extends React.Component {
     constructor(props) {
         super(props);
         this.state = {author: props.author};
-
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleChange(event) {
+    handleChange = (event) => {
         this.setState(state => {
             state.author.fio = event.target.value
             return {author: state.author}
         });
     }
 
-    handleSubmit(event) {
-        createOrUpdateAuthor.call(this, this.state.author.id === null);
+    handleSubmit = (event) => {
+        const create = this.state.author.id === null;
+        createOrUpdateAuthor.call(this, create)
+            .then(data => this.setState({author: data}))
+            .then(() => alert(create ? 'Author created!' : 'Author updated!'));
         event.preventDefault();
 
     }

@@ -9,20 +9,20 @@ export default class Genre extends React.Component {
     constructor(props) {
         super(props);
         this.state = {genre: props.genre};
-
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleChange(event) {
+    handleChange = (event) => {
         this.setState(state => {
             state.genre.caption = event.target.value
             return {genre: state.genre}
         });
     }
 
-    handleSubmit(event) {
-        createOrUpdateGenre.call(this, this.state.genre.id === null);
+    handleSubmit = (event) => {
+        const create = this.state.genre.id === null;
+        createOrUpdateGenre.call(this, create)
+            .then(data => this.setState({genre: data}))
+            .then(() => alert(create ? 'Genre created!' : 'Genre updated!'));
         event.preventDefault();
 
     }

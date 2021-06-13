@@ -21,8 +21,6 @@ export default class BookList extends React.Component {
             authors: []
         };
 
-        this.booksListToggle = this.booksListToggle.bind(this);
-        this.addBook = this.addBook.bind(this);
     }
 
     componentDidMount() {
@@ -31,21 +29,31 @@ export default class BookList extends React.Component {
     }
 
 
-    booksListToggle() {
+    booksListToggle = () => {
         if (this.state.books.length === 0) {
             loadAllBooks().then(value => this.setState({books: value}));
         }
     }
 
 
-    addBook() {
+    addBook = () => {
         this.setState({
             books: this.state.books.concat({id: null, bookName: 'NEW BOOK'})
         })
     }
 
     handleDelete = (book) => {
-        deleteBook(book).then(() => loadAllBooks().then((data) => {
+        deleteBook(book)
+            .then(response => {
+                    if (response.ok) {
+                        alert("Book deleted!");
+                    } else {
+                        response.text().then(text => {
+                            alert(text)
+                        })
+                    }
+                }
+            ).then(() => loadAllBooks().then((data) => {
             this.setState({books: data});
         }));
 

@@ -19,20 +19,16 @@ export default class BookComments extends React.Component {
             bookId: props.book.id,
             newCommentText: ''
         };
-
-        this.newCommentChange = this.newCommentChange.bind(this);
-        this.handleCommentDelete = this.handleCommentDelete.bind(this);
-        this.handleAddNewComment = this.handleAddNewComment.bind(this);
     }
 
-    newCommentChange(event) {
+    newCommentChange = (event) => {
         this.setState(state => {
             state.newCommentText = event.target.value
             return {newCommentText: state.newCommentText}
         });
     }
 
-    handleCommentDelete(deletedCommentId) {
+    handleCommentDelete = (deletedCommentId) => {
         let updatedBook = this.state.book;
         updatedBook.comments = this.state.book.comments.filter((comment) => {
             return comment.id !== deletedCommentId;
@@ -43,7 +39,7 @@ export default class BookComments extends React.Component {
         }))
     }
 
-    handleAddNewComment() {
+    handleAddNewComment = () => {
         addCommentToBook(this.state.bookId, this.state.newCommentText).then(value => this.setState({
             book: value,
             newCommentText: ''

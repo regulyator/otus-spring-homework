@@ -3,10 +3,9 @@ package ru.otus.library.web.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.otus.library.domain.dto.BookDto;
-import ru.otus.library.service.data.AuthorService;
 import ru.otus.library.service.data.BookService;
-import ru.otus.library.service.data.GenreService;
 
 import java.util.Collection;
 
@@ -36,7 +35,11 @@ public class BookController {
 
     @PostMapping("/library/api/books")
     public ResponseEntity<BookDto> createBook(@RequestBody BookDto book) {
-        return ResponseEntity.ok(bookService.createOrUpdate(book));
+        BookDto createdBookDto = bookService.createOrUpdate(book);
+        return ResponseEntity.created(
+                ServletUriComponentsBuilder
+                        .fromCurrentRequest().path("/{id}")
+                        .buildAndExpand(createdBookDto.getId()).toUri()).body(createdBookDto);
     }
 
     @PutMapping("/library/api/books/{bookId}/comment")
