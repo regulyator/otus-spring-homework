@@ -11,4 +11,5 @@
 * **hw07-spring-dao-data** - ДЗ: Библиотеку на Spring Data JPA
 * **hw08-spring-mongodb** - ДЗ: Использовать MongoDB и spring-data для хранения информации о книгах
 * **hw09-spring-MVC** - ДЗ: CRUD приложение с Web UI и хранением данных в БД
+* **hw10-spring-Rest** - ДЗ: CRUD приложение с Web UI и хранением данных в БД REST
 
