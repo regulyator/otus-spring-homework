@@ -1,12 +1,12 @@
 package ru.otus.library.repository;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import reactor.core.publisher.Flux;
 import ru.otus.library.domain.Author;
 
 import java.util.Collection;
-import java.util.List;
 
-public interface AuthorRepository extends MongoRepository<Author, String> {
+public interface AuthorRepository extends ReactiveMongoRepository<Author, String> {
 
-    List<Author> findAllByIdIn(Collection<String> iDs);
+    Flux<Author> findAllByIdIn(Collection<String> iDs);
 }

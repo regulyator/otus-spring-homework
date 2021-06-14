@@ -2,22 +2,32 @@ package ru.otus.library.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.server.HandlerFunction;
+import org.springframework.web.reactive.function.server.RequestPredicates;
+import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 import ru.otus.library.domain.Author;
 import ru.otus.library.exception.ReferenceEntityException;
+import ru.otus.library.repository.AuthorRepository;
 import ru.otus.library.service.data.AuthorService;
 
 import java.util.Collection;
 
+import static org.springframework.web.reactive.function.server.ServerResponse.ok;
+
 @RestController
 public class AuthorController {
     private final AuthorService authorService;
+    private final AuthorRepository authorRepository;
 
     @Autowired
-    public AuthorController(AuthorService authorService) {
+    public AuthorController(AuthorService authorService, AuthorRepository authorRepository) {
         this.authorService = authorService;
+        this.authorRepository = authorRepository;
     }
 
     @GetMapping("/library/api/authors")
