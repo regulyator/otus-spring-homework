@@ -1,49 +1,73 @@
 package ru.otus.library.mongock.changelog;
 
 import com.github.cloudyrock.mongock.ChangeLog;
-import com.github.cloudyrock.mongock.ChangeSet;
-import com.mongodb.client.MongoDatabase;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import ru.otus.library.domain.Author;
 import ru.otus.library.domain.Book;
 import ru.otus.library.domain.Comment;
 import ru.otus.library.domain.Genre;
-import ru.otus.library.repository.AuthorRepository;
 import ru.otus.library.repository.BookRepository;
 import ru.otus.library.repository.GenreRepository;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
 @ChangeLog
 public class InitLibraryData {
 
-    @ChangeSet(order = "001", id = "dropDb", author = "regulyator", runAlways = true)
-    public void dropDb(MongoDatabase mongoDatabase) {
-        mongoDatabase.drop();
+    private static final String BOOKS_COLLECTION_NAME = "Books";
+    private static final String AUTHORS_COLLECTION_NAME = "Authors";
+    private static final String GENRES_COLLECTION_NAME = "Genres";
+    private final ReactiveMongoOperations reactiveMongoOperations;
+
+    public InitLibraryData(ReactiveMongoOperations reactiveMongoOperations) {
+        this.reactiveMongoOperations = reactiveMongoOperations;
     }
 
-    @ChangeSet(order = "002", id = "initAuthors", author = "regulyator", runAlways = true)
-    public void initAuthors(AuthorRepository authorRepository) {
+    public void clearDb() {
+        reactiveMongoOperations.dropCollection(BOOKS_COLLECTION_NAME);
+        reactiveMongoOperations.dropCollection(AUTHORS_COLLECTION_NAME);
+        reactiveMongoOperations.dropCollection(GENRES_COLLECTION_NAME);
+    }
+
+    public void initAuthors() {
         Stream.of("Peter Watts",
                 "Robert Hainline",
                 "Arkady and Boris Strugatsky",
-                "Vernor Vinge").forEach(s -> authorRepository.save(new Author(null, s)));
+                "Vernor Vinge").forEach(s -> reactiveMongoOperations.save(new Author(null, s)));
     }
 
-    @ChangeSet(order = "003", id = "initGenres", author = "regulyator", runAlways = true)
-    public void initGenres(GenreRepository genreRepository) {
+
+    public void initGenres() {
         Stream.of("Horror",
                 "Fantasy",
-                "Sci-Fi").forEach(s -> genreRepository.save(new Genre(null, s)));
+                "Sci-Fi").forEach(s -> reactiveMongoOperations.save(new Genre(null, s)));
     }
 
-    @ChangeSet(order = "004", id = "initBooks", author = "regulyator", runAlways = true)
-    public void initBooks(BookRepository bookRepository, MongoOperations mongoOperations) {
-        bookRepository.save(new Book(null, "Blindsight",
-                mongoOperations.findOne(Query.query(Criteria.where("caption").is("Sci-Fi")), Genre.class),
+
+    public void initBooks() {
+
+        Book book1 = new Book(null, "Blindsight",
+                null,
+                Collections.emptyList(),
+                List.of(new Comment("nice book!"), new Comment("So complicated")));
+
+        reactiveMongoOperations.findOne(Query.query(Criteria.where("caption").is("Sci-Fi")), Genre.class)
+                .doOnNext(book1::setGenre)
+                .and(reactiveMongoOperations.find(Query.query(Criteria.where("fio").is("Peter Watts")), Author.class))
+
+
+        reactiveMongoOperations.findOne(Query.query(Criteria.where("caption").is("Sci-Fi")), Genre.class)
+                .and(reactiveMongoOperations.find(Query.query(Criteria.where("fio").is("Peter Watts")), Author.class))
+
+
+        reactiveMongoOperations.save(new Book(null, "Blindsight",
+                reactiveMongoOperations.findOne(Query.query(Criteria.where("caption").is("Sci-Fi")), Genre.class),
                 mongoOperations.find(Query.query(Criteria.where("fio").is("Peter Watts")), Author.class),
                 List.of(new Comment("nice book!"), new Comment("So complicated"))));
 
