@@ -29,7 +29,7 @@ public class InitLibraryData {
 
     public void initDb() {
         Book book1 = Book.builder()
-                .bookName("Blindsight 1111")
+                .bookName("Blindsight")
                 .comments(List.of(new Comment("nice book!"), new Comment("So complicated")))
                 .authors(new ArrayList<>())
                 .build();
@@ -60,40 +60,44 @@ public class InitLibraryData {
         reactiveMongoOperations.dropCollection(BOOKS_COLLECTION_NAME)
                 .then(reactiveMongoOperations.dropCollection(AUTHORS_COLLECTION_NAME))
                 .then(reactiveMongoOperations.dropCollection(GENRES_COLLECTION_NAME))
-                .then(just("Peter Watts",
+                .thenMany(just("Peter Watts",
                         "Robert Hainline",
                         "Arkady and Boris Strugatsky",
-                        "Vernor Vinge").doOnNext(s -> reactiveMongoOperations.save(new Author(null, s)))
-                        .thenMany(just("Horror",
-                                "Fantasy",
-                                "Sci-Fi",
-                                "Atata")
-                                .doOnNext(s -> reactiveMongoOperations.save(new Genre(null, s))))
-                        .then(reactiveMongoOperations.find(Query.query(Criteria.where("fio").is("Peter Watts")), Author.class)
-                                .doOnEach(author -> book1.getAuthors().add(author.get()))
-                                .then(reactiveMongoOperations.findOne(Query.query(Criteria.where("caption").is("Sci-Fi")), Genre.class))
-                                .doOnNext(book1::setGenre)
-                                .then(reactiveMongoOperations.save(book1)))
-                        .then(reactiveMongoOperations.find(Query.query(Criteria.where("fio").is("Robert Hainline")), Author.class)
-                                .doOnNext(author -> book2.getAuthors().add(author))
-                                .then(reactiveMongoOperations.findOne(Query.query(Criteria.where("caption").is("Sci-Fi")), Genre.class))
-                                .doOnNext(book2::setGenre)
-                                .then(reactiveMongoOperations.save(book2)))
-                        .then(reactiveMongoOperations.find(Query.query(Criteria.where("fio").is("Arkady and Boris Strugatsky")), Author.class)
-                                .doOnNext(author -> book3.getAuthors().add(author))
-                                .then(reactiveMongoOperations.findOne(Query.query(Criteria.where("caption").is("Fantasy")), Genre.class))
-                                .doOnNext(book3::setGenre)
-                                .then(reactiveMongoOperations.save(book3)))
-                        .then(reactiveMongoOperations.find(Query.query(Criteria.where("fio").in("Peter Watts", "Arkady and Boris Strugatsky")), Author.class)
-                                .doOnNext(author -> book4.getAuthors().add(author))
-                                .then(reactiveMongoOperations.findOne(Query.query(Criteria.where("caption").is("Sci-Fi")), Genre.class))
-                                .doOnNext(book4::setGenre)
-                                .then(reactiveMongoOperations.save(book4)))
-                        .then(reactiveMongoOperations.find(Query.query(Criteria.where("fio").in("Robert Hainline", "Arkady and Boris Strugatsky")), Author.class)
-                                .doOnNext(author -> book5.getAuthors().add(author))
-                                .then(reactiveMongoOperations.findOne(Query.query(Criteria.where("caption").is("Sci-Fi")), Genre.class))
-                                .doOnNext(book5::setGenre)
-                                .then(reactiveMongoOperations.save(book5)))).subscribe();
+                        "Vernor Vinge"))
+                .map(s -> new Author(null, s))
+                .flatMap(reactiveMongoOperations::save)
+                .thenMany(just("Horror",
+                        "Fantasy",
+                        "Sci-Fi",
+                        "Atata"))
+                .map(s -> new Genre(null, s))
+                .flatMap(reactiveMongoOperations::save)
+                .then(reactiveMongoOperations.find(Query.query(Criteria.where("fio").is("Peter Watts")), Author.class)
+                        .doOnNext(author -> book1.getAuthors().add(author))
+                        .then(reactiveMongoOperations.findOne(Query.query(Criteria.where("caption").is("Sci-Fi")), Genre.class))
+                        .doOnNext(book1::setGenre)
+                        .then(reactiveMongoOperations.save(book1))
+                        .thenMany(reactiveMongoOperations.find(Query.query(Criteria.where("fio").is("Robert Hainline")), Author.class))
+                        .doOnNext(author -> book2.getAuthors().add(author))
+                        .then(reactiveMongoOperations.findOne(Query.query(Criteria.where("caption").is("Sci-Fi")), Genre.class))
+                        .doOnNext(book2::setGenre)
+                        .then(reactiveMongoOperations.save(book2))
+                        .thenMany(reactiveMongoOperations.find(Query.query(Criteria.where("fio").is("Arkady and Boris Strugatsky")), Author.class))
+                        .doOnNext(author -> book3.getAuthors().add(author))
+                        .then(reactiveMongoOperations.findOne(Query.query(Criteria.where("caption").is("Fantasy")), Genre.class))
+                        .doOnNext(book3::setGenre)
+                        .then(reactiveMongoOperations.save(book3))
+                        .thenMany(reactiveMongoOperations.find(Query.query(Criteria.where("fio").in("Peter Watts", "Arkady and Boris Strugatsky")), Author.class))
+                        .doOnNext(author -> book4.getAuthors().add(author))
+                        .then(reactiveMongoOperations.findOne(Query.query(Criteria.where("caption").is("Sci-Fi")), Genre.class))
+                        .doOnNext(book4::setGenre)
+                        .then(reactiveMongoOperations.save(book4))
+                        .thenMany(reactiveMongoOperations.find(Query.query(Criteria.where("fio").in("Robert Hainline", "Arkady and Boris Strugatsky")), Author.class))
+                        .doOnNext(author -> book5.getAuthors().add(author))
+                        .then(reactiveMongoOperations.findOne(Query.query(Criteria.where("caption").is("Sci-Fi")), Genre.class))
+                        .doOnNext(book5::setGenre)
+                        .then(reactiveMongoOperations.save(book5))).subscribe();
+
     }
 
 
