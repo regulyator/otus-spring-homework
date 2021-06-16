@@ -8,6 +8,7 @@ import ru.otus.library.domain.Genre;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,7 +27,7 @@ public class BookDto {
         this.id = book.getId();
         this.bookName = book.getBookName();
         this.genre = book.getGenre();
-        this.authors = new ArrayList<>(book.getAuthors());
-        this.comments = new ArrayList<>(book.getComments());
+        this.authors = new ArrayList<>(Objects.nonNull(book.getAuthors()) ? book.getAuthors() : new ArrayList<>());
+        this.comments = new ArrayList<>(Objects.nonNull(book.getComments()) ? book.getComments() : new ArrayList<>());
     }
 }

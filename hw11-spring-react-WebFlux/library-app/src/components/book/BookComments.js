@@ -40,10 +40,11 @@ export default class BookComments extends React.Component {
     }
 
     handleAddNewComment = () => {
-        addCommentToBook(this.state.bookId, this.state.newCommentText).then(value => this.setState({
-            book: value,
-            newCommentText: ''
-        }))
+        addCommentToBook(this.state.bookId, this.state.newCommentText).then(value =>
+            this.setState({
+                book: value,
+                newCommentText: ''
+            }))
     }
 
     render() {

@@ -27,7 +27,7 @@ public class Book {
     @Field("genre")
     private Genre genre;
 
-    @DBRef(lazy = true)
+    @Field("authors")
     private List<Author> authors = new ArrayList<>();
 
     @Field("comments")

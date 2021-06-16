@@ -10,9 +10,9 @@ public interface BookRepository extends ReactiveMongoRepository<Book, String>, C
 
     Mono<Book> findByBookName(String bookName);
 
-    boolean existsBookByGenre_Id(String genreId);
+    Mono<Boolean> existsBookByGenre_Id(String genreId);
 
-    boolean existsBookByAuthors_Id(String authorId);
+    Mono<Boolean> existsBookByAuthors_Id(String authorId);
 
     Flux<Book> findAllByGenre_Id(String genreId);
 }
