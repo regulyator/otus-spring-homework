@@ -1,32 +1,35 @@
-package ru.otus.library.mongock.changelog;
+package ru.otus.library.configuration;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.stereotype.Service;
 import ru.otus.library.domain.Author;
 import ru.otus.library.domain.Book;
 import ru.otus.library.domain.Comment;
 import ru.otus.library.domain.Genre;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 
 import static reactor.core.publisher.Flux.just;
 
-@Service
+@Configuration
 public class InitLibraryData {
-
     private static final String BOOKS_COLLECTION_NAME = "Books";
     private static final String AUTHORS_COLLECTION_NAME = "Authors";
     private static final String GENRES_COLLECTION_NAME = "Genres";
+
     private final ReactiveMongoOperations reactiveMongoOperations;
 
+    @Autowired
     public InitLibraryData(ReactiveMongoOperations reactiveMongoOperations) {
         this.reactiveMongoOperations = reactiveMongoOperations;
-        initDb();
     }
 
+    @PostConstruct
     public void initDb() {
         Book book1 = Book.builder()
                 .bookName("Blindsight")

@@ -18,6 +18,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
 
     runtimeOnly 'org.springframework.boot:spring-boot-devtools'
 }

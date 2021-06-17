@@ -37,9 +37,7 @@ public class BookRouterConfiguration {
                 .GET("/library/api/books/{bookId}",
                         accept(APPLICATION_JSON),
                         request -> bookRepository.findById(request.pathVariable("bookId"))
-                                .map(BookDto::new)
-                                .flatMap(bookDto -> ok().contentType(APPLICATION_JSON)
-                                        .body(bookDto, BookDto.class))
+                                .flatMap(book -> ok().contentType(APPLICATION_JSON).body(Mono.just(new BookDto(book)), BookDto.class))
                 )
                 .PUT("/library/api/books",
                         accept(APPLICATION_JSON),
