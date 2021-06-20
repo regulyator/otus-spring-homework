@@ -1,0 +1,10 @@
+spring:
+  data:
+    mongodb:
+      database: library
+  main:
+    banner-mode: off
+
+logging:
+  level:
+    ROOT: ERROR

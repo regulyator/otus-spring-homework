@@ -1,0 +1,16 @@
+logging:
+  file:
+    path: './logs'
+    name: ${logging.file.path}/app.log
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/library
+
+
+server:
+  port: 8099
+
+
+
