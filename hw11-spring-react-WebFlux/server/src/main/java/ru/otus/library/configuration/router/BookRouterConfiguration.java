@@ -28,39 +28,31 @@ public class BookRouterConfiguration {
         return RouterFunctions.route()
                 .GET("/library/api/books",
                         accept(APPLICATION_JSON),
-                        request -> bookRepository.findAll()
-                                .flatMap(book -> Mono.just(new BookDto(book)))
-                                .collectList()
-                                .flatMap(bookDtos -> ok().contentType(APPLICATION_JSON)
-                                        .body(Mono.just(bookDtos), BookDto.class))
+                        request -> ok().contentType(APPLICATION_JSON)
+                                .body(bookRepository.findAll().map(BookDto::new).collectList(), BookDto.class)
                 )
                 .GET("/library/api/books/{bookId}",
                         accept(APPLICATION_JSON),
-                        request -> bookRepository.findById(request.pathVariable("bookId"))
-                                .flatMap(book -> ok().contentType(APPLICATION_JSON).body(Mono.just(new BookDto(book)), BookDto.class))
+                        request -> ok().contentType(APPLICATION_JSON).body(bookRepository.findById(request.pathVariable("bookId")).map(BookDto::new), BookDto.class)
                 )
                 .PUT("/library/api/books",
                         accept(APPLICATION_JSON),
                         request -> request.body(toMono(BookDto.class))
-                                .map(Book::new)
-                                .flatMap(bookRepository::save)
-                                .flatMap(book ->
-                                        ok().contentType(APPLICATION_JSON).body(Mono.just(new BookDto(book)), BookDto.class)
+                                .flatMap(bookDto ->
+                                        ok().contentType(APPLICATION_JSON)
+                                                .body(bookRepository.save(new Book(bookDto)).map(BookDto::new), BookDto.class)
                                 ))
                 .PUT("/library/api/books/{bookId}/comment",
                         accept(APPLICATION_JSON),
-                        request -> Mono.just(request.queryParam("newCommentText"))
-                                .flatMap(s -> Mono.just(s.get()))
-                                .ofType(String.class)
+                        request -> Mono.just(request.queryParam("newCommentText").get())
                                 .flatMap(newCommentText -> bookRepository.findById(request.pathVariable("bookId"))
                                         .flatMap(book -> {
                                             if (Objects.isNull(book.getComments())) {
                                                 book.setComments(new ArrayList<>());
                                             }
                                             book.getComments().add(new Comment(newCommentText));
-                                            return bookRepository.save(book);
+                                            return ok().contentType(APPLICATION_JSON).body(bookRepository.save(book).map(BookDto::new), BookDto.class);
                                         }))
-                                .flatMap(book -> ok().contentType(APPLICATION_JSON).body(Mono.just(new BookDto(book)), BookDto.class))
                 )
                 .POST("/library/api/books",
                         accept(APPLICATION_JSON),
@@ -68,10 +60,7 @@ public class BookRouterConfiguration {
                                 .flatMap(bookDto -> ServerResponse
                                         .created(URI.create("/library/api/books/" + bookDto.getId()))
                                         .contentType(APPLICATION_JSON)
-                                        .body(Mono.just(new Book(bookDto))
-                                                .flatMap(book ->
-                                                        bookRepository.save(book)
-                                                                .flatMap(createdBook -> Mono.just(new BookDto(createdBook)))), BookDto.class))
+                                        .body(bookRepository.save(new Book(bookDto)).map(BookDto::new), BookDto.class))
                 )
                 .DELETE("/library/api/books/{bookId}",
                         accept(APPLICATION_JSON),

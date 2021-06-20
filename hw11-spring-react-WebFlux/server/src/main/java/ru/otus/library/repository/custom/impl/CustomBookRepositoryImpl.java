@@ -22,6 +22,6 @@ public class CustomBookRepositoryImpl implements CustomBookRepository {
         Update updateGenre = new Update().set("genre", newGenre);
         return reactiveMongoOperations.updateMulti(Query.query(Criteria.where("genre.id").is(newGenre.getId())),
                 updateGenre,
-                Book.class).flatMap(updateResult -> Mono.empty());
+                Book.class).then();
     }
 }

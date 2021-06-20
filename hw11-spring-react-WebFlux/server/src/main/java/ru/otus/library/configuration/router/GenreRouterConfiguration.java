@@ -34,11 +34,11 @@ public class GenreRouterConfiguration {
                         request -> request.body(toMono(Genre.class))
                                 .flatMap(genre -> genreRepository.save(genre)
                                         .doOnNext(bookRepository::updateBooksGenre)
-                                )
-                                .flatMap(genre ->
-                                        ok().contentType(APPLICATION_JSON)
-                                                .body(Mono.just(genre), Genre.class)
-                                ))
+                                        .flatMap(genre1 ->
+                                                ok().contentType(APPLICATION_JSON)
+                                                        .body(Mono.just(genre1), Genre.class)
+                                        ))
+                )
                 .POST("/library/api/genres",
                         accept(APPLICATION_JSON),
                         request -> request.body(toMono(Genre.class))
