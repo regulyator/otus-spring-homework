@@ -6,15 +6,16 @@ import com.mongodb.client.MongoDatabase;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import ru.otus.library.domain.Author;
-import ru.otus.library.domain.Book;
-import ru.otus.library.domain.Comment;
-import ru.otus.library.domain.Genre;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import ru.otus.library.domain.*;
 import ru.otus.library.repository.AuthorRepository;
 import ru.otus.library.repository.BookRepository;
 import ru.otus.library.repository.GenreRepository;
+import ru.otus.library.repository.UserRepository;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 @ChangeLog
@@ -66,5 +67,29 @@ public class InitLibraryData {
                 mongoOperations.findOne(Query.query(Criteria.where("caption").is("Sci-Fi")), Genre.class),
                 mongoOperations.find(Query.query(Criteria.where("fio").in("Robert Hainline", "Arkady and Boris Strugatsky")), Author.class),
                 null));
+    }
+
+    @ChangeSet(order = "005", id = "initUser", author = "regulyator", runAlways = true)
+    public void initUser(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        userRepository.save(User.builder()
+                .username("user")
+                .password(passwordEncoder.encode("password"))
+                .authorities(Set.of(new SimpleGrantedAuthority("ROLE_USER")))
+                .enabled(true)
+                .credentialsNonExpired(true)
+                .accountNonLocked(true)
+                .accountNonExpired(true)
+                .build());
+
+        userRepository.save(User.builder()
+                .username("admin")
+                .password(passwordEncoder.encode("admin"))
+                .authorities(Set.of(new SimpleGrantedAuthority("ROLE_USER"),
+                        new SimpleGrantedAuthority("ROLE_ADMIN")))
+                .enabled(true)
+                .credentialsNonExpired(true)
+                .accountNonLocked(true)
+                .accountNonExpired(true)
+                .build());
     }
 }
