@@ -39,6 +39,7 @@ test {
     useJUnitPlatform()
 }
 
+/*
 tasks.register('processFrontendResources', Copy) {
     def frontendBuildDir = file("${project(':hw12-spring-security-simple-auth:library-app').buildDir}")
 
@@ -54,4 +55,4 @@ tasks.register('processFrontendResources', Copy) {
 
 tasks.named('processResources') {
     dependsOn tasks.named('processFrontendResources')
-}
+}*/

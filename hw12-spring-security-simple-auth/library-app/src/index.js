@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Welcome from './Welcome';
 import reportWebVitals from './reportWebVitals';
+import LibraryApp from "./components/LibraryApp";
 
 ReactDOM.render(
     <React.StrictMode>
-        <Welcome/>
+        <LibraryApp/>
     </React.StrictMode>,
     document.getElementById('root')
 );
