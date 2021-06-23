@@ -7,10 +7,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ru.otus.library.config.SecurityTestConfiguration;
 import ru.otus.library.domain.Book;
 import ru.otus.library.domain.Genre;
 import ru.otus.library.domain.dto.BookDto;
@@ -25,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Import(SecurityTestConfiguration.class)
 @DisplayName("BookController should")
 @WebMvcTest(controllers = BookController.class)
 class BookControllerTest {
@@ -51,6 +55,7 @@ class BookControllerTest {
 
     @DisplayName("get all books")
     @Test
+    @WithMockUser(username = "user")
     void shouldGetAllBooks() throws Exception {
         when(bookService.getAllDto()).thenReturn(Collections.singletonList(BOOK_DTO));
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders
@@ -72,6 +77,7 @@ class BookControllerTest {
 
     @DisplayName("get book by id")
     @Test
+    @WithMockUser(username = "user")
     void shouldGetBookById() throws Exception {
         when(bookService.getByIdDto(BOOK_ID)).thenReturn(BOOK_DTO);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders
@@ -90,6 +96,7 @@ class BookControllerTest {
 
     @DisplayName("update book")
     @Test
+    @WithMockUser(username = "user")
     void shouldUpdateBook() throws Exception {
         when(bookService.createOrUpdate(BOOK_DTO)).thenReturn(BOOK_DTO);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders
@@ -110,6 +117,7 @@ class BookControllerTest {
 
     @DisplayName("create book")
     @Test
+    @WithMockUser(username = "user")
     void shouldCreateBook() throws Exception {
         when(bookService.createOrUpdate(BOOK_DTO)).thenReturn(BOOK_DTO);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders
@@ -130,6 +138,7 @@ class BookControllerTest {
 
     @DisplayName("add comment to book")
     @Test
+    @WithMockUser(username = "user")
     void shouldAddCommentToBook() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                 .put("/library/api/books/{bookId}/comment", BOOK_ID)
@@ -141,6 +150,7 @@ class BookControllerTest {
 
     @DisplayName("delete book")
     @Test
+    @WithMockUser(username = "user")
     void shouldDeleteBook() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                 .delete("/library/api/books/{bookId}", BOOK_ID))

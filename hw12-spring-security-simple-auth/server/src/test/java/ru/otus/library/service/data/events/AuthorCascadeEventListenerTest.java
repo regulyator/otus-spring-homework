@@ -24,7 +24,7 @@ class AuthorCascadeEventListenerTest extends AbstractRepositoryTest {
 
     @DisplayName("not delete Author if it has references in any Book and throw Exception")
     @Test
-    public void shouldNotDeleteAuthorIfItHasReferenceToAnyBookAndThrowException() {
+    void shouldNotDeleteAuthorIfItHasReferenceToAnyBookAndThrowException() {
         Author author = authorRepository.findAll().stream()
                 .filter(a -> a.getFio().equals(REFERENCE_AUTHOR_FIO)).findFirst().orElseThrow(EntityNotFoundException::new);
 
@@ -37,7 +37,7 @@ class AuthorCascadeEventListenerTest extends AbstractRepositoryTest {
 
     @DisplayName("delete Author if it has no references in any Book")
     @Test
-    public void shouldDeleteAuthorIfItHasNoReferenceToAnyBook() {
+    void shouldDeleteAuthorIfItHasNoReferenceToAnyBook() {
         Author author = authorRepository.findAll().stream()
                 .filter(a -> a.getFio().equals(NON_REFERENCE_AUTHOR_FIO)).findFirst().orElseThrow(EntityNotFoundException::new);
 

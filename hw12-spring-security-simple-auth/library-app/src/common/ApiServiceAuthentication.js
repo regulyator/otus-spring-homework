@@ -1,7 +1,6 @@
 const apiUrlAuthentication = '/authenticate';
 
 export function authenticate(username, password) {
-    console.log("auth " + username + " " +password)
     const requestOptions = {
         method: 'GET',
         headers: {'Authorization': generateBasicAuthToken(username, password)}

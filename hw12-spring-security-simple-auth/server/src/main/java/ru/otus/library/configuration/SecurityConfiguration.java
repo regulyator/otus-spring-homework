@@ -50,7 +50,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/static/**", "/manifest.json").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/library/api/**").permitAll()
-                .antMatchers("/authenticate").permitAll()
+                .antMatchers("/", "/library", "/authenticate").permitAll()
                 .anyRequest().fullyAuthenticated()
                 .and()
                 .httpBasic();

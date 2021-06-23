@@ -7,10 +7,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ru.otus.library.config.SecurityTestConfiguration;
 import ru.otus.library.domain.Author;
 import ru.otus.library.service.data.AuthorService;
 
@@ -21,6 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Import(SecurityTestConfiguration.class)
 @DisplayName("AuthorController should")
 @WebMvcTest(controllers = AuthorController.class)
 class AuthorControllerTest {
@@ -36,6 +40,7 @@ class AuthorControllerTest {
 
     @DisplayName("get all authors")
     @Test
+    @WithMockUser(username = "user")
     void shouldGetAllAuthors() throws Exception {
         when(authorService.getAll()).thenReturn(Collections.singletonList(AUTHOR));
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders
@@ -56,6 +61,7 @@ class AuthorControllerTest {
 
     @DisplayName("update author")
     @Test
+    @WithMockUser(username = "user")
     void shouldUpdateAuthor() throws Exception {
         when(authorService.createOrUpdate(AUTHOR)).thenReturn(AUTHOR);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders
@@ -76,6 +82,7 @@ class AuthorControllerTest {
 
     @DisplayName("create author")
     @Test
+    @WithMockUser(username = "user")
     void shouldCreateAuthor() throws Exception {
         when(authorService.createOrUpdate(AUTHOR)).thenReturn(AUTHOR);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders
@@ -97,6 +104,7 @@ class AuthorControllerTest {
 
     @DisplayName("delete author")
     @Test
+    @WithMockUser(username = "user")
     void shouldDeleteAuthor() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                 .delete("/library/api/authors/{authorId}", AUTHOR_ID))

@@ -19,16 +19,12 @@ import java.util.stream.Collectors;
 @Service
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
-    private final AuthorService authorService;
-    private final GenreService genreService;
 
     @Autowired
     public BookServiceImpl(BookRepository bookRepository,
                            AuthorService authorService,
                            GenreService genreService) {
         this.bookRepository = bookRepository;
-        this.authorService = authorService;
-        this.genreService = genreService;
     }
 
     @Override

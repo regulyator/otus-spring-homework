@@ -32,7 +32,7 @@ class GenreCascadeEventListenerTest extends AbstractRepositoryTest {
 
     @DisplayName("not delete Genre if it has references in any Book and throw Exception")
     @Test
-    public void shouldNotDeleteGenreIfItHasReferenceToAnyBookAndThrowException() {
+    void shouldNotDeleteGenreIfItHasReferenceToAnyBookAndThrowException() {
         Genre genre = genreRepository.findAll().stream()
                 .filter(a -> a.getCaption().equals(REFERENCE_GENRE_CAPTION)).findFirst().orElseThrow(EntityNotFoundException::new);
 
@@ -45,7 +45,7 @@ class GenreCascadeEventListenerTest extends AbstractRepositoryTest {
 
     @DisplayName("delete Genre if it has no references in any Book")
     @Test
-    public void shouldDeleteGenreIfItHasNoReferenceToAnyBook() {
+    void shouldDeleteGenreIfItHasNoReferenceToAnyBook() {
         Genre genre = genreRepository.findAll().stream()
                 .filter(a -> a.getCaption().equals(NON_REFERENCE_GENRE_CAPTION)).findFirst().orElseThrow(EntityNotFoundException::new);
 
@@ -58,7 +58,7 @@ class GenreCascadeEventListenerTest extends AbstractRepositoryTest {
 
     @DisplayName("update reference Genre caption in Book when Genre is updated")
     @Test
-    public void shouldUpdateGenreCaptionInReferenceBook() {
+    void shouldUpdateGenreCaptionInReferenceBook() {
         Genre genre = genreRepository.findAll().stream()
                 .filter(a -> a.getCaption().equals(REFERENCE_GENRE_CAPTION)).findFirst().orElseThrow(EntityNotFoundException::new);
         genre.setCaption(UPDATED_GENRE_CAPTION);
