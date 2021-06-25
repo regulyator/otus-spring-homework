@@ -8,7 +8,3 @@ export function authenticate(username, password) {
     return fetch(`${apiUrlAuthentication}?username=${username}&password=${password}`, requestOptions)
         .catch(reason => console.log(reason));
 }
-
-function generateBasicAuthToken(username, password) {
-    return 'Basic ' + window.btoa(username + ":" + password)
-}

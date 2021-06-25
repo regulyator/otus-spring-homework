@@ -14,12 +14,11 @@ export default function Login(props) {
         event.preventDefault();
         authenticate(username, password)
             .then(response => {
-                    console.log(response)
                     if (response.ok) {
                         props.onLogin(true);
                         history.push("/library");
                     } else if (response.status === 401) {
-                        alert("error")
+                        alert("Wrong username or password!")
                     }
                 }
             )
