@@ -53,6 +53,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/library", "/authenticate").permitAll()
                 .anyRequest().fullyAuthenticated()
                 .and()
-                .httpBasic();
+                .formLogin().loginPage("/")
+                .loginProcessingUrl("/authenticate")
+                .defaultSuccessUrl("/",true);
     }
 }

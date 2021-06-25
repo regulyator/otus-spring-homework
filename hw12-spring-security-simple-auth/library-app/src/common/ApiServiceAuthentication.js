@@ -2,10 +2,10 @@ const apiUrlAuthentication = '/authenticate';
 
 export function authenticate(username, password) {
     const requestOptions = {
-        method: 'GET',
-        headers: {'Authorization': generateBasicAuthToken(username, password)}
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
     };
-    return fetch(apiUrlAuthentication, requestOptions)
+    return fetch(`${apiUrlAuthentication}?username=${username}&password=${password}`, requestOptions)
         .catch(reason => console.log(reason));
 }
 
