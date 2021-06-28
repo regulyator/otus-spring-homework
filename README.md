@@ -12,4 +12,6 @@
 * **hw08-spring-mongodb** - ДЗ: Использовать MongoDB и spring-data для хранения информации о книгах
 * **hw09-spring-MVC** - ДЗ: CRUD приложение с Web UI и хранением данных в БД
 * **hw10-spring-Rest** - ДЗ: CRUD приложение с Web UI и хранением данных в БД REST
+* **hw11-spring-react-WebFlux** - ДЗ: CRUD приложение с Web UI и использованием WebFlux
+* **hw12-spring-security-simple-auth** - ДЗ: В CRUD Web-приложение добавить механизм аутентификации
 
