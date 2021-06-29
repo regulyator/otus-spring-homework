@@ -71,11 +71,15 @@ public class AclConfiguration {
 
     @Bean
     public LookupStrategy lookupStrategy() {
-        return new BasicLookupStrategy(dataSource, aclCache(), aclAuthorizationStrategy(), new ConsoleAuditLogger());
+        BasicLookupStrategy lookupStrategy = new BasicLookupStrategy(dataSource, aclCache(), aclAuthorizationStrategy(), new ConsoleAuditLogger());
+        lookupStrategy.setAclClassIdSupported(true);
+        return lookupStrategy;
     }
 
     @Bean
     public JdbcMutableAclService aclService() {
+        JdbcMutableAclService aclService = new JdbcMutableAclService(dataSource, lookupStrategy(), aclCache());
+        aclService.setAclClassIdSupported(true);
         return new JdbcMutableAclService(dataSource, lookupStrategy(), aclCache());
     }
 }

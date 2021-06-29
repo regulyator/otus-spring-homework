@@ -7,6 +7,8 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/library
+  datasource:
+    url: jdbc:h2:mem:testdb
   mvc:
     hiddenmethod:
       filter:
