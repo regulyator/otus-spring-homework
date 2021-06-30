@@ -6,6 +6,7 @@ import Accordion from "react-bootstrap/Accordion";
 import Button from "react-bootstrap/Button";
 import Author from "./Author";
 import {deleteAuthor, loadAllAuthors} from "../../common/ApiServiceAuthors";
+import {handleErrors} from "../../common/Util";
 
 export default class AuthorList extends React.Component {
     constructor(props) {
@@ -32,6 +33,7 @@ export default class AuthorList extends React.Component {
 
     handleDelete = (author) => {
         deleteAuthor(author)
+            .then(handleErrors)
             .then(response => {
                     if (response.ok) {
                         alert("Author deleted!");
@@ -43,7 +45,9 @@ export default class AuthorList extends React.Component {
                 }
             ).then(() => loadAllAuthors().then((data) => {
             this.setState({authors: data})
-        }));
+        })).catch(error =>
+            alert(error)
+        );
     }
 
     render() {

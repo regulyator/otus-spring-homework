@@ -1,9 +1,15 @@
+import {handleErrors} from "./Util";
+
 const apiUrlAuthors = '/library/api/authors/';
+
 
 export function loadAllAuthors() {
     return fetch(apiUrlAuthors)
-        .then(res => res.json())
-        .catch(console.log)
+        .then(handleErrors)
+        .then(response => response.json())
+        .catch(error =>
+            alert(error)
+        );
 }
 
 export function createOrUpdateAuthor(create) {
@@ -12,15 +18,12 @@ export function createOrUpdateAuthor(create) {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(this.state.author)
     };
-    return fetch(apiUrlAuthors, requestOptions)
-        .then(response => response.json());
+    return fetch(apiUrlAuthors, requestOptions);
 }
 
 export function deleteAuthor(author) {
     return fetch(apiUrlAuthors + author.id, {
         method: 'DELETE',
         headers: {'Content-Type': 'application/json'}
-    }).catch(reason =>
-        console.log(reason)
-    )
+    });
 }

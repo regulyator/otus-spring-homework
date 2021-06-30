@@ -4,6 +4,7 @@ import React from 'react'
 import Button from "react-bootstrap/Button";
 import {FormControl, InputGroup} from "react-bootstrap";
 import {createOrUpdateAuthor} from "../../common/ApiServiceAuthors";
+import {handleErrors} from "../../common/Util";
 
 export default class Author extends React.Component {
     constructor(props) {
@@ -19,12 +20,16 @@ export default class Author extends React.Component {
     }
 
     handleSubmit = (event) => {
+        event.preventDefault();
         const create = this.state.author.id === null;
         createOrUpdateAuthor.call(this, create)
+            .then(handleErrors)
+            .then(response => response.json())
             .then(data => this.setState({author: data}))
-            .then(() => alert(create ? 'Author created!' : 'Author updated!'));
-        event.preventDefault();
-
+            .then(() => alert(create ? 'Author created!' : 'Author updated!'))
+            .catch(error =>
+                alert(error)
+            );
     }
 
     render() {

@@ -7,12 +7,6 @@ export function loadAllBooks() {
         .catch(console.log)
 }
 
-export function loadBook(bookId) {
-    return fetch(apiUrlBooks + bookId)
-        .then(res => res.json())
-        .catch(console.log)
-}
-
 export function createOrUpdateBook(book) {
     return fetch(apiUrlBooks, {
         method: book.id === null ? 'POST' : 'PUT',
