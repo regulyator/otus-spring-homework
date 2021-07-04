@@ -18,7 +18,6 @@ public class UserController {
         this.userService = userService;
     }
 
-
     @GetMapping("/library/api/users")
     public ResponseEntity<Collection<User>> getAllAuthors() {
         return ResponseEntity.ok(userService.getAll());

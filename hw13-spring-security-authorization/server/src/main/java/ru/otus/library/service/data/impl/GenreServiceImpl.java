@@ -1,6 +1,8 @@
 package ru.otus.library.service.data.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostFilter;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import ru.otus.library.domain.Genre;
 import ru.otus.library.exception.EntityNotFoundException;
@@ -34,6 +36,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
+    @PostFilter("hasPermission(filterObject, 'READ')")
     public Collection<Genre> getAll() {
         return genreRepository.findAll();
     }
