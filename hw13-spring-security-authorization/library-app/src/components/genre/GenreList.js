@@ -6,6 +6,7 @@ import Accordion from "react-bootstrap/Accordion";
 import Button from "react-bootstrap/Button";
 import Genre from "./Genre";
 import {deleteGenre, loadAllGenres} from "../../common/ApiServiceGenres";
+import {handleErrors} from "../../common/Util";
 
 export default class GenreList extends React.Component {
     constructor(props) {
@@ -32,6 +33,7 @@ export default class GenreList extends React.Component {
 
     handleDelete = (genre) => {
         deleteGenre(genre)
+            .then(handleErrors)
             .then(response => {
                     if (response.ok) {
                         alert("Genre deleted!");
@@ -43,7 +45,9 @@ export default class GenreList extends React.Component {
                 }
             ).then(() => loadAllGenres().then((data) => {
             this.setState({genres: data})
-        }));
+        })).catch(error =>
+            console.log(error)
+        );
     }
 
     render() {

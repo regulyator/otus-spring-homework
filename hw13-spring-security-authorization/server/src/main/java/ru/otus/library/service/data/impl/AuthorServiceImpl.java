@@ -7,17 +7,20 @@ import ru.otus.library.domain.Author;
 import ru.otus.library.exception.EntityNotFoundException;
 import ru.otus.library.repository.AuthorRepository;
 import ru.otus.library.service.data.AuthorService;
+import ru.otus.library.service.security.AclPermissionGrant;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Objects;
 
 @Service
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
+    private final AclPermissionGrant aclPermissionGrant;
 
     @Autowired
-    public AuthorServiceImpl(AuthorRepository authorRepository) {
+    public AuthorServiceImpl(AuthorRepository authorRepository, AclPermissionGrant aclPermissionGrant) {
         this.authorRepository = authorRepository;
+        this.aclPermissionGrant = aclPermissionGrant;
     }
 
     @Override
@@ -27,7 +30,15 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Author createOrUpdate(Author author) {
-        return authorRepository.save(author);
+        final boolean isNewEntity = Objects.isNull(author.getId()) || author.getId().isEmpty();
+
+        if (isNewEntity) {
+            final Author savedAuthor = authorRepository.save(author);
+            aclPermissionGrant.grantAclPermission(savedAuthor);
+            return savedAuthor;
+        } else {
+            return authorRepository.save(author);
+        }
     }
 
     @Override
@@ -36,7 +47,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PostFilter("hasPermission(filterObject, 'ADMINISTRATION') or hasRole('ROLE_ADMIN')")
     public Collection<Author> getAll() {
         return authorRepository.findAll();
     }

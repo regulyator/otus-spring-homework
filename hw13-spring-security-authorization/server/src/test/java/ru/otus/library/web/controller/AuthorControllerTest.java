@@ -104,13 +104,24 @@ class AuthorControllerTest {
 
     @DisplayName("delete author")
     @Test
-    @WithMockUser(username = "user")
+    @WithMockUser(username = "user", roles = {"ADMIN"})
     void shouldDeleteAuthor() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                 .delete("/library/api/authors/{authorId}", AUTHOR_ID))
                 .andExpect(status().is2xxSuccessful());
 
         verify(authorService, times(1)).removeById(AUTHOR_ID);
+    }
+
+    @DisplayName("not delete author without role ADMIN")
+    @Test
+    @WithMockUser(username = "user")
+    void shouldNotDeleteAuthorWithoutRoleAdmin() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                .delete("/library/api/authors/{authorId}", AUTHOR_ID))
+                .andExpect(status().isForbidden());
+
+        verify(authorService, times(0)).removeById(AUTHOR_ID);
     }
 
 

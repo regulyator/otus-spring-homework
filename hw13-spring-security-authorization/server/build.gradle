@@ -46,14 +46,14 @@ test {
     useJUnitPlatform()
 }
 
-/*tasks.register('processFrontendResources', Copy) {
-    def frontendBuildDir = file("${project(':hw12-spring-security-simple-auth:library-app').buildDir}")
+tasks.register('processFrontendResources', Copy) {
+    def frontendBuildDir = file("${project(':hw13-spring-security-authorization:library-app').buildDir}")
 
-    def frontendResourcesDir = file("${project(':hw12-spring-security-simple-auth:server').projectDir}/src/main/resources/static")
+    def frontendResourcesDir = file("${project(':hw13-spring-security-authorization:server').projectDir}/src/main/resources/static")
 
     group 'Frontend'
     description 'Process frontend resources'
-    dependsOn project(':hw12-spring-security-simple-auth:library-app').tasks.named('assembleFrontend')
+    dependsOn project(':hw13-spring-security-authorization:library-app').tasks.named('assembleFrontend')
 
     from frontendBuildDir
     into frontendResourcesDir
@@ -61,4 +61,4 @@ test {
 
 tasks.named('processResources') {
     dependsOn tasks.named('processFrontendResources')
-}*/
+}

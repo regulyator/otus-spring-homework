@@ -57,7 +57,9 @@ export default class BookList extends React.Component {
                 }
             ).then(() => loadAllBooks().then((data) => {
             this.setState({books: data});
-        }));
+        })).catch(error =>
+            alert(error)
+        );
 
     };
 

@@ -1,19 +1,18 @@
 package ru.otus.library.service.data.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import ru.otus.library.domain.Book;
 import ru.otus.library.domain.Comment;
 import ru.otus.library.domain.dto.BookDto;
 import ru.otus.library.exception.EntityNotFoundException;
 import ru.otus.library.repository.BookRepository;
-import ru.otus.library.service.data.AuthorService;
 import ru.otus.library.service.data.BookService;
-import ru.otus.library.service.data.GenreService;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -27,6 +26,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Secured({"ROLE_ADMIN"})
     public BookDto createOrUpdate(BookDto bookDto) {
         if (Objects.isNull(bookDto.getId())) {
             Book createdBook = bookRepository.save(new Book(bookDto));
@@ -52,6 +52,17 @@ public class BookServiceImpl implements BookService {
         }
 
         book.getComments().add(new Comment(commentCaption));
+        return new BookDto(bookRepository.save(book));
+    }
+
+    @Override
+    public BookDto removeComment(String idBook, String idComment) {
+        final Book book = bookRepository.findById(idBook).orElseThrow(EntityNotFoundException::new);
+        List<Comment> newComments = book.getComments()
+                .stream().filter(comment -> !comment.getId().equals(idComment))
+                .collect(Collectors.toList());
+
+        book.setComments(newComments);
         return new BookDto(bookRepository.save(book));
     }
 

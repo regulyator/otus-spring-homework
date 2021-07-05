@@ -150,13 +150,24 @@ class BookControllerTest {
 
     @DisplayName("delete book")
     @Test
-    @WithMockUser(username = "user")
+    @WithMockUser(username = "user", roles = {"ADMIN"})
     void shouldDeleteBook() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                 .delete("/library/api/books/{bookId}", BOOK_ID))
                 .andExpect(status().is2xxSuccessful());
 
         verify(bookService, times(1)).removeById(BOOK_ID);
+    }
+
+    @DisplayName("not delete book without role ADMIN")
+    @Test
+    @WithMockUser(username = "user")
+    void shouldNotDeleteBookWithoutRoleAdmin() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                .delete("/library/api/books/{bookId}", BOOK_ID))
+                .andExpect(status().isForbidden());
+
+        verify(bookService, times(0)).removeById(BOOK_ID);
     }
 
 }

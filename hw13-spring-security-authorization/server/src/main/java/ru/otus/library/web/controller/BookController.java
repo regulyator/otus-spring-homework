@@ -48,6 +48,12 @@ public class BookController {
         return ResponseEntity.ok(bookService.addComment(bookId, newCommentText));
     }
 
+    @PutMapping("/library/api/books/{bookId}/comment/{commentId}")
+    public ResponseEntity<BookDto> removeCommentFromBook(@PathVariable String bookId,
+                                                         @PathVariable String commentId) {
+        return ResponseEntity.ok(bookService.removeComment(bookId, commentId));
+    }
+
     @DeleteMapping("/library/api/books/{bookId}")
     public ResponseEntity<Void> deleteBook(@PathVariable String bookId) {
         bookService.removeById(bookId);

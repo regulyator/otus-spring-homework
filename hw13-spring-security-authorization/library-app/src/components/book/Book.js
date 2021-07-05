@@ -6,6 +6,7 @@ import {FormControl, InputGroup} from "react-bootstrap";
 import BookEditModal from "./BookEditModal";
 import {createOrUpdateBook} from "../../common/ApiServiceBooks";
 import BookComments from "./BookComments";
+import {handleErrors} from "../../common/Util";
 
 export default class Book extends React.Component {
     constructor(props) {
@@ -40,6 +41,7 @@ export default class Book extends React.Component {
         updatedBook.authors = this.state.bookAuthors;
 
         createOrUpdateBook(updatedBook)
+            .then(handleErrors)
             .then(value => {
                 this.setState({
                     book: value,
@@ -48,7 +50,13 @@ export default class Book extends React.Component {
                     bookAuthors: value.authors
                 })
             })
-            .then(() => this.setEditBookShow(false));
+            .then(() => this.setEditBookShow(false))
+            .catch(error => {
+                    this.setEditBookShow(false);
+                    alert(error);
+                }
+            );
+        ;
     }
 
     handleChangeGenre = (event) => {

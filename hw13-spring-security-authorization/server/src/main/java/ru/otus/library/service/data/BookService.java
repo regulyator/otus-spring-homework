@@ -11,6 +11,8 @@ public interface BookService extends StandardService<Book> {
 
     BookDto addComment(String idBook, String commentCaption);
 
+    BookDto removeComment(String idBook, String idComment);
+
     BookDto getByIdDto(String id);
 
     Collection<BookDto> getAllDto();

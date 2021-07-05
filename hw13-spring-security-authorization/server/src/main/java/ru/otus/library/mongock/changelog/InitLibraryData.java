@@ -3,14 +3,10 @@ package ru.otus.library.mongock.changelog;
 import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;
 import com.mongodb.client.MongoDatabase;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.otus.library.configuration.security.acl.DemoInitAcl;
@@ -20,7 +16,6 @@ import ru.otus.library.repository.BookRepository;
 import ru.otus.library.repository.GenreRepository;
 import ru.otus.library.repository.UserRepository;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -62,7 +57,7 @@ public class InitLibraryData {
         Stream.of("Horror",
                 "Fantasy",
                 "Sci-Fi").forEach(s -> {
-            Genre genre = genreRepository.save(new Genre(null, s));
+            genreRepository.save(new Genre(null, s));
         });
     }
 
@@ -73,8 +68,6 @@ public class InitLibraryData {
                 "Arkady and Boris Strugatsky",
                 "Vernor Vinge").forEach(s -> authorRepository.save(new Author(null, s)));
     }
-
-
 
 
     @ChangeSet(order = "005", id = "initBooks", author = "regulyator", runAlways = true)
@@ -106,8 +99,5 @@ public class InitLibraryData {
 
         demoInitAcl.initAcl();
     }
-
-
-
 
 }

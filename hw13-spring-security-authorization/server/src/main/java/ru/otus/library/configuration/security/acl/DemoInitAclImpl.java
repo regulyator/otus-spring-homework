@@ -1,18 +1,16 @@
 package ru.otus.library.configuration.security.acl;
 
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import ru.otus.library.domain.Author;
 import ru.otus.library.domain.Genre;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
-@Service
+@Component
 public class DemoInitAclImpl implements DemoInitAcl {
     private final MongoOperations mongoOperations;
     private final NamedParameterJdbcOperations namedParameterJdbcOperations;
@@ -21,6 +19,7 @@ public class DemoInitAclImpl implements DemoInitAcl {
         this.mongoOperations = mongoOperations;
         this.namedParameterJdbcOperations = namedParameterJdbcOperations;
     }
+
     public void initAcl() {
         final List<Genre> genres = mongoOperations.findAll(Genre.class);
         final List<Author> authors = mongoOperations.findAll(Author.class);

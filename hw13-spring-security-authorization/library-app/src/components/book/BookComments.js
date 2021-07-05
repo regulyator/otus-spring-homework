@@ -1,7 +1,7 @@
 import React from "react";
 import {FormControl, InputGroup, Modal} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import {addCommentToBook, createOrUpdateBook} from "../../common/ApiServiceBooks";
+import {addCommentToBook, removeCommentFromBook} from "../../common/ApiServiceBooks";
 
 export default class BookComments extends React.Component {
     static getDerivedStateFromProps(props, state) {
@@ -29,12 +29,9 @@ export default class BookComments extends React.Component {
     }
 
     handleCommentDelete = (deletedCommentId) => {
-        let updatedBook = this.state.book;
-        updatedBook.comments = this.state.book.comments.filter((comment) => {
-            return comment.id !== deletedCommentId;
-        })
+        let idBook = this.state.book.id;
 
-        createOrUpdateBook(updatedBook).then(value => this.setState({
+        removeCommentFromBook(idBook, deletedCommentId).then(value => this.setState({
             book: value
         }))
     }

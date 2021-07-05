@@ -25,7 +25,7 @@ export default class BookEditModal extends React.Component {
                                               value={this.props.bookName}
                                               onChange={this.props.handleBookNameChange}/>
                             </Form.Group>
-
+                            {this.props.genres?.length > 0 &&
                             <Form.Group as={Col} controlId="formGridBookGenre">
                                 <Form.Label>Genre</Form.Label>
                                 <Form.Control as="select" value={this.props.bookGenre?.id}
@@ -37,8 +37,10 @@ export default class BookEditModal extends React.Component {
                                     )}
                                 </Form.Control>
                             </Form.Group>
-                        </Form.Row>
+                            }
 
+                        </Form.Row>
+                        {this.props.authors?.length > 0 &&
                         <Form.Group controlId="formBookAuthors">
                             <Form.Label>Example multiple select</Form.Label>
                             <Form.Control as="select" multiple
@@ -49,7 +51,8 @@ export default class BookEditModal extends React.Component {
                                             value={author.id}>{author.fio}</option>
                                 )}
                             </Form.Control>
-                        </Form.Group>
+                        </Form.Group>}
+
                     </div>
                 </Modal.Body>
                 <Modal.Footer>

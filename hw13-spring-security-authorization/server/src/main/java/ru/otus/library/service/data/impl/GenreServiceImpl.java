@@ -2,14 +2,7 @@ package ru.otus.library.service.data.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostFilter;
-import org.springframework.security.acls.domain.BasePermission;
-import org.springframework.security.acls.domain.ObjectIdentityImpl;
-import org.springframework.security.acls.domain.PrincipalSid;
-import org.springframework.security.acls.model.*;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.library.domain.Genre;
 import ru.otus.library.exception.EntityNotFoundException;
 import ru.otus.library.repository.GenreRepository;
@@ -37,11 +30,10 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    @Transactional
     public Genre createOrUpdate(Genre genre) {
         final boolean isNewEntity = Objects.isNull(genre.getId()) || genre.getId().isEmpty();
 
-        if(isNewEntity){
+        if (isNewEntity) {
             final Genre savedGenre = genreRepository.save(genre);
             aclPermissionGrant.grantAclPermission(savedGenre);
             return savedGenre;

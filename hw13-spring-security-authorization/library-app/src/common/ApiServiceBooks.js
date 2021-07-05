@@ -1,5 +1,6 @@
 const apiUrlBooks = '/library/api/books/';
 const apiUrlPathNewComment = '/comment?newCommentText='
+const apiUrlPathRemoveComment = '/comment/'
 
 export function loadAllBooks() {
     return fetch(apiUrlBooks)
@@ -12,11 +13,18 @@ export function createOrUpdateBook(book) {
         method: book.id === null ? 'POST' : 'PUT',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(book)
-    }).then(response => response.json())
+    });
 }
 
 export function addCommentToBook(bookId, commentText) {
     return fetch(apiUrlBooks + bookId + apiUrlPathNewComment + commentText, {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'}
+    }).then(response => response.json());
+}
+
+export function removeCommentFromBook(bookId, commentId) {
+    return fetch(apiUrlBooks + bookId + apiUrlPathRemoveComment + commentId, {
         method: 'PUT',
         headers: {'Content-Type': 'application/json'}
     }).then(response => response.json());

@@ -104,13 +104,24 @@ class GenreControllerTest {
 
     @DisplayName("delete genre")
     @Test
-    @WithMockUser(username = "user")
+    @WithMockUser(username = "user", roles = {"ADMIN"})
     void shouldDeleteGenre() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                 .delete("/library/api/genres/{genreId}", GENRE_ID))
                 .andExpect(status().is2xxSuccessful());
 
         verify(genreService, times(1)).removeById(GENRE_ID);
+    }
+
+    @DisplayName("not delete genre without role ADMIN")
+    @Test
+    @WithMockUser(username = "user")
+    void shouldNotDeleteGenreWithoutRoleAdmin() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                .delete("/library/api/genres/{genreId}", GENRE_ID))
+                .andExpect(status().isForbidden());
+
+        verify(genreService, times(0)).removeById(GENRE_ID);
     }
 
 }
