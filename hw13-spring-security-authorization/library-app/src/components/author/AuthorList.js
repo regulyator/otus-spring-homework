@@ -46,7 +46,7 @@ export default class AuthorList extends React.Component {
             ).then(() => loadAllAuthors().then((data) => {
             this.setState({authors: data})
         })).catch(error =>
-            alert(error)
+            console.log(error)
         );
     }
 

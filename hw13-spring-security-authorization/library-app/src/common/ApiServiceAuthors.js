@@ -1,11 +1,8 @@
-import {handleErrors} from "./Util";
-
 const apiUrlAuthors = '/library/api/authors/';
 
 
 export function loadAllAuthors() {
     return fetch(apiUrlAuthors)
-        .then(handleErrors)
         .then(response => response.json())
         .catch(error =>
             alert(error)

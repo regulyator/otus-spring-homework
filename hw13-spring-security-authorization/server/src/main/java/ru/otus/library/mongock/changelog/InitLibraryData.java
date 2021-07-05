@@ -3,17 +3,24 @@ package ru.otus.library.mongock.changelog;
 import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;
 import com.mongodb.client.MongoDatabase;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import ru.otus.library.configuration.security.acl.DemoInitAcl;
 import ru.otus.library.domain.*;
 import ru.otus.library.repository.AuthorRepository;
 import ru.otus.library.repository.BookRepository;
 import ru.otus.library.repository.GenreRepository;
 import ru.otus.library.repository.UserRepository;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -26,7 +33,40 @@ public class InitLibraryData {
         mongoDatabase.drop();
     }
 
-    @ChangeSet(order = "002", id = "initAuthors", author = "regulyator", runAlways = true)
+    @ChangeSet(order = "002", id = "initUser", author = "regulyator", runAlways = true)
+    public void initUser(UserRepository userRepository, PasswordEncoder passwordEncoder, NamedParameterJdbcOperations namedParameterJdbcOperations) {
+        userRepository.save(User.builder()
+                .username("user")
+                .password(passwordEncoder.encode("password"))
+                .authorities(Set.of(new SimpleGrantedAuthority("ROLE_USER")))
+                .enabled(true)
+                .credentialsNonExpired(true)
+                .accountNonLocked(true)
+                .accountNonExpired(true)
+                .build());
+
+        userRepository.save(User.builder()
+                .username("admin")
+                .password(passwordEncoder.encode("admin"))
+                .authorities(Set.of(new SimpleGrantedAuthority("ROLE_USER"),
+                        new SimpleGrantedAuthority("ROLE_ADMIN")))
+                .enabled(true)
+                .credentialsNonExpired(true)
+                .accountNonLocked(true)
+                .accountNonExpired(true)
+                .build());
+    }
+
+    @ChangeSet(order = "003", id = "initGenres", author = "regulyator", runAlways = true)
+    public void initGenres(GenreRepository genreRepository, NamedParameterJdbcOperations namedParameterJdbcOperations) {
+        Stream.of("Horror",
+                "Fantasy",
+                "Sci-Fi").forEach(s -> {
+            Genre genre = genreRepository.save(new Genre(null, s));
+        });
+    }
+
+    @ChangeSet(order = "004", id = "initAuthors", author = "regulyator", runAlways = true)
     public void initAuthors(AuthorRepository authorRepository) {
         Stream.of("Peter Watts",
                 "Robert Hainline",
@@ -34,15 +74,11 @@ public class InitLibraryData {
                 "Vernor Vinge").forEach(s -> authorRepository.save(new Author(null, s)));
     }
 
-    @ChangeSet(order = "003", id = "initGenres", author = "regulyator", runAlways = true)
-    public void initGenres(GenreRepository genreRepository) {
-        Stream.of("Horror",
-                "Fantasy",
-                "Sci-Fi").forEach(s -> genreRepository.save(new Genre(null, s)));
-    }
 
-    @ChangeSet(order = "004", id = "initBooks", author = "regulyator", runAlways = true)
-    public void initBooks(BookRepository bookRepository, MongoOperations mongoOperations) {
+
+
+    @ChangeSet(order = "005", id = "initBooks", author = "regulyator", runAlways = true)
+    public void initBooks(BookRepository bookRepository, MongoOperations mongoOperations, DemoInitAcl demoInitAcl) {
         bookRepository.save(new Book(null, "Blindsight",
                 mongoOperations.findOne(Query.query(Criteria.where("caption").is("Sci-Fi")), Genre.class),
                 mongoOperations.find(Query.query(Criteria.where("fio").is("Peter Watts")), Author.class),
@@ -67,29 +103,11 @@ public class InitLibraryData {
                 mongoOperations.findOne(Query.query(Criteria.where("caption").is("Sci-Fi")), Genre.class),
                 mongoOperations.find(Query.query(Criteria.where("fio").in("Robert Hainline", "Arkady and Boris Strugatsky")), Author.class),
                 null));
+
+        demoInitAcl.initAcl();
     }
 
-    @ChangeSet(order = "005", id = "initUser", author = "regulyator", runAlways = true)
-    public void initUser(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        userRepository.save(User.builder()
-                .username("user")
-                .password(passwordEncoder.encode("password"))
-                .authorities(Set.of(new SimpleGrantedAuthority("ROLE_USER")))
-                .enabled(true)
-                .credentialsNonExpired(true)
-                .accountNonLocked(true)
-                .accountNonExpired(true)
-                .build());
 
-        userRepository.save(User.builder()
-                .username("admin")
-                .password(passwordEncoder.encode("admin"))
-                .authorities(Set.of(new SimpleGrantedAuthority("ROLE_USER"),
-                        new SimpleGrantedAuthority("ROLE_ADMIN")))
-                .enabled(true)
-                .credentialsNonExpired(true)
-                .accountNonLocked(true)
-                .accountNonExpired(true)
-                .build());
-    }
+
+
 }

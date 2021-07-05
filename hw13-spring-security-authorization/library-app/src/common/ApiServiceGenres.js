@@ -21,5 +21,5 @@ export function deleteGenre(genre) {
     return fetch(apiUrlGenres + genre.id, {
         method: 'DELETE',
         headers: {'Content-Type': 'application/json'}
-    }).catch(reason => console.log(reason))
+    });
 }

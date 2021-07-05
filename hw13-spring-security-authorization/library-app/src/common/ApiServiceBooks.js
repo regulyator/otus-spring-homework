@@ -26,5 +26,5 @@ export function deleteBook(book) {
     return fetch(apiUrlBooks + book.id, {
         method: 'DELETE',
         headers: {'Content-Type': 'application/json'}
-    }).catch(reason => console.log(reason))
+    });
 }

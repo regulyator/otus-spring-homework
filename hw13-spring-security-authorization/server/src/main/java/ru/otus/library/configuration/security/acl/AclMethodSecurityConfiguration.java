@@ -1,4 +1,4 @@
-package ru.otus.library.configuration.security;
+package ru.otus.library.configuration.security.acl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

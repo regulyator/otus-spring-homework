@@ -8,6 +8,7 @@ import Book from "./Book";
 import {deleteBook, loadAllBooks} from "../../common/ApiServiceBooks";
 import {loadAllAuthors} from "../../common/ApiServiceAuthors";
 import {loadAllGenres} from "../../common/ApiServiceGenres";
+import {handleErrors} from "../../common/Util";
 
 
 export default class BookList extends React.Component {
@@ -44,6 +45,7 @@ export default class BookList extends React.Component {
 
     handleDelete = (book) => {
         deleteBook(book)
+            .then(handleErrors)
             .then(response => {
                     if (response.ok) {
                         alert("Book deleted!");

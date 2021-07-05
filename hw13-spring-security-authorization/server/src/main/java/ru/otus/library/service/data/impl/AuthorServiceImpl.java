@@ -1,6 +1,7 @@
 package ru.otus.library.service.data.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.stereotype.Service;
 import ru.otus.library.domain.Author;
 import ru.otus.library.exception.EntityNotFoundException;
@@ -35,14 +36,11 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    @PostFilter("hasPermission(filterObject, 'READ')")
     public Collection<Author> getAll() {
         return authorRepository.findAll();
     }
 
-    @Override
-    public List<Author> getAll(Collection<String> authorsIds) {
-        return authorRepository.findAllByIdIn(authorsIds);
-    }
 
     @Override
     public void removeById(String id) {
