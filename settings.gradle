@@ -14,5 +14,6 @@ include 'hw11-spring-react-WebFlux:server'
 include 'hw11-spring-react-WebFlux:library-app'
 include 'hw12-spring-security-simple-auth:server'
 include 'hw12-spring-security-simple-auth:library-app'
+include 'hw14-spring-batch'
 
 
