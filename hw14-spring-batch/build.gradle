@@ -13,14 +13,17 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-logging'
     implementation 'org.springframework.boot:spring-boot-starter-batch'
     implementation 'org.springframework.shell:spring-shell-starter'
+    implementation 'org.springframework:spring-oxm'
+    implementation 'javax.xml.bind:jaxb-api'
 
-
+    runtimeOnly 'org.glassfish.jaxb:jaxb-runtime'
     runtimeOnly 'com.h2database:h2'
 
     compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.batch:spring-batch-test'
 }
 
 test {

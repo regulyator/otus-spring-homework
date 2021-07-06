@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<book>
+  <entries>
+    <entry>
+      <ID>1</ID>
+      <REC_CODE>01</REC_CODE>
+      <MKB_NAME>НЕКОТОРЫЕ ИНФЕКЦИОННЫЕ И ПАРАЗИТАРНЫЕ БОЛЕЗНИ (A00-B99)</MKB_NAME>
+      <ACTUAL>1</ACTUAL>
+    </entry>
+    <entry>
+      <ID>2</ID>
+      <REC_CODE>0101</REC_CODE>
+      <MKB_NAME>КИШЕЧНЫЕ ИНФЕКЦИИ (A00-A09)</MKB_NAME>
+      <ID_PARENT>1</ID_PARENT>
+      <ACTUAL>1</ACTUAL>
+    </entry>
+    <entry>
+      <ID>3</ID>
+      <REC_CODE>0101A00</REC_CODE>
+      <MKB_CODE>A00</MKB_CODE>
+      <MKB_NAME>Холера</MKB_NAME>
+      <ID_PARENT>2</ID_PARENT>
+      <ACTUAL>1</ACTUAL>
+    </entry>
+    <entry>
+      <ID>4</ID>
+      <REC_CODE>0101A000</REC_CODE>
+      <MKB_CODE>A00.0</MKB_CODE>
+      <MKB_NAME>Холера, вызванная холерным вибрионом 01, биовар cholerae</MKB_NAME>
+      <ID_PARENT>3</ID_PARENT>
+      <ACTUAL>1</ACTUAL>
+    </entry>
+    <entry>
+      <ID>5</ID>
+      <REC_CODE>0101A001</REC_CODE>
+      <MKB_CODE>A00.1</MKB_CODE>
+      <MKB_NAME>Холера, вызванная холерным вибрионом 01, биовар eltor</MKB_NAME>
+      <ID_PARENT>3</ID_PARENT>
+      <ACTUAL>1</ACTUAL>
+    </entry>
+    <entry>
+      <ID>6</ID>
+      <REC_CODE>0101A009</REC_CODE>
+      <MKB_CODE>A00.9</MKB_CODE>
+      <MKB_NAME>Холера неуточненная</MKB_NAME>
+      <ID_PARENT>3</ID_PARENT>
+      <ACTUAL>1</ACTUAL>
+    </entry>
+    <entry>
+      <ID>7</ID>
+      <REC_CODE>0101A01</REC_CODE>
+      <MKB_CODE>A01</MKB_CODE>
+      <MKB_NAME>Тиф и паратиф</MKB_NAME>
+      <ID_PARENT>2</ID_PARENT>
+      <ACTUAL>1</ACTUAL>
+    </entry>
+    <entry>
+      <ID>8</ID>
+      <REC_CODE>0101A010</REC_CODE>
+      <MKB_CODE>A01.0</MKB_CODE>
+      <MKB_NAME>Брюшной тиф</MKB_NAME>
+      <ID_PARENT>7</ID_PARENT>
+      <ACTUAL>1</ACTUAL>
+    </entry>
+    <entry>
+      <ID>9</ID>
+      <REC_CODE>0101A011</REC_CODE>
+      <MKB_CODE>A01.1</MKB_CODE>
+      <MKB_NAME>Паратиф A</MKB_NAME>
+      <ID_PARENT>7</ID_PARENT>
+      <ACTUAL>1</ACTUAL>
+    </entry>
+    <entry>
+      <ID>10</ID>
+      <REC_CODE>0101A012</REC_CODE>
+      <MKB_CODE>A01.2</MKB_CODE>
+      <MKB_NAME>Паратиф B</MKB_NAME>
+      <ID_PARENT>7</ID_PARENT>
+      <ACTUAL>1</ACTUAL>
+    </entry>
+    <entry>
+      <ID>11</ID>
+      <REC_CODE>0101A013</REC_CODE>
+      <MKB_CODE>A01.3</MKB_CODE>
+      <MKB_NAME>Паратиф C</MKB_NAME>
+      <ID_PARENT>7</ID_PARENT>
+      <ACTUAL>1</ACTUAL>
+    </entry>
+    <entry>
+      <ID>12</ID>
+      <REC_CODE>0101A014</REC_CODE>
+      <MKB_CODE>A01.4</MKB_CODE>
+      <MKB_NAME>Паратиф неуточненный</MKB_NAME>
+      <ID_PARENT>7</ID_PARENT>
+      <ACTUAL>1</ACTUAL>
+    </entry>
+    <entry>
+      <ID>13</ID>
+      <REC_CODE>0101A02</REC_CODE>
+      <MKB_CODE>A02</MKB_CODE>
+      <MKB_NAME>Другие сальмонеллезные инфекции</MKB_NAME>
+      <ID_PARENT>2</ID_PARENT>
+      <ACTUAL>1</ACTUAL>
+    </entry>
+  </entries>
+</book>
