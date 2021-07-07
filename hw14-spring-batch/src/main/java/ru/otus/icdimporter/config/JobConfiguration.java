@@ -18,10 +18,10 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import ru.otus.icdimporter.model.IcdEntry;
 
-@Configuration
+//@Configuration
 public class JobConfiguration {
 
-    @Bean
+    /*@Bean
     @StepScope
     public ItemStreamReader<IcdEntry> icdEntryItemReader(@Value("#{jobParameters['source']}") String inputSource) {
         Jaxb2Marshaller icdEntryMarshaller = new Jaxb2Marshaller();
@@ -45,7 +45,7 @@ public class JobConfiguration {
     @Bean
     @StepScope
     public ItemWriter<String> icdEntryItemWriter() {
-        return items -> items.forEach(s -> System.out.println(s));
+        return items -> System.out.println(items);
     }
 
     @Bean
@@ -66,5 +66,5 @@ public class JobConfiguration {
     public Job job(JobBuilderFactory jobBuilderFactory,
                    @Qualifier("step1") Step step1) {
         return jobBuilderFactory.get("firstBatchJob").start(step1).build();
-    }
+    }*/
 }

@@ -1,5 +1,6 @@
 package ru.otus.icdimporter.model;
 
+import lombok.Builder;
 import lombok.Data;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -10,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name="entry")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Data
+@Builder
 public class IcdEntry {
     @XmlElement(name="ID")
     private Long id;

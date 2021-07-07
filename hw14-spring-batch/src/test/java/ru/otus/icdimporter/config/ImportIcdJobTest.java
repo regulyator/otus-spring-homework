@@ -37,6 +37,7 @@ class ImportIcdJobTest {
         JobParameters parameters = new JobParametersBuilder()
                 .addString("source", testInputFileName)
                 .toJobParameters();
+
         JobExecution jobExecution = jobLauncherTestUtils.launchJob(parameters);
 
     }
