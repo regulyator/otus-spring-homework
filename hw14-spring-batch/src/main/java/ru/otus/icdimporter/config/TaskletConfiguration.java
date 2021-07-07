@@ -6,16 +6,14 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.otus.icdimporter.model.IcdEntry;
-import ru.otus.icdimporter.model.Tree;
 import ru.otus.icdimporter.tasklets.IcdWriter;
-import ru.otus.icdimporter.tasklets.IcdXmlSourceReader;
+import ru.otus.icdimporter.tasklets.IcdXmlXpathSourceReader;
 
-@Configuration
+//@Configuration
 public class TaskletConfiguration {
 
 
-    private final JobBuilderFactory jobBuilderFactory;
+    /*private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
 
     public TaskletConfiguration(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory) {
@@ -27,7 +25,7 @@ public class TaskletConfiguration {
     protected Step readIcdSource() {
         return stepBuilderFactory
                 .get("readInputIcdXml")
-                .tasklet(new IcdXmlSourceReader())
+                .tasklet(new IcdXmlXpathSourceReader())
                 .build();
     }
 
@@ -42,9 +40,9 @@ public class TaskletConfiguration {
     @Bean
     public Job job(JobBuilderFactory jobBuilderFactory) {
         return jobBuilderFactory
-                .get("taskletsJob")
+                .get("taskletJob")
                 .start(readIcdSource())
                 .next(writeIcd())
                 .build();
-    }
+    }*/
 }

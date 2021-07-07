@@ -8,10 +8,10 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import ru.otus.icdimporter.model.IcdEntry;
-import ru.otus.icdimporter.model.Tree;
+import ru.otus.icdimporter.model.IcdTree;
 
 public class IcdWriter implements Tasklet, StepExecutionListener {
-    private Tree<IcdEntry> icdEntryTree;
+    private IcdTree<IcdEntry> icdEntryTree;
 
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
@@ -21,7 +21,7 @@ public class IcdWriter implements Tasklet, StepExecutionListener {
 
     @Override
     public void beforeStep(StepExecution stepExecution) {
-        icdEntryTree= (Tree<IcdEntry>) stepExecution
+        icdEntryTree= (IcdTree<IcdEntry>) stepExecution
                 .getJobExecution()
                 .getExecutionContext().get("icdEntryTree");
     }
