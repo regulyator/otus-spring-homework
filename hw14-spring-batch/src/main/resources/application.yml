@@ -3,7 +3,7 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017/icd
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:tempdb
     initialization-mode: always
   batch:
     job:
