@@ -1,34 +1,54 @@
 package ru.otus.icdimporter.config;
 
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.step.tasklet.MethodInvokingTaskletAdapter;
+import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemStreamReader;
+import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.data.builder.MongoItemWriterBuilder;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
-import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
 import org.springframework.batch.item.xml.builder.StaxEventItemReaderBuilder;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import ru.otus.icdimporter.model.IcdEntry;
+import ru.otus.icdimporter.model.domain.mongo.IcdDocument;
+import ru.otus.icdimporter.service.IcdDocumentProcessor;
+import ru.otus.icdimporter.service.PrepareForJobService;
 
 import javax.sql.DataSource;
 
 @Configuration
+@Slf4j
 public class JobConfiguration {
+
+    public static final String SOURCE_FILE_JOB_PARAMETER = "source";
+    private final PrepareForJobService prepareForJobService;
+
+    public JobConfiguration(PrepareForJobService prepareForJobService) {
+        this.prepareForJobService = prepareForJobService;
+    }
+
 
     @Bean
     @StepScope
-    public ItemStreamReader<IcdEntry> icdEntryItemReader(@Value("#{jobParameters['source']}") String inputSource) {
+    public ItemStreamReader<IcdEntry> icdEntryXmlItemReader(@Value("#{jobParameters['" + SOURCE_FILE_JOB_PARAMETER + "']}") String inputSource) {
         Jaxb2Marshaller icdEntryMarshaller = new Jaxb2Marshaller();
         icdEntryMarshaller.setClassesToBeBound(IcdEntry.class);
 
@@ -42,8 +62,8 @@ public class JobConfiguration {
 
 
     @Bean
-    public JdbcBatchItemWriter<IcdEntry> icdEntryJdbcBatchItemWriter(DataSource dataSource,
-                                                                     NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public ItemWriter<IcdEntry> icdEntryJdbcBatchItemWriter(DataSource dataSource,
+                                                            NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         return new JdbcBatchItemWriterBuilder<IcdEntry>()
                 .dataSource(dataSource)
                 .namedParametersJdbcTemplate(namedParameterJdbcTemplate)
@@ -54,34 +74,94 @@ public class JobConfiguration {
     }
 
     @Bean
-    public ItemStreamReader<IcdEntry> icdEntryJdbcItemReader(DataSource dataSource) {
-
+    public ItemReader<IcdEntry> icdEntryJdbcItemReader(DataSource dataSource) {
         return new JdbcCursorItemReaderBuilder<IcdEntry>()
                 .dataSource(dataSource)
                 .name("icdEntryJdbcItemReader")
                 .sql("SELECT id, rec_code as recCode, mkb_name as mbkName, mkb_code as mkbCode, actual as actual, id_parent as idParent " +
-                        "from icd order by id ACS")
+                        "from icd")
                 .rowMapper(new BeanPropertyRowMapper<>(IcdEntry.class))
                 .build();
     }
 
     @Bean
-    protected Step writeToTemporaryInMemoryDatabaseStep(StepBuilderFactory stepBuilderFactory,
-                                                        ItemStreamReader<IcdEntry> icdEntryItemReader,
-                                                        JdbcBatchItemWriter<IcdEntry> icdEntryJdbcBatchItemWriter) {
+    public ItemProcessor<IcdEntry, IcdDocument> icdEntryProcessor(IcdDocumentProcessor icdDocumentProcessor) {
+        return icdDocumentProcessor::processIcd;
+    }
+
+    @Bean
+    public ItemWriter<IcdDocument> icdDocumentWriter(MongoOperations mongoOperations) {
+        return new MongoItemWriterBuilder<IcdDocument>()
+                .collection("icds")
+                .delete(false)
+                .template(mongoOperations)
+                .build();
+    }
+
+
+    @Bean
+    public Step writeToTemporaryInMemoryDatabaseStep(StepBuilderFactory stepBuilderFactory,
+                                                     ItemReader<IcdEntry> icdEntryXmlItemReader,
+                                                     ItemWriter<IcdEntry> icdEntryJdbcBatchItemWriter) {
         return stepBuilderFactory
-                .get("writeToTemporaryInMemoryDatabase")
-                .<IcdEntry, IcdEntry>chunk(100)
-                .reader(icdEntryItemReader)
+                .get("writeToTemporaryInMemoryDatabaseStep")
+                .<IcdEntry, IcdEntry>chunk(1000)
+                .reader(icdEntryXmlItemReader)
                 .writer(icdEntryJdbcBatchItemWriter)
                 .build();
     }
 
-    @Bean(name = "firstBatchJob")
-    public Job job(JobBuilderFactory jobBuilderFactory,
-                   @Qualifier("writeToTemporaryInMemoryDatabaseStep") Step writeToTemporaryInMemoryDatabaseStep) {
+    @Bean
+    public Step writeToMongoDbStep(StepBuilderFactory stepBuilderFactory,
+                                   ItemReader<IcdEntry> icdEntryJdbcItemReader,
+                                   ItemProcessor<IcdEntry, IcdDocument> icdEntryProcessor,
+                                   ItemWriter<IcdDocument> icdDocumentWriter) {
+        return stepBuilderFactory
+                .get("writeToMongoDbStep")
+                .<IcdEntry, IcdDocument>chunk(1000)
+                .reader(icdEntryJdbcItemReader)
+                .processor(icdEntryProcessor)
+                .writer(icdDocumentWriter)
+                .build();
+    }
+
+    @Bean
+    public Step prepareStep(StepBuilderFactory stepBuilderFactory) {
+        return stepBuilderFactory.get("prepareJobStep")
+                .tasklet(cleanUpTasklet())
+                .build();
+    }
+
+    @Bean
+    public MethodInvokingTaskletAdapter cleanUpTasklet() {
+        MethodInvokingTaskletAdapter adapter = new MethodInvokingTaskletAdapter();
+
+        adapter.setTargetObject(prepareForJobService);
+        adapter.setTargetMethod("prepare");
+
+        return adapter;
+    }
+
+    @Bean
+    public Job importIcdJob(JobBuilderFactory jobBuilderFactory,
+                            Step prepareStep,
+                            Step writeToTemporaryInMemoryDatabaseStep,
+                            Step writeToMongoDbStep) {
         return jobBuilderFactory.get("importIcdJob")
-                .start(writeToTemporaryInMemoryDatabaseStep)
+                .start(prepareStep)
+                .next(writeToTemporaryInMemoryDatabaseStep)
+                .next(writeToMongoDbStep)
+                .listener(new JobExecutionListener() {
+                    @Override
+                    public void beforeJob(@NonNull JobExecution jobExecution) {
+                        log.info("Start import icd");
+                    }
+
+                    @Override
+                    public void afterJob(@NonNull JobExecution jobExecution) {
+                        log.info("End import icd");
+                    }
+                })
                 .build();
     }
 }

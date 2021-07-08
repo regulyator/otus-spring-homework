@@ -10,7 +10,7 @@ spring:
       enabled: false
   shell:
     interactive:
-        enabled: false
+      enabled: false
     command:
       stacktrace:
         enabled: false
