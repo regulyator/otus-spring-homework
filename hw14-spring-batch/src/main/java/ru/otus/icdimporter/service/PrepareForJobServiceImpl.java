@@ -20,7 +20,6 @@ public class PrepareForJobServiceImpl implements PrepareForJobService {
     @Override
     public void prepare() {
         mongoOperations.dropCollection(ICDS_COLLECTION_NAME);
-        jdbcOperations.execute("DROP TABLE IF EXISTS ICD");
-        jdbcOperations.execute("CREATE TABLE ICD(ID BIGINT PRIMARY KEY,rec_code VARCHAR(255),mkb_name VARCHAR(1000),mkb_code VARCHAR(255),actual INT,id_parent BIGINT)");
+        jdbcOperations.execute("DELETE FROM ICD");
     }
 }
