@@ -1,0 +1,14 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/icd
+  datasource:
+    url: jdbc:h2:mem:tempdb
+    initialization-mode: always
+  batch:
+    job:
+      enabled: false
+  shell:
+    command:
+      stacktrace:
+        enabled: false
