@@ -10,10 +10,10 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.step.tasklet.MethodInvokingTaskletAdapter;
-import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.data.MongoItemWriter;
 import org.springframework.batch.item.data.builder.MongoItemWriterBuilder;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
@@ -25,11 +25,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import ru.otus.icdimporter.model.IcdEntry;
 import ru.otus.icdimporter.model.domain.mongo.IcdDocument;
-import ru.otus.icdimporter.service.IcdDocumentProcessor;
+import ru.otus.icdimporter.service.CustomIcdMongoWriter;
 import ru.otus.icdimporter.service.PrepareForJobService;
 
 import javax.sql.DataSource;
@@ -85,17 +86,17 @@ public class JobConfiguration {
     }
 
     @Bean
-    public ItemProcessor<IcdEntry, IcdDocument> icdEntryProcessor(IcdDocumentProcessor icdDocumentProcessor) {
-        return icdDocumentProcessor::processIcd;
-    }
+    public ItemWriter<IcdEntry> icdDocumentWriter(MongoOperations mongoOperations,
+                                                  NamedParameterJdbcOperations namedParameterJdbcOperations) {
 
-    @Bean
-    public ItemWriter<IcdDocument> icdDocumentWriter(MongoOperations mongoOperations) {
-        return new MongoItemWriterBuilder<IcdDocument>()
+        MongoItemWriter<IcdDocument> mongoWriter = new MongoItemWriterBuilder<IcdDocument>()
                 .collection("icds")
                 .delete(false)
                 .template(mongoOperations)
                 .build();
+
+        return new CustomIcdMongoWriter(namedParameterJdbcOperations,
+                mongoWriter);
     }
 
 
@@ -114,13 +115,11 @@ public class JobConfiguration {
     @Bean
     public Step writeToMongoDbStep(StepBuilderFactory stepBuilderFactory,
                                    ItemReader<IcdEntry> icdEntryJdbcItemReader,
-                                   ItemProcessor<IcdEntry, IcdDocument> icdEntryProcessor,
-                                   ItemWriter<IcdDocument> icdDocumentWriter) {
+                                   ItemWriter<IcdEntry> icdDocumentWriter) {
         return stepBuilderFactory
                 .get("writeToMongoDbStep")
-                .<IcdEntry, IcdDocument>chunk(1000)
+                .<IcdEntry, IcdEntry>chunk(1000)
                 .reader(icdEntryJdbcItemReader)
-                .processor(icdEntryProcessor)
                 .writer(icdDocumentWriter)
                 .build();
     }
