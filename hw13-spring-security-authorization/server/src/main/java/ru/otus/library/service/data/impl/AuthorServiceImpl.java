@@ -7,7 +7,7 @@ import ru.otus.library.domain.Author;
 import ru.otus.library.exception.EntityNotFoundException;
 import ru.otus.library.repository.AuthorRepository;
 import ru.otus.library.service.data.AuthorService;
-import ru.otus.library.service.security.AclPermissionGrant;
+import ru.otus.library.service.security.AclPermissionGrantService;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -15,12 +15,12 @@ import java.util.Objects;
 @Service
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
-    private final AclPermissionGrant aclPermissionGrant;
+    private final AclPermissionGrantService aclPermissionGrantservice;
 
     @Autowired
-    public AuthorServiceImpl(AuthorRepository authorRepository, AclPermissionGrant aclPermissionGrant) {
+    public AuthorServiceImpl(AuthorRepository authorRepository, AclPermissionGrantService aclPermissionGrantservice) {
         this.authorRepository = authorRepository;
-        this.aclPermissionGrant = aclPermissionGrant;
+        this.aclPermissionGrantservice = aclPermissionGrantservice;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class AuthorServiceImpl implements AuthorService {
 
         if (isNewEntity) {
             final Author savedAuthor = authorRepository.save(author);
-            aclPermissionGrant.grantAclPermission(savedAuthor);
+            aclPermissionGrantservice.grantAclPermission(savedAuthor);
             return savedAuthor;
         } else {
             return authorRepository.save(author);

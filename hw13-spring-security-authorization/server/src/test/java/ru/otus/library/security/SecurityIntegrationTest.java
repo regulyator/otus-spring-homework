@@ -23,7 +23,7 @@ import ru.otus.library.service.data.GenreService;
 import ru.otus.library.service.data.impl.AuthorServiceImpl;
 import ru.otus.library.service.data.impl.BookServiceImpl;
 import ru.otus.library.service.data.impl.GenreServiceImpl;
-import ru.otus.library.service.security.AclPermissionGrant;
+import ru.otus.library.service.security.AclPermissionGrantService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,7 +59,7 @@ class SecurityIntegrationTest {
     @MockBean
     private AuthorRepository authorRepository;
     @MockBean
-    private AclPermissionGrant aclPermissionGrant;
+    private AclPermissionGrantService aclPermissionGrantservice;
     @MockBean
     private PermissionEvaluator testPermissionEvaluator;
 

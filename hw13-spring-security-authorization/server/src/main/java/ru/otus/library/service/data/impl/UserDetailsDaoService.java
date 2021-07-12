@@ -25,9 +25,4 @@ public class UserDetailsDaoService implements UserDetailsService, UserService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found!"));
     }
-
-    @Override
-    public List<User> getAll() {
-        return userRepository.findAll();
-    }
 }

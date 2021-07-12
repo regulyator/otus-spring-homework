@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public class AclPermissionGrantImpl implements AclPermissionGrant {
+public class AclPermissionGrantServiceImpl implements AclPermissionGrantService {
     private final MutableAclService mutableAclService;
 
-    public AclPermissionGrantImpl(MutableAclService mutableAclService) {
+    public AclPermissionGrantServiceImpl(MutableAclService mutableAclService) {
         this.mutableAclService = mutableAclService;
     }
 

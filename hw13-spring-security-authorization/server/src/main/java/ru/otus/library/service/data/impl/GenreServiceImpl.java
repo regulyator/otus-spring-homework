@@ -7,7 +7,7 @@ import ru.otus.library.domain.Genre;
 import ru.otus.library.exception.EntityNotFoundException;
 import ru.otus.library.repository.GenreRepository;
 import ru.otus.library.service.data.GenreService;
-import ru.otus.library.service.security.AclPermissionGrant;
+import ru.otus.library.service.security.AclPermissionGrantService;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -16,12 +16,12 @@ import java.util.Objects;
 public class GenreServiceImpl implements GenreService {
 
     private final GenreRepository genreRepository;
-    private final AclPermissionGrant aclPermissionGrant;
+    private final AclPermissionGrantService aclPermissionGrantservice;
 
     @Autowired
-    public GenreServiceImpl(GenreRepository genreRepository, AclPermissionGrant aclPermissionGrant) {
+    public GenreServiceImpl(GenreRepository genreRepository, AclPermissionGrantService aclPermissionGrantservice) {
         this.genreRepository = genreRepository;
-        this.aclPermissionGrant = aclPermissionGrant;
+        this.aclPermissionGrantservice = aclPermissionGrantservice;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class GenreServiceImpl implements GenreService {
 
         if (isNewEntity) {
             final Genre savedGenre = genreRepository.save(genre);
-            aclPermissionGrant.grantAclPermission(savedGenre);
+            aclPermissionGrantservice.grantAclPermission(savedGenre);
             return savedGenre;
         } else {
             return genreRepository.save(genre);
