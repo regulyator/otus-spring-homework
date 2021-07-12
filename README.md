@@ -14,4 +14,6 @@
 * **hw10-spring-Rest** - ДЗ: CRUD приложение с Web UI и хранением данных в БД REST
 * **hw11-spring-react-WebFlux** - ДЗ: CRUD приложение с Web UI и использованием WebFlux
 * **hw12-spring-security-simple-auth** - ДЗ: В CRUD Web-приложение добавить механизм аутентификации
+* **hw13-spring-security-authorization** - ДЗ: Ввести авторизацию на основе URL и/или доменных сущностей
+* **hw14-spring-batch** - ДЗ: На основе Spring Batch разработать процедуру миграции данных из реляционного хранилища в NoSQL или наоборот
 
