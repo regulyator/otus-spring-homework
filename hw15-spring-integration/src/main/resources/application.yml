@@ -1,0 +1,13 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/icd
+  shell:
+    command:
+      stacktrace:
+        enabled: false
+
+mongock:
+  runner-type: initializingbean
+  change-logs-scan-package:
+    - ru.otus.integration.mongock.changelog

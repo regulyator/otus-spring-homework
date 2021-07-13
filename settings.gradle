@@ -17,6 +17,7 @@ include 'hw12-spring-security-simple-auth:library-app'
 include 'hw13-spring-security-authorization:server'
 include 'hw13-spring-security-authorization:library-app'
 include 'hw14-spring-batch'
+include 'hw15-spring-integration'
 
 
 
