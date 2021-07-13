@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/icd
+      uri: mongodb://localhost:27017/covid
   shell:
     command:
       stacktrace:

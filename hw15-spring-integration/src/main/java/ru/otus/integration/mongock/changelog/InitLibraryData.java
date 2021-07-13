@@ -3,12 +3,12 @@ package ru.otus.integration.mongock.changelog;
 import com.github.cloudyrock.mongock.ChangeLog;
 import com.github.cloudyrock.mongock.ChangeSet;
 import com.mongodb.client.MongoDatabase;
-import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
+import ru.otus.integration.model.domain.Patient;
+import ru.otus.integration.model.domain.Polyclinic;
+import ru.otus.integration.repository.PatientRepository;
+import ru.otus.integration.repository.PolyclinicRepository;
 
-import java.util.List;
-import java.util.stream.Stream;
+import java.util.Date;
 
 @ChangeLog
 public class InitLibraryData {
@@ -19,45 +19,91 @@ public class InitLibraryData {
     }
 
     @ChangeSet(order = "002", id = "initPolyclinic", author = "regulyator", runAlways = true)
-    public void initAuthors(AuthorRepository authorRepository) {
-        Stream.of("Peter Watts",
-                "Robert Hainline",
-                "Arkady and Boris Strugatsky",
-                "Vernor Vinge").forEach(s -> authorRepository.save(new Author(null, s)));
+    public void initPolyclinics(PolyclinicRepository polyclinicRepository) {
+        polyclinicRepository.save(Polyclinic.builder()
+                .cityKladrCode("100")
+                .caption("Moscow")
+                .firstVaccineRoom("25")
+                .secondVaccineRoom("50")
+                .build());
+
+        polyclinicRepository.save(Polyclinic.builder()
+                .cityKladrCode("200")
+                .caption("Moscow")
+                .firstVaccineRoom("1")
+                .secondVaccineRoom("2")
+                .build());
+
+        polyclinicRepository.save(Polyclinic.builder()
+                .cityKladrCode("300")
+                .caption("Vladivostok")
+                .firstVaccineRoom("101")
+                .secondVaccineRoom("202")
+                .build());
     }
 
-    @ChangeSet(order = "003", id = "initGenres", author = "regulyator", runAlways = true)
-    public void initGenres(GenreRepository genreRepository) {
-        Stream.of("Horror",
-                "Fantasy",
-                "Sci-Fi").forEach(s -> genreRepository.save(new Genre(null, s)));
-    }
+    @ChangeSet(order = "003", id = "initPatient", author = "regulyator", runAlways = true)
+    public void initPatients(PatientRepository patientRepository) {
+        patientRepository.save(Patient.builder()
+                .fio("Ivanov")
+                .cityKladrCode("100")
+                .build());
 
-    @ChangeSet(order = "004", id = "initBooks", author = "regulyator", runAlways = true)
-    public void initBooks(BookRepository bookRepository, MongoOperations mongoOperations) {
-        bookRepository.save(new Book(null, "Blindsight",
-                mongoOperations.findOne(Query.query(Criteria.where("caption").is("Sci-Fi")), Genre.class),
-                mongoOperations.find(Query.query(Criteria.where("fio").is("Peter Watts")), Author.class),
-                List.of(new Comment("nice book!"), new Comment("So complicated"))));
+        patientRepository.save(Patient.builder()
+                .fio("Petrov")
+                .cityKladrCode("100")
+                .build());
 
-        bookRepository.save(new Book(null, "The Moon Is a Harsh Mistress",
-                mongoOperations.findOne(Query.query(Criteria.where("caption").is("Sci-Fi")), Genre.class),
-                mongoOperations.find(Query.query(Criteria.where("fio").is("Robert Hainline")), Author.class),
-                List.of(new Comment("atata"), new Comment("Mooooooon!"))));
+        patientRepository.save(Patient.builder()
+                .fio("Sidorov")
+                .cityKladrCode("200")
+                .firstVaccineDoseDate(new Date())
+                .secondVaccineDoseDate(new Date())
+                .build());
 
-        bookRepository.save(new Book(null, "Prisoners of Power",
-                mongoOperations.findOne(Query.query(Criteria.where("caption").is("Fantasy")), Genre.class),
-                mongoOperations.find(Query.query(Criteria.where("fio").is("Arkady and Boris Strugatsky")), Author.class),
-                List.of(new Comment("What a brilliant book!"), new Comment("ohhhhh"))));
+        patientRepository.save(Patient.builder()
+                .fio("Sharapov")
+                .cityKladrCode("300")
+                .firstVaccineDoseDate(new Date())
+                .secondVaccineDoseDate(new Date())
+                .build());
 
-        bookRepository.save(new Book(null, "Prisoners of Power, Blindsight",
-                mongoOperations.findOne(Query.query(Criteria.where("caption").is("Sci-Fi")), Genre.class),
-                mongoOperations.find(Query.query(Criteria.where("fio").in("Peter Watts", "Arkady and Boris Strugatsky")), Author.class),
-                List.of(new Comment("ohhhhh"))));
+        patientRepository.save(Patient.builder()
+                .fio("Abdulov")
+                .cityKladrCode("100")
+                .firstVaccineDoseDate(new Date())
+                .build());
 
-        bookRepository.save(new Book(null, "The Moon Is a Harsh Mistress, Prisoners of Power",
-                mongoOperations.findOne(Query.query(Criteria.where("caption").is("Sci-Fi")), Genre.class),
-                mongoOperations.find(Query.query(Criteria.where("fio").in("Robert Hainline", "Arkady and Boris Strugatsky")), Author.class),
-                null));
+        patientRepository.save(Patient.builder()
+                .fio("Dersu Uzala")
+                .cityKladrCode("200")
+                .firstVaccineDoseDate(new Date())
+                .build());
+
+        patientRepository.save(Patient.builder()
+                .fio("Sharapova")
+                .cityKladrCode("300")
+                .firstVaccineDoseDate(new Date())
+                .build());
+
+        patientRepository.save(Patient.builder()
+                .fio("Bardwel")
+                .cityKladrCode("100")
+                .firstVaccineDoseDate(new Date())
+                .build());
+
+        patientRepository.save(Patient.builder()
+                .fio("Obama")
+                .cityKladrCode("200")
+                .firstVaccineDoseDate(new Date())
+                .build());
+
+        patientRepository.save(Patient.builder()
+                .fio("Putin")
+                .cityKladrCode("100")
+                .firstVaccineDoseDate(new Date())
+                .secondVaccineDoseDate(new Date())
+                .build());
+
     }
 }

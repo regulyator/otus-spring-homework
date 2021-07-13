@@ -1,4 +1,4 @@
-package ru.otus.integration.service;
+package ru.otus.integration.service.vaccination;
 
 import ru.otus.integration.model.VaccineReminder;
 import ru.otus.integration.model.domain.Patient;

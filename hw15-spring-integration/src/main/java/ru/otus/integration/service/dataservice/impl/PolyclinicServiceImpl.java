@@ -1,10 +1,11 @@
-package ru.otus.integration.service.dataservice;
+package ru.otus.integration.service.dataservice.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.otus.integration.exception.EntityNotFoundException;
 import ru.otus.integration.model.domain.Polyclinic;
 import ru.otus.integration.repository.PolyclinicRepository;
+import ru.otus.integration.service.dataservice.PolyclinicService;
 
 import java.util.List;
 

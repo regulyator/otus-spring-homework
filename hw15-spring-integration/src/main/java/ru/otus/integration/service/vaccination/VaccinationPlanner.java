@@ -1,4 +1,4 @@
-package ru.otus.integration.service;
+package ru.otus.integration.service.vaccination;
 
 import java.util.Date;
 

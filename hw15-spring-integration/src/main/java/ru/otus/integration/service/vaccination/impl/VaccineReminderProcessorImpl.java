@@ -1,18 +1,22 @@
-package ru.otus.integration.service;
+package ru.otus.integration.service.vaccination.impl;
 
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ru.otus.integration.exception.InvalidPatientDataException;
 import ru.otus.integration.model.VaccineReminder;
 import ru.otus.integration.model.domain.Patient;
 import ru.otus.integration.model.domain.Polyclinic;
 import ru.otus.integration.service.dataservice.PolyclinicService;
+import ru.otus.integration.service.vaccination.VaccinationPlanner;
+import ru.otus.integration.service.vaccination.VaccineReminderProcessor;
 
 import java.util.Date;
 import java.util.Objects;
 
-@Component
+@Service
 public class VaccineReminderProcessorImpl implements VaccineReminderProcessor {
+    private static final String VACCINATE_STATION_FULL_ADDRESS = "Address: %s room: %s";
     private final PolyclinicService polyclinicService;
     private final VaccinationPlanner vaccinationPlanner;
 
@@ -24,19 +28,33 @@ public class VaccineReminderProcessorImpl implements VaccineReminderProcessor {
 
     @Override
     public VaccineReminder generateVaccineReminder(@NonNull Patient patient) {
-        if(checkPatientDataForInvalidValues(patient)){
+        if (checkPatientDataForInvalidValues(patient)) {
             throw new InvalidPatientDataException("Invalid Patient data! Check patient FIO, City KLADR Code and vaccine dates.");
         } else {
-
-            new Date().s;
             final Polyclinic polyclinic = polyclinicService.getByKladrCode(patient.getCityKladrCode());
-            final Date reminderDate = Objects.isNull(patient.getFirstVaccineDoseDate()) ? vaccinationPlanner.getVaccinationDate():vaccinationPlanner.getNextVaccineDoseDate()
-            final String vaccinateStation = String.format("Address: %s room: %s", polyclinic.getCaption(),)
+            final boolean isFirstVaccineDose = checkIsFirstVaccineDose(patient);
             VaccineReminder.builder()
                     .fio(patient.getFio())
-                    .
+                    .vaccinateDate(getVaccinationDate(patient, isFirstVaccineDose))
+                    .vaccinationStation(getVaccinateStation(polyclinic, isFirstVaccineDose));
         }
         return null;
+    }
+
+    private Date getVaccinationDate(Patient patient, boolean isFirstVaccineDose) {
+        return isFirstVaccineDose ?
+                vaccinationPlanner.getVaccinationDate() :
+                vaccinationPlanner.getNextVaccineDoseDate(patient.getFirstVaccineDoseDate());
+    }
+
+    private String getVaccinateStation(Polyclinic polyclinic, boolean isFirstVaccineDose) {
+        return String.format(VACCINATE_STATION_FULL_ADDRESS,
+                polyclinic.getCaption(),
+                isFirstVaccineDose ? polyclinic.getFirstVaccineRoom() : polyclinic.getSecondVaccineRoom());
+    }
+
+    private boolean checkIsFirstVaccineDose(Patient patient) {
+        return Objects.isNull(patient.getFirstVaccineDoseDate());
     }
 
     private boolean checkPatientDataForInvalidValues(Patient patient) {

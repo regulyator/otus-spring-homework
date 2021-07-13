@@ -1,10 +1,11 @@
-package ru.otus.integration.service;
+package ru.otus.integration.service.vaccination.impl;
 
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
 import ru.otus.integration.exception.InvalidPatientDataForCertificateException;
 import ru.otus.integration.model.VaccineCertificate;
 import ru.otus.integration.model.domain.Patient;
+import ru.otus.integration.service.vaccination.VaccineCertificateProcessor;
 
 import java.util.Objects;
 import java.util.UUID;

@@ -1,6 +1,7 @@
-package ru.otus.integration.service;
+package ru.otus.integration.service.vaccination.impl;
 
 import org.springframework.stereotype.Component;
+import ru.otus.integration.service.vaccination.VaccinationPlanner;
 
 import java.util.Calendar;
 import java.util.Date;

@@ -7,4 +7,6 @@ import java.util.List;
 public interface PatientService {
 
     List<Patient> getAll();
+
+    Patient getPatientById(String patientId);
 }
