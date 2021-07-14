@@ -1,7 +1,6 @@
 package ru.otus.integration.service.vaccination.impl;
 
 import lombok.NonNull;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import ru.otus.integration.exception.InvalidPatientDataException;
 import ru.otus.integration.model.VaccineReminder;
@@ -33,12 +32,12 @@ public class VaccineReminderProcessorImpl implements VaccineReminderProcessor {
         } else {
             final Polyclinic polyclinic = polyclinicService.getByKladrCode(patient.getCityKladrCode());
             final boolean isFirstVaccineDose = checkIsFirstVaccineDose(patient);
-            VaccineReminder.builder()
+            return VaccineReminder.builder()
                     .fio(patient.getFio())
                     .vaccinateDate(getVaccinationDate(patient, isFirstVaccineDose))
-                    .vaccinationStation(getVaccinateStation(polyclinic, isFirstVaccineDose));
+                    .vaccinationStation(getVaccinateStation(polyclinic, isFirstVaccineDose))
+                    .build();
         }
-        return null;
     }
 
     private Date getVaccinationDate(Patient patient, boolean isFirstVaccineDose) {

@@ -25,7 +25,7 @@ public class PolyclinicServiceImpl implements PolyclinicService {
 
     @Override
     public Polyclinic getByKladrCode(String cityKladrCode) {
-        return polyclinicRepository.findByCityKladrCode(cityKladrCode).orElseThrow(EntityNotFoundException::new);
+        return polyclinicRepository.findByCityKladrCode(cityKladrCode).orElseThrow(() -> new EntityNotFoundException("No polyclinic on KLADR code: " + cityKladrCode));
 
     }
 }

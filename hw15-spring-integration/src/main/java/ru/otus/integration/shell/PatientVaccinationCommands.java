@@ -26,8 +26,8 @@ public class PatientVaccinationCommands {
     }
 
     @ShellMethod(key = "process-patient", value = "Process patient")
-    public void processPatient(@ShellOption(value = {"patientId"}) String patientId){
-        Object processResult = patientProcessor.process(patientService.getPatientById(patientId));
+    public void processPatient(@ShellOption(value = {"patientId"}) String patientId) {
+        String processResult = patientProcessor.process(patientService.getPatientById(patientId));
         System.out.println(processResult);
     }
 

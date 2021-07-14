@@ -1,6 +1,6 @@
 package ru.otus.integration.exception;
 
-public class EntityNotFoundException extends RuntimeException{
+public class EntityNotFoundException extends RuntimeException {
 
     public EntityNotFoundException() {
         super();

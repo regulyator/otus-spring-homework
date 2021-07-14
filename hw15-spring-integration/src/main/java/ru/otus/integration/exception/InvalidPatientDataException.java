@@ -1,6 +1,6 @@
 package ru.otus.integration.exception;
 
-public class InvalidPatientDataException extends RuntimeException{
+public class InvalidPatientDataException extends RuntimeException {
 
     public InvalidPatientDataException() {
         super();

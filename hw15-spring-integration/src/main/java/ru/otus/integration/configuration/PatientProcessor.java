@@ -4,9 +4,9 @@ import org.springframework.integration.annotation.Gateway;
 import org.springframework.integration.annotation.MessagingGateway;
 import ru.otus.integration.model.domain.Patient;
 
-@MessagingGateway
+@MessagingGateway(errorChannel = "customErrorChannel")
 public interface PatientProcessor {
 
     @Gateway(requestChannel = "patientsInputChannel", replyChannel = "patientsOutputChannel")
-    Object process(Patient patient);
+    String process(Patient patient);
 }

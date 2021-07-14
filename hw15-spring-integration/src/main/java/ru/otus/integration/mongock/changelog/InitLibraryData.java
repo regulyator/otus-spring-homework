@@ -51,7 +51,7 @@ public class InitLibraryData {
 
         patientRepository.save(Patient.builder()
                 .fio("Petrov")
-                .cityKladrCode("100")
+                .cityKladrCode("150")
                 .build());
 
         patientRepository.save(Patient.builder()
@@ -101,7 +101,6 @@ public class InitLibraryData {
         patientRepository.save(Patient.builder()
                 .fio("Putin")
                 .cityKladrCode("100")
-                .firstVaccineDoseDate(new Date())
                 .secondVaccineDoseDate(new Date())
                 .build());
 
