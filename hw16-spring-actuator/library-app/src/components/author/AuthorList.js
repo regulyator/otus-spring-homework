@@ -21,7 +21,10 @@ export default class AuthorList extends React.Component {
 
     authorsListToggle = () => {
         if (this.state.authors.length === 0) {
-            loadAllAuthors().then(value => this.setState({authors: value}));
+            loadAllAuthors().then(value => {
+                console.log(value)
+                this.setState({authors: value._embedded.authors})
+            });
         }
     }
 

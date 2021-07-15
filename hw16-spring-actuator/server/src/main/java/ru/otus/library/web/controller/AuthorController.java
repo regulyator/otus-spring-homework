@@ -11,8 +11,9 @@ import ru.otus.library.service.data.AuthorService;
 
 import java.util.Collection;
 
-@RestController
+//@RestController
 public class AuthorController {
+/*
     private final AuthorService authorService;
 
     @Autowired
@@ -49,4 +50,5 @@ public class AuthorController {
     public ResponseEntity<String> referenceDeleteErrorHandler() {
         return new ResponseEntity<>("Reference delete error! First remove this author from Books!", HttpStatus.BAD_REQUEST);
     }
+*/
 }
