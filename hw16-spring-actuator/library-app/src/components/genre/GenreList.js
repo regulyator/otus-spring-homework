@@ -21,7 +21,7 @@ export default class GenreList extends React.Component {
 
     genresListToggle = () => {
         if (this.state.genres.length === 0) {
-            loadAllGenres().then(value => this.setState({genres: value}));
+            loadAllGenres().then(value => this.setState({genres: value._embedded.genres}));
         }
     }
 
@@ -44,7 +44,7 @@ export default class GenreList extends React.Component {
                     }
                 }
             ).then(() => loadAllGenres().then((data) => {
-            this.setState({genres: data})
+            this.setState({genres: data._embedded.genres})
         })).catch(error =>
             console.log(error)
         );
@@ -65,17 +65,14 @@ export default class GenreList extends React.Component {
                         <>
                             <Card.Body>
                                 <div>
-                                    {this.state.genres.map((genre) => (
-                                        <Genre key={genre.id} genre={genre} onDelete={this.handleDelete}/>
+                                    {this.state.genres.map((genre,idx) => (
+                                        <Genre key={idx} genre={genre} onDelete={this.handleDelete}/>
                                     ))}
                                 </div>
                             </Card.Body>
 
                             <Button className="m-2 btn btn-success"
                                     onClick={this.addGenre}>Add genre</Button>
-                            <Button className="btn btn-secondary"
-                                    onClick={() => loadAllGenres().then(value => this.setState({genres: value}))}>Refresh
-                                genre list</Button>
                         </>
                     </Accordion.Collapse>
                 </Card>

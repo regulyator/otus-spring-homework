@@ -15,11 +15,11 @@ export function createOrUpdateAuthor(create) {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(this.state.author)
     };
-    return fetch(apiUrlAuthors, requestOptions);
+    return fetch(create ? apiUrlAuthors : this.state.author._links.self.href, requestOptions);
 }
 
 export function deleteAuthor(author) {
-    return fetch(apiUrlAuthors + author.id, {
+    return fetch(author._links.self.href, {
         method: 'DELETE',
         headers: {'Content-Type': 'application/json'}
     });

@@ -22,7 +22,6 @@ export default class AuthorList extends React.Component {
     authorsListToggle = () => {
         if (this.state.authors.length === 0) {
             loadAllAuthors().then(value => {
-                console.log(value)
                 this.setState({authors: value._embedded.authors})
             });
         }
@@ -47,7 +46,7 @@ export default class AuthorList extends React.Component {
                     }
                 }
             ).then(() => loadAllAuthors().then((data) => {
-            this.setState({authors: data})
+            this.setState({authors: data._embedded.authors})
         })).catch(error =>
             console.log(error)
         );
@@ -68,17 +67,14 @@ export default class AuthorList extends React.Component {
                         <>
                             <Card.Body>
                                 <div>
-                                    {this.state.authors.map((author) => (
-                                        <Author key={author.id} author={author} onDelete={this.handleDelete}/>
+                                    {this.state.authors.map((author, idx) => (
+                                        <Author key={idx} author={author} onDelete={this.handleDelete}/>
                                     ))}
                                 </div>
                             </Card.Body>
 
                             <Button className="m-2 btn btn-success"
                                     onClick={this.addAuthor}>Add author</Button>
-                            <Button className="m-2 btn btn-secondary"
-                                    onClick={() => loadAllAuthors().then(value => this.setState({authors: value}))}>Refresh
-                                author list</Button>
                         </>
                     </Accordion.Collapse>
                 </Card>

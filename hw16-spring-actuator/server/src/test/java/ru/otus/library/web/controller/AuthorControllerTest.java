@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.otus.library.config.SecurityTestConfiguration;
 import ru.otus.library.domain.Author;
-import ru.otus.library.service.data.AuthorService;
 
 import java.util.Collections;
 import java.util.List;

@@ -13,12 +13,11 @@ export function createOrUpdateGenre(create) {
         body: JSON.stringify(this.state.genre)
     };
 
-    return fetch(apiUrlGenres, requestOptions)
-        .then(response => response.json());
+    return fetch(create ? apiUrlGenres : this.state.genre._links.self.href, requestOptions);
 }
 
 export function deleteGenre(genre) {
-    return fetch(apiUrlGenres + genre.id, {
+    return fetch(genre._links.self.href, {
         method: 'DELETE',
         headers: {'Content-Type': 'application/json'}
     });

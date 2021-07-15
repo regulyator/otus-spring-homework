@@ -23,7 +23,9 @@ export default class Author extends React.Component {
         const create = this.state.author.id === null;
         createOrUpdateAuthor.call(this, create)
             .then(response => response.json())
-            .then(data => this.setState({author: data}))
+            .then(data => {
+                this.setState({author: data});
+            })
             .then(() => alert(create ? 'Author created!' : 'Author updated!'))
             .catch(error =>
                 alert(error)

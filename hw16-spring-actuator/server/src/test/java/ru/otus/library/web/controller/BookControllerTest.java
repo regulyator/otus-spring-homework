@@ -17,9 +17,7 @@ import ru.otus.library.config.SecurityTestConfiguration;
 import ru.otus.library.domain.Book;
 import ru.otus.library.domain.Genre;
 import ru.otus.library.domain.dto.BookDto;
-import ru.otus.library.service.data.AuthorService;
 import ru.otus.library.service.data.BookService;
-import ru.otus.library.service.data.GenreService;
 
 import java.util.Collections;
 import java.util.List;

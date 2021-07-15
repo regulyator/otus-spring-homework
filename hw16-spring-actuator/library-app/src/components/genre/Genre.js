@@ -19,11 +19,18 @@ export default class Genre extends React.Component {
     }
 
     handleSubmit = (event) => {
+        event.preventDefault();
         const create = this.state.genre.id === null;
         createOrUpdateGenre.call(this, create)
-            .then(data => this.setState({genre: data}))
-            .then(() => alert(create ? 'Genre created!' : 'Genre updated!'));
-        event.preventDefault();
+            .then(response => response.json())
+            .then(data => {
+                this.setState({genre: data});
+            })
+            .then(() => alert(create ? 'Genre created!' : 'Genre updated!'))
+            .catch(error =>
+                alert(error)
+            );
+
 
     }
 

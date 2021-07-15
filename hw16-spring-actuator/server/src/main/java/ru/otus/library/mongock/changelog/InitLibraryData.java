@@ -6,10 +6,8 @@ import com.mongodb.client.MongoDatabase;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.otus.library.configuration.security.acl.DemoInitAcl;
 import ru.otus.library.domain.*;
 import ru.otus.library.repository.AuthorRepository;
 import ru.otus.library.repository.BookRepository;
@@ -29,7 +27,7 @@ public class InitLibraryData {
     }
 
     @ChangeSet(order = "002", id = "initUser", author = "regulyator", runAlways = true)
-    public void initUser(UserRepository userRepository, PasswordEncoder passwordEncoder, NamedParameterJdbcOperations namedParameterJdbcOperations) {
+    public void initUser(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         userRepository.save(User.builder()
                 .username("user")
                 .password(passwordEncoder.encode("password"))
@@ -53,7 +51,7 @@ public class InitLibraryData {
     }
 
     @ChangeSet(order = "003", id = "initGenres", author = "regulyator", runAlways = true)
-    public void initGenres(GenreRepository genreRepository, NamedParameterJdbcOperations namedParameterJdbcOperations) {
+    public void initGenres(GenreRepository genreRepository) {
         Stream.of("Horror",
                 "Fantasy",
                 "Sci-Fi").forEach(s -> {
@@ -71,7 +69,7 @@ public class InitLibraryData {
 
 
     @ChangeSet(order = "005", id = "initBooks", author = "regulyator", runAlways = true)
-    public void initBooks(BookRepository bookRepository, MongoOperations mongoOperations, DemoInitAcl demoInitAcl) {
+    public void initBooks(BookRepository bookRepository, MongoOperations mongoOperations) {
         bookRepository.save(new Book(null, "Blindsight",
                 mongoOperations.findOne(Query.query(Criteria.where("caption").is("Sci-Fi")), Genre.class),
                 mongoOperations.find(Query.query(Criteria.where("fio").is("Peter Watts")), Author.class),
@@ -96,8 +94,6 @@ public class InitLibraryData {
                 mongoOperations.findOne(Query.query(Criteria.where("caption").is("Sci-Fi")), Genre.class),
                 mongoOperations.find(Query.query(Criteria.where("fio").in("Robert Hainline", "Arkady and Boris Strugatsky")), Author.class),
                 null));
-
-        demoInitAcl.initAcl();
     }
 
 }
