@@ -42,12 +42,14 @@ export default class Book extends React.Component {
 
         createOrUpdateBook(updatedBook)
             .then(handleErrors)
-            .then(value => {
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
                 this.setState({
-                    book: value,
-                    bookName: value.bookName,
-                    bookGenre: value.genre,
-                    bookAuthors: value.authors
+                    book: data,
+                    bookName: data.bookName,
+                    bookGenre: data.genre,
+                    bookAuthors: data.authors
                 })
             })
             .then(() => this.setEditBookShow(false))

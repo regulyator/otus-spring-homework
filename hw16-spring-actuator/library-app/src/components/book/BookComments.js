@@ -4,14 +4,6 @@ import Button from "react-bootstrap/Button";
 import {addCommentToBook, removeCommentFromBook} from "../../common/ApiServiceBooks";
 
 export default class BookComments extends React.Component {
-    static getDerivedStateFromProps(props, state) {
-        if (props.book.id !== state.bookId) {
-            return {bookId: props.book.id}
-        } else {
-            return null;
-        }
-    }
-
     constructor(props) {
         super(props);
         this.state = {
@@ -19,6 +11,14 @@ export default class BookComments extends React.Component {
             bookId: props.book.id,
             newCommentText: ''
         };
+    }
+
+    static getDerivedStateFromProps(props, state) {
+        if (props.book.id !== state.bookId) {
+            return {bookId: props.book.id}
+        } else {
+            return null;
+        }
     }
 
     newCommentChange = (event) => {

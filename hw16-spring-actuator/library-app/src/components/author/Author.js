@@ -20,13 +20,12 @@ export default class Author extends React.Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        const create = this.state.author.id === null;
-        createOrUpdateAuthor.call(this, create)
+        createOrUpdateAuthor(this.state.author)
             .then(response => response.json())
             .then(data => {
                 this.setState({author: data});
             })
-            .then(() => alert(create ? 'Author created!' : 'Author updated!'))
+            .then(() => alert('Author saved!'))
             .catch(error =>
                 alert(error)
             );

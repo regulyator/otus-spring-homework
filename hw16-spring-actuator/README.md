@@ -1,5 +1,6 @@
 # ДЗ "Разработчик на Spring Framework" OTUS
-## ДЗ hw10-spring-Rest
 
-### для сборки в один jar с фронтом нужно запустить gradle в корне hw10-spring-Rest
+## ДЗ hw16-spring-actuator
+
+### для сборки в один jar с фронтом нужно запустить gradle build в корне hw16-spring-actuator
 

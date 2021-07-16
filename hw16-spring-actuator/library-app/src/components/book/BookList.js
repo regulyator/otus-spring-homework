@@ -25,8 +25,8 @@ export default class BookList extends React.Component {
     }
 
     componentDidMount() {
-        loadAllAuthors().then(data => this.setState({authors: data}));
-        loadAllGenres().then(data => this.setState({genres: data}));
+        loadAllAuthors().then(data => this.setState({authors: data._embedded.authors}));
+        loadAllGenres().then(data => this.setState({genres: data._embedded.genres}));
     }
 
 

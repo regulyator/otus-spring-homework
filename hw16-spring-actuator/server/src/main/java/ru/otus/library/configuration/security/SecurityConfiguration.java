@@ -23,15 +23,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
 
-    @Override
-    public void configure(WebSecurity web) {
-        web.ignoring()
-                .antMatchers("/h2-console/**","/actuator/**","/");
-    }
-
     @Autowired
     public SecurityConfiguration(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
+    }
+
+    @Override
+    public void configure(WebSecurity web) {
+        web.ignoring()
+                .antMatchers("/h2-console/**", "/actuator/**", "/");
     }
 
     @Bean

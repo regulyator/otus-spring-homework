@@ -6,14 +6,12 @@ export function loadAllGenres() {
         .catch(console.log)
 }
 
-export function createOrUpdateGenre(create) {
-    const requestOptions = {
-        method: create ? 'POST' : 'PUT',
+export function createOrUpdateGenre(genre) {
+    return fetch(genre.id === null ? apiUrlGenres : genre._links.self.href, {
+        method: genre.id === null ? 'POST' : 'PUT',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(this.state.genre)
-    };
-
-    return fetch(create ? apiUrlGenres : this.state.genre._links.self.href, requestOptions);
+        body: JSON.stringify(genre)
+    });
 }
 
 export function deleteGenre(genre) {

@@ -44,10 +44,6 @@ class BookControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private AuthorService authorService;
-    @MockBean
-    private GenreService genreService;
-    @MockBean
     private BookService bookService;
 
 

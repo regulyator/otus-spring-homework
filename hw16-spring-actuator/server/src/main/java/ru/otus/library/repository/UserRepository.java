@@ -2,7 +2,6 @@ package ru.otus.library.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import org.springframework.data.rest.core.annotation.RestResource;
 import ru.otus.library.domain.User;
 
 import java.util.Optional;

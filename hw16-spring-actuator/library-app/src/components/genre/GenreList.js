@@ -65,7 +65,7 @@ export default class GenreList extends React.Component {
                         <>
                             <Card.Body>
                                 <div>
-                                    {this.state.genres.map((genre,idx) => (
+                                    {this.state.genres.map((genre, idx) => (
                                         <Genre key={idx} genre={genre} onDelete={this.handleDelete}/>
                                     ))}
                                 </div>

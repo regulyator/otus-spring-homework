@@ -9,13 +9,12 @@ export function loadAllAuthors() {
         );
 }
 
-export function createOrUpdateAuthor(create) {
-    const requestOptions = {
-        method: create ? 'POST' : 'PUT',
+export function createOrUpdateAuthor(author) {
+    return fetch(author.id === null ? apiUrlAuthors : author._links.self.href, {
+        method: author.id === null ? 'POST' : 'PUT',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(this.state.author)
-    };
-    return fetch(create ? apiUrlAuthors : this.state.author._links.self.href, requestOptions);
+        body: JSON.stringify(author)
+    });
 }
 
 export function deleteAuthor(author) {

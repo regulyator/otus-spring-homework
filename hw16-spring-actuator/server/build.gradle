@@ -46,7 +46,7 @@ test {
     useJUnitPlatform()
 }
 
-/*tasks.register('processFrontendResources', Copy) {
+tasks.register('processFrontendResources', Copy) {
     def frontendBuildDir = file("${project(':hw16-spring-actuator:library-app').buildDir}")
 
     def frontendResourcesDir = file("${project(':hw16-spring-actuator:server').projectDir}/src/main/resources/static")
@@ -61,4 +61,4 @@ test {
 
 tasks.named('processResources') {
     dependsOn tasks.named('processFrontendResources')
-}*/
+}
