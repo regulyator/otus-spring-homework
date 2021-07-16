@@ -1,0 +1,16 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/icd
+  datasource:
+    url: jdbc:h2:mem:testdb
+    initialization-mode: always
+  batch:
+    job:
+      enabled: false
+  shell:
+    interactive:
+      enabled: false
+    command:
+      stacktrace:
+        enabled: false
