@@ -1,0 +1,28 @@
+version: "3"
+services:
+  library-db:
+    image: mongo
+    ports:
+      - "27017:27019"
+    networks:
+      - nw
+  server:
+    build: ./server/
+    ports:
+      - "8099:8099"
+    depends_on:
+      - library-db
+    container_name: library-server
+    environment:
+      - spring.data.mongodb.uri=mongodb://library-db:27019/library
+    networks:
+      - nw
+  client:
+    build: ./library-app
+    ports:
+      - "80:80"
+    container_name: library-client
+    networks:
+      - nw
+networks:
+  nw:
