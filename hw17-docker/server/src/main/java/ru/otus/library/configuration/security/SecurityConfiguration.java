@@ -58,15 +58,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/static/**", "/manifest.json").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/library/api/**").permitAll()
                 .antMatchers("/", "/library", "/authenticate").permitAll()
                 .antMatchers(HttpMethod.DELETE).hasRole("ADMIN")
                 .anyRequest().fullyAuthenticated()
                 .and()
-                .formLogin().loginPage("/")
-                .loginProcessingUrl("/authenticate")
-                .defaultSuccessUrl("/", true)
-                .failureHandler((request, response, exception) -> response.setStatus(HttpStatus.UNAUTHORIZED.value()));
+                .httpBasic();
     }
 }

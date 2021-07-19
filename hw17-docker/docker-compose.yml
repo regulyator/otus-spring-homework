@@ -1,28 +1,36 @@
 version: "3"
 services:
   library-db:
-    image: mongo
+    image: mongo:4.4.6
     ports:
-      - "27017:27019"
+      - "27019:27017"
     networks:
-      - nw
+      - library-network-backend
   server:
     build: ./server/
+    container_name: library-server
     ports:
-      - "8099:8099"
+      - "8019:8099"
     depends_on:
       - library-db
-    container_name: library-server
     environment:
-      - spring.data.mongodb.uri=mongodb://library-db:27019/library
+      - spring.data.mongodb.uri=mongodb://library-db:27017/library
     networks:
-      - nw
+      - library-network-backend
+      - library-network-frontend
   client:
-    build: ./library-app
+    build:
+      context: ./library-app
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_URL: "http://localhost:8019"
+    container_name: library-client
     ports:
       - "80:80"
-    container_name: library-client
+    depends_on:
+      - server
     networks:
-      - nw
+      - library-network-frontend
 networks:
-  nw:
+  library-network-backend:
+  library-network-frontend:
