@@ -22,8 +22,6 @@ services:
     build:
       context: ./library-app
       dockerfile: Dockerfile
-      args:
-        REACT_APP_API_URL: "http://localhost:8019"
     container_name: library-client
     ports:
       - "80:80"
