@@ -1,0 +1,34 @@
+version: "3"
+services:
+  library-db:
+    image: mongo:4.4.6
+    ports:
+      - "27019:27017"
+    networks:
+      - library-network-backend
+  server:
+    build: ./server/
+    container_name: library-server
+    ports:
+      - "8019:8099"
+    depends_on:
+      - library-db
+    environment:
+      - spring.data.mongodb.uri=mongodb://library-db:27017/library
+    networks:
+      - library-network-backend
+      - library-network-frontend
+  client:
+    build:
+      context: ./library-app
+      dockerfile: Dockerfile
+    container_name: library-client
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+    networks:
+      - library-network-frontend
+networks:
+  library-network-backend:
+  library-network-frontend:

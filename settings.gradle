@@ -20,3 +20,6 @@ include 'hw14-spring-batch'
 include 'hw15-spring-integration'
 include 'hw16-spring-actuator:server'
 include 'hw16-spring-actuator:library-app'
+include 'hw17-docker:server'
+include 'hw17-docker:library-app'
+
