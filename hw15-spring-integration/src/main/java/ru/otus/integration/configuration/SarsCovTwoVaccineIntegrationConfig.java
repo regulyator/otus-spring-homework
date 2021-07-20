@@ -10,6 +10,7 @@ import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.MessageChannels;
 import org.springframework.integration.dsl.Pollers;
 import org.springframework.integration.scheduling.PollerMetadata;
+import org.springframework.integration.transformer.GenericTransformer;
 import org.springframework.messaging.Message;
 import ru.otus.integration.model.VaccineCertificate;
 import ru.otus.integration.model.VaccineReminder;
@@ -22,16 +23,20 @@ import java.util.Objects;
 @Configuration
 public class SarsCovTwoVaccineIntegrationConfig {
 
-    private static final String VACCINE_REMINDER_MESSAGE = "Patient: %s; Vaccinate station: %s; Planned date: %s";
-    private static final String VACCINE_CERTIFICATE_MESSAGE = "Patient: %s; Vaccinate certificate: %s; Vaccinate dates: %s %s";
-
     private final VaccineCertificateProcessor vaccineCertificateProcessor;
     private final VaccineReminderProcessor vaccineReminderProcessor;
+    private final GenericTransformer<VaccineCertificate, String> vaccineCertificateTransformer;
+    private final GenericTransformer<VaccineReminder, String> vaccineReminderTransformer;
 
     @Autowired
-    public SarsCovTwoVaccineIntegrationConfig(VaccineCertificateProcessor vaccineCertificateProcessor, VaccineReminderProcessor vaccineReminderProcessor) {
+    public SarsCovTwoVaccineIntegrationConfig(VaccineCertificateProcessor vaccineCertificateProcessor,
+                                              VaccineReminderProcessor vaccineReminderProcessor,
+                                              GenericTransformer<VaccineCertificate, String> vaccineCertificateTransformer,
+                                              GenericTransformer<VaccineReminder, String> vaccineReminderTransformer) {
         this.vaccineCertificateProcessor = vaccineCertificateProcessor;
         this.vaccineReminderProcessor = vaccineReminderProcessor;
+        this.vaccineCertificateTransformer = vaccineCertificateTransformer;
+        this.vaccineReminderTransformer = vaccineReminderTransformer;
     }
 
     @Bean
@@ -78,8 +83,7 @@ public class SarsCovTwoVaccineIntegrationConfig {
     @Bean
     public IntegrationFlow certificateFlow() {
         return IntegrationFlows.from(certificateChannel())
-                .transform(VaccineCertificate.class, vc ->
-                        String.format(VACCINE_CERTIFICATE_MESSAGE, vc.getFio(), vc.getUuid(), vc.getFirstVaccineDoseDate(), vc.getSecondVaccineDoseDate()))
+                .transform(vaccineCertificateTransformer)
                 .channel("patientsOutputChannel")
                 .get();
     }
@@ -87,8 +91,7 @@ public class SarsCovTwoVaccineIntegrationConfig {
     @Bean
     public IntegrationFlow remindersFlow() {
         return IntegrationFlows.from(remindersChannel())
-                .transform(VaccineReminder.class, vr ->
-                        String.format(VACCINE_REMINDER_MESSAGE, vr.getFio(), vr.getVaccinationStation(), vr.getVaccinateDate()))
+                .transform(vaccineReminderTransformer)
                 .channel(patientsOutputChannel())
                 .get();
     }

@@ -18,4 +18,5 @@
 * **hw14-spring-batch** - ДЗ: На основе Spring Batch разработать процедуру миграции данных из реляционного хранилища в NoSQL или наоборот
 * **hw15-spring-integration** - ДЗ: Реализовать обработку доменной сущности через каналы Spring Integration
 * **hw16-spring-actuator** - ДЗ: Использовать метрики, healthchecks и logfile
+* **hw17-docker** - ДЗ: Обернуть приложение в docker-контейнер
 
