@@ -22,4 +22,6 @@ include 'hw16-spring-actuator:server'
 include 'hw16-spring-actuator:library-app'
 include 'hw17-docker:server'
 include 'hw17-docker:library-app'
+include 'hw18-hystrix:server'
+include 'hw18-hystrix:library-app'
 
