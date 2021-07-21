@@ -4,8 +4,6 @@ import java.util.Collection;
 
 public interface StandardService<T> {
 
-    boolean checkExistById(String id);
-
     T createOrUpdate(T entity);
 
     T getById(String id);

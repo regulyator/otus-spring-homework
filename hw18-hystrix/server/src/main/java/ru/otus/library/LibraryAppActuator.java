@@ -2,10 +2,11 @@ package ru.otus.library;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 
 @SpringBootApplication
-@EnableHystrix
+@EnableCircuitBreaker
 public class LibraryAppActuator {
     //как уже упоминали проблема на маках с арм процессорами
     static {

@@ -11,10 +11,7 @@ import ru.otus.library.exception.EntityNotFoundException;
 import ru.otus.library.repository.BookRepository;
 import ru.otus.library.service.data.BookService;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,7 +25,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Secured({"ROLE_ADMIN"})
-    @HystrixCommand(groupKey = "bookServiceGroup", fallbackMethod = "")
+    @HystrixCommand(fallbackMethod = "fallbackCreateOrUpdate")
     public BookDto createOrUpdate(BookDto bookDto) {
         if (Objects.isNull(bookDto.getId())) {
             Book createdBook = bookRepository.save(new Book(bookDto));
@@ -45,7 +42,12 @@ public class BookServiceImpl implements BookService {
         return bookDto;
     }
 
+    private BookDto fallbackCreateOrUpdate(BookDto bookDto) {
+        return bookDto;
+    }
+
     @Override
+    @HystrixCommand(fallbackMethod = "fallbackAddComment")
     public BookDto addComment(String idBook, String commentCaption) {
         Book book = bookRepository.findById(idBook).orElseThrow(EntityNotFoundException::new);
 
@@ -57,7 +59,12 @@ public class BookServiceImpl implements BookService {
         return new BookDto(bookRepository.save(book));
     }
 
+    private BookDto fallbackCreateOrUpdate(String idBook, String commentCaption) {
+        return new BookDto();
+    }
+
     @Override
+    @HystrixCommand(fallbackMethod = "fallbackRemoveComment")
     public BookDto removeComment(String idBook, String idComment) {
         final Book book = bookRepository.findById(idBook).orElseThrow(EntityNotFoundException::new);
         List<Comment> newComments = book.getComments()
@@ -68,24 +75,38 @@ public class BookServiceImpl implements BookService {
         return new BookDto(bookRepository.save(book));
     }
 
-    @Override
-    public boolean checkExistById(String id) {
-        return bookRepository.existsById(id);
+    private BookDto fallbackRemoveComment(String idBook, String commentCaption) {
+        return new BookDto();
     }
 
     @Override
+    @HystrixCommand(fallbackMethod = "fallbackCreateOrUpdateBook")
     public Book createOrUpdate(Book book) {
         return bookRepository.save(book);
     }
 
+    private Book fallbackCreateOrUpdateBook(Book book) {
+        return book;
+    }
+
     @Override
+    @HystrixCommand(fallbackMethod = "fallbackGetById")
     public Book getById(String id) {
         return bookRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
+    private Book fallbackGetById(String id) {
+        return null;
+    }
+
     @Override
+    @HystrixCommand(fallbackMethod = "fallbackGetAll")
     public Collection<Book> getAll() {
         return bookRepository.findAll();
+    }
+
+    private Collection<Book> fallbackGetAll() {
+        return Collections.emptyList();
     }
 
     @Override
@@ -94,12 +115,22 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @HystrixCommand(fallbackMethod = "fallbackGetByIdDto")
     public BookDto getByIdDto(String id) {
         return new BookDto(bookRepository.findById(id).orElseThrow(EntityNotFoundException::new));
     }
 
+    private BookDto fallbackGetByIdDto(String id) {
+        return null;
+    }
+
     @Override
+    @HystrixCommand(fallbackMethod = "fallbackGetAllDto")
     public Collection<BookDto> getAllDto() {
         return this.getAll().stream().map(BookDto::new).collect(Collectors.toList());
+    }
+
+    private Collection<BookDto> fallbackGetAllDto() {
+        return Collections.emptyList();
     }
 }
