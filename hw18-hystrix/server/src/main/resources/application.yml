@@ -32,3 +32,11 @@ management:
   endpoint:
     health:
       show-details: always
+
+hystrix:
+  command:
+    bookServiceGroup:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 3000

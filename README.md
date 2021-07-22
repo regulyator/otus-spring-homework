@@ -19,4 +19,5 @@
 * **hw15-spring-integration** - ДЗ: Реализовать обработку доменной сущности через каналы Spring Integration
 * **hw16-spring-actuator** - ДЗ: Использовать метрики, healthchecks и logfile
 * **hw17-docker** - ДЗ: Обернуть приложение в docker-контейнер
+* **hw18-hystrix** - ДЗ: Обернуть внешние вызовы в Hystrix
 
